@@ -308,24 +308,6 @@ CREATE TABLE public.itemmall (
 ALTER TABLE public.itemmall OWNER TO postgres;
 
 --
--- TOC entry 220 (class 1259 OID 42946)
--- Name: itemmall_limit_amount; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.itemmall_limit_amount (
-    account_id integer NOT NULL,
-    sell_amount integer NOT NULL,
-    item_id integer NOT NULL,
-    item_group integer NOT NULL,
-    item_index integer NOT NULL,
-    item_num integer NOT NULL,
-    money_unit integer NOT NULL
-);
-
-
-ALTER TABLE public.itemmall_limit_amount OWNER TO postgres;
-
---
 -- TOC entry 217 (class 1259 OID 42689)
 -- Name: itemmall_old; Type: TABLE; Schema: public; Owner: postgres
 --
