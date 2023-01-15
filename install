@@ -47,9 +47,6 @@ full)
 
 	echo -en $ip_bytes | dd of=${zone_folder}/${zone_binary} bs=1 seek=$((0x$zone_offset)) count=${#ip_bytes} conv=notrunc >/dev/null 2>&1
 
-	sed -i "s/db_pwd/$db_pwd/g" "./setup.ini"
-	sed -i "s/db_pwd/$db_pwd/g" "./GatewayServer/setup.ini"
-
 	sudo apt-get install apache2 -y
     sudo apt-get install php -y
     sudo apt-get install php-cli -y
@@ -58,6 +55,8 @@ full)
 	sudo cp ./_utils/register.php /var/www/html
 	sudo cp ./_utils/status.php /var/www/html
 
+	sed -i "s/db_pwd/$db_pwd/g" "./setup.ini"
+	sed -i "s/db_pwd/$db_pwd/g" "./GatewayServer/setup.ini"
 	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/register.php"
 	sed -i "s/host_ip/$host_ip/g" "/var/www/html/status.php"
 
@@ -99,6 +98,10 @@ update)
 		echo "Please Enter IP:"
 		read host_ip
 	fi
+
+	sudo cp ./_utils/status.php /var/www/html
+
+	sed -i "s/host_ip/$host_ip/g" "/var/www/html/status.php"
 
 	ip_parts=(${host_ip//./ })
 	ip_parts[3]=0
