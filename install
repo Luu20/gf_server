@@ -111,15 +111,63 @@ update)
 
 	echo -en $ip_bytes | dd of=${zone_folder}/${zone_binary} bs=1 seek=$((0x$zone_offset)) count=${#ip_bytes} conv=notrunc >/dev/null 2>&1
 
-	
 	sudo -u postgres psql -d gf_ls -c "UPDATE worlds SET ip = '$host_ip';"
 	sudo -u postgres psql -d gf_gs -c "UPDATE serverstatus SET ext_address = '$host_ip' WHERE ext_address != 'none';"
 
 	;;
+restore)
+	host_ip=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+	if [ "$host_ip" != "" ]; then
+		echo -e "Select IP Option:\n1 - Use Current IP: $host_ip\n2 - Input Other IP"
+		read invar
+	else
+		invar="2"
+	fi
+	if [ "$invar" = "2" ]; then
+		echo "Please Enter IP:"
+		read host_ip
+	fi
+
+	sudo -u postgres psql -c "DROP DATABASE gf_gs;"
+	sudo -u postgres psql -c "DROP DATABASE gf_ls;"
+	sudo -u postgres psql -c "DROP DATABASE gf_ms;"
+
+	if ! [ $(sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='gf_gs'") ] && ! [ $(sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='gf_ls'") ] && ! [ $(sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='gf_ms'") ]; then
+		chmod 777 /root -R
+		sudo -u postgres psql -c "create database gf_gs encoding 'UTF8' template template0;"
+		sudo -u postgres psql -c "create database gf_ls encoding 'UTF8' template template0;"
+		sudo -u postgres psql -c "create database gf_ms encoding 'UTF8' template template0;"
+		sudo -u postgres psql -d gf_gs -c "\i '/root/gf_server/SQL/GF_GS.sql';"
+		sudo -u postgres psql -d gf_ls -c "\i '/root/gf_server/SQL/GF_LS.sql';"
+		sudo -u postgres psql -d gf_ms -c "\i '/root/gf_server/SQL/GF_MS.sql';"
+		sudo -u postgres psql -d gf_ls -c "UPDATE worlds SET ip = '$host_ip';"
+		sudo -u postgres psql -d gf_gs -c "UPDATE serverstatus SET ext_address = '$host_ip' WHERE ext_address != 'none';"
+	else
+		echo $R"Close All DB Connections!"$W
+	fi
+
+	;;
+register)
+	sudo apt-get install apache2 -y
+    sudo apt-get install php -y
+    sudo apt-get install php-cli -y
+    sudo apt-get install php-pgsql -y
+
+	echo "Please Enter PostgreSQL Password:"
+	read db_pwd
+
+	sudo cp ./_utils/register.php /var/www/html
+
+	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/register.php"
+
+	;;
+
 *)
-	echo "Usage: $0 {full|update}"
+	echo "Usage: $0 {full|update|restore|register}"
 	echo "full - Full Server Instalation"
 	echo "update - Server IP Update"
+	echo "restore - Delete And Create DB"
+	echo "register - Install Registration"
 	exit 1
 	;;
 esac
