@@ -2,34 +2,28 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 12.13 (Ubuntu 12.13-1.pgdg22.04+1)
+-- Dumped by pg_dump version 14.2
+
+-- Started on 2023-01-15 10:23:47
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
+SET xmloption = content;
 SET client_min_messages = warning;
+SET row_security = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
-SET search_path = public, pg_catalog;
-
---
+-- TOC entry 221 (class 1255 OID 42596)
 -- Name: plpgsql_call_handler(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION plpgsql_call_handler() RETURNS language_handler
+CREATE FUNCTION public.plpgsql_call_handler() RETURNS language_handler
     LANGUAGE c
     AS '$libdir/plpgsql', 'plpgsql_call_handler';
 
@@ -38,30 +32,34 @@ ALTER FUNCTION public.plpgsql_call_handler() OWNER TO postgres;
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
--- Name: accounts; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 202 (class 1259 OID 42597)
+-- Name: accounts; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE accounts (
+CREATE TABLE public.accounts (
     id integer NOT NULL,
     username character varying(32),
     password character varying(32),
     realname character varying(32),
     worldserver integer DEFAULT 0,
+    use_charpassword BOOLEAN DEFAULT false,
+    charpassword character varying(32),
     state integer DEFAULT 0,
     char_max_num integer DEFAULT 3
 );
 
 
-ALTER TABLE accounts OWNER TO postgres;
+ALTER TABLE public.accounts OWNER TO postgres;
 
 --
--- Name: character_number; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 205 (class 1259 OID 42611)
+-- Name: character_number; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE character_number (
+CREATE TABLE public.character_number (
     account_id integer NOT NULL,
     world_id integer NOT NULL,
     "character" integer DEFAULT 0 NOT NULL,
@@ -69,25 +67,27 @@ CREATE TABLE character_number (
 );
 
 
-ALTER TABLE character_number OWNER TO postgres;
+ALTER TABLE public.character_number OWNER TO postgres;
 
 --
--- Name: configuration; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 206 (class 1259 OID 42615)
+-- Name: configuration; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE configuration (
+CREATE TABLE public.configuration (
     schema_version integer NOT NULL,
     login_version character varying(32)
 );
 
 
-ALTER TABLE configuration OWNER TO postgres;
+ALTER TABLE public.configuration OWNER TO postgres;
 
 --
--- Name: crashlog; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 207 (class 1259 OID 42618)
+-- Name: crashlog; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE crashlog (
+CREATE TABLE public.crashlog (
     host character(20) NOT NULL,
     process character(30),
     eth0 character varying(15) NOT NULL,
@@ -96,13 +96,14 @@ CREATE TABLE crashlog (
 );
 
 
-ALTER TABLE crashlog OWNER TO postgres;
+ALTER TABLE public.crashlog OWNER TO postgres;
 
 --
--- Name: crashmonitor; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 208 (class 1259 OID 42622)
+-- Name: crashmonitor; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE crashmonitor (
+CREATE TABLE public.crashmonitor (
     host character varying(20) NOT NULL,
     daemon character varying(100) NOT NULL,
     process character varying(100) NOT NULL,
@@ -113,47 +114,50 @@ CREATE TABLE crashmonitor (
 );
 
 
-ALTER TABLE crashmonitor OWNER TO postgres;
+ALTER TABLE public.crashmonitor OWNER TO postgres;
 
 --
--- Name: exchange_pin; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 209 (class 1259 OID 42627)
+-- Name: exchange_pin; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE exchange_pin (
+CREATE TABLE public.exchange_pin (
     pin character varying(16) NOT NULL,
     password character varying(16) NOT NULL,
-    rule_id integer DEFAULT (-1),
+    rule_id integer DEFAULT '-1'::integer,
     state character varying(16) DEFAULT 'create'::character varying,
-    zoneserver_id integer DEFAULT (-1),
-    account_id integer DEFAULT (-1),
-    character_id integer DEFAULT (-1),
+    zoneserver_id integer DEFAULT '-1'::integer,
+    account_id integer DEFAULT '-1'::integer,
+    character_id integer DEFAULT '-1'::integer,
     log_time timestamp without time zone,
-    pin_set integer DEFAULT (-1)
+    pin_set integer DEFAULT '-1'::integer
 );
 
 
-ALTER TABLE exchange_pin OWNER TO postgres;
+ALTER TABLE public.exchange_pin OWNER TO postgres;
 
 --
--- Name: exchange_rule; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 210 (class 1259 OID 42636)
+-- Name: exchange_rule; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE exchange_rule (
+CREATE TABLE public.exchange_rule (
     id integer NOT NULL,
-    item_id integer DEFAULT (-1),
+    item_id integer DEFAULT '-1'::integer,
     item_num integer DEFAULT 0,
     rate integer DEFAULT 0,
     set integer DEFAULT 0
 );
 
 
-ALTER TABLE exchange_rule OWNER TO postgres;
+ALTER TABLE public.exchange_rule OWNER TO postgres;
 
 --
--- Name: fortune_bag; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 211 (class 1259 OID 42643)
+-- Name: fortune_bag; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE fortune_bag (
+CREATE TABLE public.fortune_bag (
     id integer NOT NULL,
     sequence smallint NOT NULL,
     set integer NOT NULL,
@@ -169,13 +173,14 @@ CREATE TABLE fortune_bag (
 );
 
 
-ALTER TABLE fortune_bag OWNER TO postgres;
+ALTER TABLE public.fortune_bag OWNER TO postgres;
 
 --
--- Name: gm_tool_accounts; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 212 (class 1259 OID 42650)
+-- Name: gm_tool_accounts; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE gm_tool_accounts (
+CREATE TABLE public.gm_tool_accounts (
     id integer NOT NULL,
     account_name character varying(32),
     password character varying(32),
@@ -183,59 +188,85 @@ CREATE TABLE gm_tool_accounts (
 );
 
 
-ALTER TABLE gm_tool_accounts OWNER TO postgres;
+ALTER TABLE public.gm_tool_accounts OWNER TO postgres;
 
 --
--- Name: item_receipt; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 204 (class 1259 OID 42607)
+-- Name: high_lottery; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE item_receipt (
+CREATE TABLE public.high_lottery (
+    lottery_id integer NOT NULL,
+    item_index integer NOT NULL,
+    week integer NOT NULL,
+    round integer NOT NULL,
+    item_id integer NOT NULL,
+    item_amount integer NOT NULL,
+    probability double precision NOT NULL,
+    num_replay integer NOT NULL,
+    bulletin integer NOT NULL,
+    probability_plus1 double precision NOT NULL,
+    probability_plus2 double precision NOT NULL,
+    probability_plus3 double precision NOT NULL
+);
+
+
+ALTER TABLE public.high_lottery OWNER TO postgres;
+
+--
+-- TOC entry 213 (class 1259 OID 42654)
+-- Name: item_receipt; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.item_receipt (
     id integer NOT NULL,
     purchase_time timestamp(6) without time zone NOT NULL,
     receieved_time timestamp(6) without time zone DEFAULT now(),
     account_name character varying(20) DEFAULT ''::character varying,
-    item_id integer DEFAULT (-1) NOT NULL,
-    item_quantity integer DEFAULT (-1) NOT NULL,
-    point integer DEFAULT (-1),
+    item_id integer DEFAULT '-1'::integer NOT NULL,
+    item_quantity integer DEFAULT '-1'::integer NOT NULL,
+    point integer DEFAULT '-1'::integer,
     amount integer,
-    world_id integer DEFAULT (-1),
+    world_id integer DEFAULT '-1'::integer,
     player_name character varying(32) DEFAULT ''::character varying,
-    unique_id integer DEFAULT (-1),
-    create_time integer DEFAULT (-1),
+    unique_id integer DEFAULT '-1'::integer,
+    create_time integer DEFAULT '-1'::integer,
     mail_name character varying(32)
 );
 
 
-ALTER TABLE item_receipt OWNER TO postgres;
+ALTER TABLE public.item_receipt OWNER TO postgres;
 
 --
--- Name: item_receivable; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 214 (class 1259 OID 42666)
+-- Name: item_receivable; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE item_receivable (
+CREATE TABLE public.item_receivable (
     id integer NOT NULL,
     state smallint DEFAULT 1 NOT NULL,
     purchase_time timestamp without time zone DEFAULT now(),
     receivable_time timestamp without time zone DEFAULT now(),
     account_name character varying(20) DEFAULT ''::character varying,
-    item_id integer DEFAULT (-1) NOT NULL,
-    item_quantity smallint DEFAULT (-1) NOT NULL,
-    world_id integer DEFAULT (-1),
+    item_id integer DEFAULT '-1'::integer NOT NULL,
+    item_quantity smallint DEFAULT '-1'::integer NOT NULL,
+    world_id integer DEFAULT '-1'::integer,
     player_name character varying(32) DEFAULT ''::character varying,
-    point integer DEFAULT (-1),
+    point integer DEFAULT '-1'::integer,
     amount integer DEFAULT 1,
     mail_name character varying(32),
     money_type integer
 );
 
 
-ALTER TABLE item_receivable OWNER TO postgres;
+ALTER TABLE public.item_receivable OWNER TO postgres;
 
 --
+-- TOC entry 215 (class 1259 OID 42679)
 -- Name: item_receivable_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE item_receivable_id_seq
+CREATE SEQUENCE public.item_receivable_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -243,20 +274,23 @@ CREATE SEQUENCE item_receivable_id_seq
     CACHE 1;
 
 
-ALTER TABLE item_receivable_id_seq OWNER TO postgres;
+ALTER TABLE public.item_receivable_id_seq OWNER TO postgres;
 
 --
+-- TOC entry 3130 (class 0 OID 0)
+-- Dependencies: 215
 -- Name: item_receivable_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE item_receivable_id_seq OWNED BY item_receivable.id;
+ALTER SEQUENCE public.item_receivable_id_seq OWNED BY public.item_receivable.id;
 
 
 --
--- Name: itemmall; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 216 (class 1259 OID 42681)
+-- Name: itemmall; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE itemmall (
+CREATE TABLE public.itemmall (
     item_id integer NOT NULL,
     item_group integer NOT NULL,
     item_index integer NOT NULL,
@@ -271,13 +305,32 @@ CREATE TABLE itemmall (
 );
 
 
-ALTER TABLE itemmall OWNER TO postgres;
+ALTER TABLE public.itemmall OWNER TO postgres;
 
 --
--- Name: itemmall_old; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 220 (class 1259 OID 42946)
+-- Name: itemmall_limit_amount; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE itemmall_old (
+CREATE TABLE public.itemmall_limit_amount (
+    account_id integer NOT NULL,
+    sell_amount integer NOT NULL,
+    item_id integer NOT NULL,
+    item_group integer NOT NULL,
+    item_index integer NOT NULL,
+    item_num integer NOT NULL,
+    money_unit integer NOT NULL
+);
+
+
+ALTER TABLE public.itemmall_limit_amount OWNER TO postgres;
+
+--
+-- TOC entry 217 (class 1259 OID 42689)
+-- Name: itemmall_old; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.itemmall_old (
     item_id integer NOT NULL,
     item_group character varying(32) DEFAULT ''::character varying NOT NULL,
     item_index integer NOT NULL,
@@ -288,13 +341,37 @@ CREATE TABLE itemmall_old (
 );
 
 
-ALTER TABLE itemmall_old OWNER TO postgres;
+ALTER TABLE public.itemmall_old OWNER TO postgres;
 
 --
--- Name: worlds; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 203 (class 1259 OID 42603)
+-- Name: lottery; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE worlds (
+CREATE TABLE public.lottery (
+    lottery_id integer NOT NULL,
+    item_index integer NOT NULL,
+    week integer NOT NULL,
+    round integer NOT NULL,
+    item_id integer NOT NULL,
+    item_amount integer NOT NULL,
+    probability double precision NOT NULL,
+    num_replay integer NOT NULL,
+    bulletin integer NOT NULL,
+    probability_plus1 double precision NOT NULL,
+    probability_plus2 double precision NOT NULL,
+    probability_plus3 double precision NOT NULL
+);
+
+
+ALTER TABLE public.lottery OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 42697)
+-- Name: worlds; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.worlds (
     id integer DEFAULT nextval(('"worlds_id_seq"'::text)::regclass) NOT NULL,
     name character varying(32),
     ip character varying(15),
@@ -307,13 +384,14 @@ CREATE TABLE worlds (
 );
 
 
-ALTER TABLE worlds OWNER TO postgres;
+ALTER TABLE public.worlds OWNER TO postgres;
 
 --
+-- TOC entry 219 (class 1259 OID 42706)
 -- Name: worlds_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE worlds_id_seq
+CREATE SEQUENCE public.worlds_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -321,77 +399,94 @@ CREATE SEQUENCE worlds_id_seq
     CACHE 1;
 
 
-ALTER TABLE worlds_id_seq OWNER TO postgres;
+ALTER TABLE public.worlds_id_seq OWNER TO postgres;
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+-- TOC entry 2939 (class 2604 OID 42708)
+-- Name: item_receivable id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY item_receivable ALTER COLUMN id SET DEFAULT nextval('item_receivable_id_seq'::regclass);
+ALTER TABLE ONLY public.item_receivable ALTER COLUMN id SET DEFAULT nextval('public.item_receivable_id_seq'::regclass);
 
 
 --
+-- TOC entry 3105 (class 0 OID 42597)
+-- Dependencies: 202
 -- Data for Name: accounts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY accounts (id, username, password, realname, worldserver, state, char_max_num) FROM stdin;
+COPY public.accounts (id, username, password, realname, worldserver, state, char_max_num) FROM stdin;
 \.
 
 
 --
+-- TOC entry 3108 (class 0 OID 42611)
+-- Dependencies: 205
 -- Data for Name: character_number; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY character_number (account_id, world_id, "character", first_ch_create_time) FROM stdin;
+COPY public.character_number (account_id, world_id, "character", first_ch_create_time) FROM stdin;
 \.
 
 
 --
+-- TOC entry 3109 (class 0 OID 42615)
+-- Dependencies: 206
 -- Data for Name: configuration; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY configuration (schema_version, login_version) FROM stdin;
+COPY public.configuration (schema_version, login_version) FROM stdin;
 812300000	Unknown_Version(Login)
 \.
 
 
 --
+-- TOC entry 3110 (class 0 OID 42618)
+-- Dependencies: 207
 -- Data for Name: crashlog; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY crashlog (host, process, eth0, eth1, regdate) FROM stdin;
+COPY public.crashlog (host, process, eth0, eth1, regdate) FROM stdin;
 \.
 
 
 --
+-- TOC entry 3111 (class 0 OID 42622)
+-- Dependencies: 208
 -- Data for Name: crashmonitor; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY crashmonitor (host, daemon, process, status, eth0, eth1, regdate) FROM stdin;
+COPY public.crashmonitor (host, daemon, process, status, eth0, eth1, regdate) FROM stdin;
 \.
 
 
 --
+-- TOC entry 3112 (class 0 OID 42627)
+-- Dependencies: 209
 -- Data for Name: exchange_pin; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY exchange_pin (pin, password, rule_id, state, zoneserver_id, account_id, character_id, log_time, pin_set) FROM stdin;
+COPY public.exchange_pin (pin, password, rule_id, state, zoneserver_id, account_id, character_id, log_time, pin_set) FROM stdin;
 \.
 
 
 --
+-- TOC entry 3113 (class 0 OID 42636)
+-- Dependencies: 210
 -- Data for Name: exchange_rule; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY exchange_rule (id, item_id, item_num, rate, set) FROM stdin;
+COPY public.exchange_rule (id, item_id, item_num, rate, set) FROM stdin;
 \.
 
 
 --
+-- TOC entry 3114 (class 0 OID 42643)
+-- Dependencies: 211
 -- Data for Name: fortune_bag; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, white, green, blue, yellow, note) FROM stdin;
+COPY public.fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, white, green, blue, yellow, note) FROM stdin;
 49001	1	1	40159	1	1	1	0	0	0	0	
 49001	2	1	40170	1	6	0	0	0	0	0	
 49001	3	1	40021	2	3	0	0	0	0	0	
@@ -419,10 +514,10 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49001	25	1	40183	22	3	0	0	0	0	0	
 49001	26	1	40251	1	3	0	0	0	0	0	
 49001	27	1	40226	1	1	1	0	0	0	0	
-49002	1	1	40437	1	0.400000006	1	0	0	0	0	
+49002	1	1	40437	1	0.4	1	0	0	0	0	
 49002	2	1	40441	1	2	0	0	0	0	0	
-49002	3	1	40194	1	0.600000024	1	0	0	0	0	
-49002	4	1	40197	1	2.4000001	0	0	0	0	0	
+49002	3	1	40194	1	0.6	1	0	0	0	0	
+49002	4	1	40197	1	2.4	0	0	0	0	0	
 49002	5	1	40021	2	3	0	0	0	0	0	
 49002	6	1	40209	2	3	0	0	0	0	0	
 49002	7	1	40211	2	3	0	0	0	0	0	
@@ -434,7 +529,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49002	13	1	40020	3	5	0	0	0	0	0	
 49002	14	1	40186	1	5	0	0	0	0	0	
 49002	15	1	40019	5	5	0	0	0	0	0	
-49002	16	1	40200	4	4.5999999	0	0	0	0	0	
+49002	16	1	40200	4	4.6	0	0	0	0	0	
 49002	17	1	40039	120	4	0	0	0	0	0	
 49002	18	1	40038	160	5	0	0	0	0	0	
 49002	19	1	40034	160	5	0	0	0	0	0	
@@ -448,7 +543,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49002	27	1	40183	22	3	0	0	0	0	0	
 49002	28	1	40251	1	3	0	0	0	0	0	
 49002	29	1	40226	1	1	0	0	0	0	0	
-49003	1	1	40195	1	0.300000012	1	0	0	0	0	
+49003	1	1	40195	1	0.3	1	0	0	0	0	
 49003	2	1	40198	1	2	0	0	0	0	0	
 49003	3	1	40021	2	3	0	0	0	0	0	
 49003	4	1	40209	2	3	0	0	0	0	0	
@@ -472,10 +567,10 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49003	22	1	40191	11	3	0	0	0	0	0	
 49003	23	1	40192	11	4	0	0	0	0	0	
 49003	24	1	40193	11	4	0	0	0	0	0	
-49003	25	1	40183	22	5.69999981	0	0	0	0	0	
+49003	25	1	40183	22	5.7	0	0	0	0	0	
 49003	26	1	40251	1	3.5	0	0	0	0	0	
 49003	27	1	40226	1	0.5	0	0	0	0	0	
-49004	1	1	40196	1	0.300000012	1	0	0	0	0	
+49004	1	1	40196	1	0.3	1	0	0	0	0	
 49004	2	1	40199	1	2	0	0	0	0	0	
 49004	3	1	40021	2	3	0	0	0	0	0	
 49004	4	1	40209	2	3	0	0	0	0	0	
@@ -499,7 +594,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49004	22	1	40191	11	3	0	0	0	0	0	
 49004	23	1	40192	11	4	0	0	0	0	0	
 49004	24	1	40193	11	4	0	0	0	0	0	
-49004	25	1	40183	22	5.69999981	0	0	0	0	0	
+49004	25	1	40183	22	5.7	0	0	0	0	0	
 49004	26	1	40251	1	3.5	0	0	0	0	0	
 49004	27	1	40226	1	0.5	0	0	0	0	0	
 49005	1	1	40160	1	2	0	0	0	0	0	
@@ -527,7 +622,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49005	23	1	40251	1	3.5	0	0	0	0	0	
 49005	24	1	40226	1	0.5	0	0	0	0	0	
 49005	25	1	40188	1	3	0	0	0	0	0	
-49014	1	1	40232	1	0.300000012	1	0	0	0	0	
+49014	1	1	40232	1	0.3	1	0	0	0	0	
 49014	2	1	40257	1	2	0	0	0	0	0	
 49014	3	1	40021	2	3	0	0	0	0	0	
 49014	4	1	40209	2	3	0	0	0	0	0	
@@ -551,7 +646,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49014	22	1	40191	11	3	0	0	0	0	0	
 49014	23	1	40192	11	4	0	0	0	0	0	
 49014	24	1	40193	11	4	0	0	0	0	0	
-49014	25	1	40183	22	5.69999981	0	0	0	0	0	
+49014	25	1	40183	22	5.7	0	0	0	0	0	
 49015	1	1	40233	1	1	1	0	0	0	0	
 49015	2	1	40258	1	5	0	0	0	0	0	
 49015	3	1	40021	2	3	0	0	0	0	0	
@@ -577,9 +672,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49015	23	1	40192	11	4	0	0	0	0	0	
 49015	24	1	40193	11	4	0	0	0	0	0	
 49015	25	1	40183	22	4	0	0	0	0	0	
-49016	1	1	40238	1	0.600000024	1	0	0	0	0	
-49016	2	1	40263	1	2.4000001	0	0	0	0	0	
-49016	3	1	40399	1	0.400000006	1	0	0	0	0	
+49016	1	1	40238	1	0.6	1	0	0	0	0	
+49016	2	1	40263	1	2.4	0	0	0	0	0	
+49016	3	1	40399	1	0.4	1	0	0	0	0	
 49016	4	1	40402	1	2	0	0	0	0	0	
 49016	5	1	40021	2	3	0	0	0	0	0	
 49016	6	1	40209	2	3	0	0	0	0	0	
@@ -603,7 +698,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49016	24	1	40191	11	3	0	0	0	0	0	
 49016	25	1	40192	11	4	0	0	0	0	0	
 49016	26	1	40193	11	4	0	0	0	0	0	
-49016	27	1	40183	22	5.5999999	0	0	0	0	0	
+49016	27	1	40183	22	5.6	0	0	0	0	0	
 49017	1	1	40230	1	1	1	0	0	0	0	
 49017	2	1	40255	1	3	0	0	0	0	0	
 49017	3	1	40246	1	2	0	0	0	0	0	
@@ -674,39 +769,39 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49019	6	1	40049	1	2.5	0	0	0	0	0	
 49019	7	1	40050	1	2.5	0	0	0	0	0	
 49019	8	1	40051	1	2.5	0	0	0	0	0	
-49019	9	1	40052	1	2.9000001	0	0	0	0	0	
-49019	10	1	40053	1	2.9000001	0	0	0	0	0	
-49019	11	1	40056	1	2.9000001	0	0	0	0	0	
-49019	12	1	40059	1	2.9000001	0	0	0	0	0	
-49019	13	1	40055	1	2.79999995	0	0	0	0	0	
-49019	14	1	40057	1	2.79999995	0	0	0	0	0	
-49019	15	1	40058	1	2.79999995	0	0	0	0	0	
+49019	9	1	40052	1	2.9	0	0	0	0	0	
+49019	10	1	40053	1	2.9	0	0	0	0	0	
+49019	11	1	40056	1	2.9	0	0	0	0	0	
+49019	12	1	40059	1	2.9	0	0	0	0	0	
+49019	13	1	40055	1	2.8	0	0	0	0	0	
+49019	14	1	40057	1	2.8	0	0	0	0	0	
+49019	15	1	40058	1	2.8	0	0	0	0	0	
 49019	16	1	40061	1	1	0	0	0	0	0	
 49019	17	1	40063	1	1	0	0	0	0	0	
 49019	18	1	40064	1	1	0	0	0	0	0	
 49019	19	1	40065	1	1	0	0	0	0	0	
 49019	20	1	40096	1	1	0	0	0	0	0	
 49019	21	1	40097	1	1	0	0	0	0	0	
-49019	22	1	40060	1	1.29999995	0	0	0	0	0	
-49019	23	1	40062	1	1.29999995	0	0	0	0	0	
-49019	24	1	40066	1	0.300000012	0	0	0	0	0	
-49019	25	1	40067	1	0.300000012	0	0	0	0	0	
-49019	26	1	40068	1	0.300000012	0	0	0	0	0	
-49019	27	1	40069	1	0.300000012	0	0	0	0	0	
-49019	28	1	40070	1	0.300000012	0	0	0	0	0	
-49019	29	1	40071	1	0.300000012	0	0	0	0	0	
-49019	30	1	40072	1	0.300000012	0	0	0	0	0	
-49019	31	1	40073	1	0.300000012	0	0	0	0	0	
-49019	32	1	40074	1	0.300000012	0	0	0	0	0	
-49019	33	1	40075	1	0.300000012	0	0	0	0	0	
-49019	34	1	40076	1	0.300000012	0	0	0	0	0	
-49019	35	1	40077	1	0.300000012	0	0	0	0	0	
-49019	36	1	40078	1	0.300000012	0	0	0	0	0	
-49019	37	1	40079	1	0.300000012	0	0	0	0	0	
-49019	38	1	40080	1	0.300000012	0	0	0	0	0	
-49019	39	1	40081	1	0.300000012	0	0	0	0	0	
-49019	40	1	40082	1	0.300000012	0	0	0	0	0	
-49019	41	1	40083	1	0.300000012	0	0	0	0	0	
+49019	22	1	40060	1	1.3	0	0	0	0	0	
+49019	23	1	40062	1	1.3	0	0	0	0	0	
+49019	24	1	40066	1	0.3	0	0	0	0	0	
+49019	25	1	40067	1	0.3	0	0	0	0	0	
+49019	26	1	40068	1	0.3	0	0	0	0	0	
+49019	27	1	40069	1	0.3	0	0	0	0	0	
+49019	28	1	40070	1	0.3	0	0	0	0	0	
+49019	29	1	40071	1	0.3	0	0	0	0	0	
+49019	30	1	40072	1	0.3	0	0	0	0	0	
+49019	31	1	40073	1	0.3	0	0	0	0	0	
+49019	32	1	40074	1	0.3	0	0	0	0	0	
+49019	33	1	40075	1	0.3	0	0	0	0	0	
+49019	34	1	40076	1	0.3	0	0	0	0	0	
+49019	35	1	40077	1	0.3	0	0	0	0	0	
+49019	36	1	40078	1	0.3	0	0	0	0	0	
+49019	37	1	40079	1	0.3	0	0	0	0	0	
+49019	38	1	40080	1	0.3	0	0	0	0	0	
+49019	39	1	40081	1	0.3	0	0	0	0	0	
+49019	40	1	40082	1	0.3	0	0	0	0	0	
+49019	41	1	40083	1	0.3	0	0	0	0	0	
 49019	42	1	40202	7	4	0	0	0	0	0	
 49019	43	1	40105	80	4	0	0	0	0	0	
 49019	44	1	40104	95	4	0	0	0	0	0	
@@ -729,21 +824,21 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49020	7	1	41085	3	6	0	0	0	0	0	
 49020	8	1	41086	1	6	0	0	0	0	0	
 49020	9	1	41087	3	6	0	0	0	0	0	
-49020	10	1	41065	1	0.400000006	0	0	0	0	0	
-49020	11	1	41066	1	0.400000006	0	0	0	0	0	
-49020	12	1	41067	1	0.400000006	0	0	0	0	0	
-49020	13	1	41068	1	0.400000006	0	0	0	0	0	
-49020	14	1	41069	1	0.400000006	0	0	0	0	0	
-49020	15	1	41070	1	0.400000006	0	0	0	0	0	
-49020	16	1	41071	1	0.400000006	0	0	0	0	0	
-49020	17	1	41072	1	0.400000006	0	0	0	0	0	
-49020	18	1	41073	1	0.400000006	0	0	0	0	0	
-49020	19	1	41074	1	0.400000006	0	0	0	0	0	
-49020	20	1	41075	1	0.400000006	0	0	0	0	0	
-49020	21	1	41077	1	0.400000006	0	0	0	0	0	
-49020	22	1	41078	1	0.400000006	0	0	0	0	0	
-49020	23	1	41079	1	0.400000006	0	0	0	0	0	
-49020	24	1	41080	1	0.400000006	0	0	0	0	0	
+49020	10	1	41065	1	0.4	0	0	0	0	0	
+49020	11	1	41066	1	0.4	0	0	0	0	0	
+49020	12	1	41067	1	0.4	0	0	0	0	0	
+49020	13	1	41068	1	0.4	0	0	0	0	0	
+49020	14	1	41069	1	0.4	0	0	0	0	0	
+49020	15	1	41070	1	0.4	0	0	0	0	0	
+49020	16	1	41071	1	0.4	0	0	0	0	0	
+49020	17	1	41072	1	0.4	0	0	0	0	0	
+49020	18	1	41073	1	0.4	0	0	0	0	0	
+49020	19	1	41074	1	0.4	0	0	0	0	0	
+49020	20	1	41075	1	0.4	0	0	0	0	0	
+49020	21	1	41077	1	0.4	0	0	0	0	0	
+49020	22	1	41078	1	0.4	0	0	0	0	0	
+49020	23	1	41079	1	0.4	0	0	0	0	0	
+49020	24	1	41080	1	0.4	0	0	0	0	0	
 49020	25	1	41081	1	3.5	0	0	0	0	0	
 49020	26	1	40100	1	1	0	0	0	0	0	
 49020	27	1	40101	1	1	0	0	0	0	0	
@@ -981,8 +1076,8 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49033	38	1	40021	2	2	0	0	0	0	0	
 49033	39	1	40020	3	3	0	0	0	0	0	
 49033	40	1	40019	5	3	0	0	0	0	0	
-49034	1	1	40265	1	1.20000005	1	0	0	0	0	
-49034	2	1	40266	1	0.300000012	1	0	0	0	0	
+49034	1	1	40265	1	1.2	1	0	0	0	0	
+49034	2	1	40266	1	0.3	1	0	0	0	0	
 49034	3	1	40269	1	4	0	0	0	0	0	
 49034	4	1	40270	1	1.5	0	0	0	0	0	
 49034	5	1	40021	2	4	0	0	0	0	0	
@@ -1009,9 +1104,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49034	24	1	40193	11	4	0	0	0	0	0	
 49034	25	1	40183	22	4	0	0	0	0	0	
 49035	1	1	40331	1	1.5	1	0	0	0	0	
-49035	2	1	40332	1	0.400000006	1	0	0	0	0	
+49035	2	1	40332	1	0.4	1	0	0	0	0	
 49035	3	1	40333	1	4	0	0	0	0	0	
-49035	4	1	40334	1	1.70000005	0	0	0	0	0	
+49035	4	1	40334	1	1.7	0	0	0	0	0	
 49035	5	1	40021	2	4	0	0	0	0	0	
 49035	6	1	40209	2	4	0	0	0	0	0	
 49035	7	1	40211	2	4	0	0	0	0	0	
@@ -1150,7 +1245,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49048	2	2	40418	1	100	0	0	0	0	0	
 49049	1	1	40419	1	100	0	0	0	0	0	
 49049	2	2	40420	1	100	0	0	0	0	0	
-49050	1	1	40400	1	0.400000006	1	0	0	0	0	
+49050	1	1	40400	1	0.4	1	0	0	0	0	
 49050	2	1	40403	1	2	0	0	0	0	0	
 49050	3	1	40021	2	3	0	0	0	0	0	
 49050	4	1	40209	2	3	0	0	0	0	0	
@@ -1174,12 +1269,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49050	22	1	40191	11	3	0	0	0	0	0	
 49050	23	1	40192	11	4	0	0	0	0	0	
 49050	24	1	40193	11	4	0	0	0	0	0	
-49050	25	1	40183	22	5.5999999	0	0	0	0	0	
+49050	25	1	40183	22	5.6	0	0	0	0	0	
 49050	26	1	40251	1	3.5	0	0	0	0	0	
 49050	27	1	40226	1	0.5	0	0	0	0	0	
-49051	1	1	40440	1	0.300000012	1	0	0	0	0	
+49051	1	1	40440	1	0.3	1	0	0	0	0	
 49051	2	1	40442	1	2	0	0	0	0	0	
-49051	3	1	40021	2	3.0999999	0	0	0	0	0	
+49051	3	1	40021	2	3.1	0	0	0	0	0	
 49051	4	1	40209	2	3	0	0	0	0	0	
 49051	5	1	40211	2	3	0	0	0	0	0	
 49051	6	1	40213	2	3	0	0	0	0	0	
@@ -1201,29 +1296,29 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49051	22	1	40191	11	3	0	0	0	0	0	
 49051	23	1	40192	11	4	0	0	0	0	0	
 49051	24	1	40193	11	4	0	0	0	0	0	
-49051	25	1	40183	22	5.5999999	0	0	0	0	0	
+49051	25	1	40183	22	5.6	0	0	0	0	0	
 49051	26	1	40251	1	3.5	0	0	0	0	0	
 49051	27	1	40226	1	0.5	0	0	0	0	0	
-49057	1	1	40159	1	0.300000012	0	0	0	0	0	
-49057	2	1	40160	1	0.300000012	0	0	0	0	0	
-49057	3	1	40161	1	0.300000012	0	0	0	0	0	
-49057	4	1	40162	1	0.300000012	0	0	0	0	0	
-49057	5	1	40163	1	0.300000012	0	0	0	0	0	
-49057	6	1	40164	1	0.300000012	0	0	0	0	0	
-49057	7	1	40165	1	0.300000012	0	0	0	0	0	
-49057	8	1	40166	1	0.300000012	0	0	0	0	0	
-49057	9	1	40167	1	0.300000012	0	0	0	0	0	
-49057	10	1	40168	1	0.300000012	0	0	0	0	0	
-49057	11	1	40223	1	0.300000012	0	0	0	0	0	
-49057	12	1	40224	1	0.300000012	0	0	0	0	0	
-49057	13	1	40225	1	0.300000012	0	0	0	0	0	
-49057	14	1	40226	1	0.300000012	0	0	0	0	0	
-49057	15	1	40227	1	0.300000012	0	0	0	0	0	
-49057	16	1	40228	1	0.300000012	0	0	0	0	0	
-49057	17	1	40229	1	0.300000012	0	0	0	0	0	
-49057	18	1	40230	1	0.300000012	0	0	0	0	0	
-49057	19	1	40231	1	0.300000012	0	0	0	0	0	
-49057	20	1	40247	1	0.300000012	0	0	0	0	0	
+49057	1	1	40159	1	0.3	0	0	0	0	0	
+49057	2	1	40160	1	0.3	0	0	0	0	0	
+49057	3	1	40161	1	0.3	0	0	0	0	0	
+49057	4	1	40162	1	0.3	0	0	0	0	0	
+49057	5	1	40163	1	0.3	0	0	0	0	0	
+49057	6	1	40164	1	0.3	0	0	0	0	0	
+49057	7	1	40165	1	0.3	0	0	0	0	0	
+49057	8	1	40166	1	0.3	0	0	0	0	0	
+49057	9	1	40167	1	0.3	0	0	0	0	0	
+49057	10	1	40168	1	0.3	0	0	0	0	0	
+49057	11	1	40223	1	0.3	0	0	0	0	0	
+49057	12	1	40224	1	0.3	0	0	0	0	0	
+49057	13	1	40225	1	0.3	0	0	0	0	0	
+49057	14	1	40226	1	0.3	0	0	0	0	0	
+49057	15	1	40227	1	0.3	0	0	0	0	0	
+49057	16	1	40228	1	0.3	0	0	0	0	0	
+49057	17	1	40229	1	0.3	0	0	0	0	0	
+49057	18	1	40230	1	0.3	0	0	0	0	0	
+49057	19	1	40231	1	0.3	0	0	0	0	0	
+49057	20	1	40247	1	0.3	0	0	0	0	0	
 49057	21	1	40170	1	1.5	0	0	0	0	0	
 49057	22	1	40171	1	1.5	0	0	0	0	0	
 49057	23	1	40172	1	1.5	0	0	0	0	0	
@@ -1243,14 +1338,14 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49057	37	1	40254	1	1.5	0	0	0	0	0	
 49057	38	1	40255	1	1.5	0	0	0	0	0	
 49057	39	1	40256	1	1.5	0	0	0	0	0	
-49057	40	1	40327	1	0.300000012	0	0	0	0	0	
-49057	41	1	40328	1	0.300000012	0	0	0	0	0	
-49057	42	1	40329	1	0.300000012	0	0	0	0	0	
+49057	40	1	40327	1	0.3	0	0	0	0	0	
+49057	41	1	40328	1	0.3	0	0	0	0	0	
+49057	42	1	40329	1	0.3	0	0	0	0	0	
 49057	43	1	40330	1	1.5	0	0	0	0	0	
 49057	44	1	40344	1	1.5	0	0	0	0	0	
 49057	45	1	40346	1	2	0	0	0	0	0	
-49057	46	1	40438	1	1.20000005	0	0	0	0	0	
-49057	47	1	40362	2	28.3999996	0	0	0	0	0	
+49057	46	1	40438	1	1.2	0	0	0	0	0	
+49057	47	1	40362	2	28.4	0	0	0	0	0	
 49057	48	1	40033	160	3	0	0	0	0	0	
 49057	49	1	40034	120	3	0	0	0	0	0	
 49057	50	1	40035	95	3	0	0	0	0	0	
@@ -1261,15 +1356,15 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49057	55	1	40104	95	3	0	0	0	0	0	
 49057	56	1	40105	80	3	0	0	0	0	0	
 49057	57	1	40106	70	3	0	0	0	0	0	
-49058	1	1	40194	1	0.150000006	1	0	0	0	0	
-49058	2	1	40375	1	0.150000006	1	0	0	0	0	
-49058	3	1	40195	1	0.150000006	1	0	0	0	0	
-49058	4	1	40196	1	0.150000006	1	0	0	0	0	
-49058	5	1	40232	1	0.150000006	1	0	0	0	0	
-49058	6	1	40233	1	0.150000006	1	0	0	0	0	
-49058	7	1	40347	1	0.150000006	1	0	0	0	0	
-49058	8	1	40400	1	0.150000006	1	0	0	0	0	
-49058	9	1	40437	1	0.150000006	1	0	0	0	0	
+49058	1	1	40194	1	0.15	1	0	0	0	0	
+49058	2	1	40375	1	0.15	1	0	0	0	0	
+49058	3	1	40195	1	0.15	1	0	0	0	0	
+49058	4	1	40196	1	0.15	1	0	0	0	0	
+49058	5	1	40232	1	0.15	1	0	0	0	0	
+49058	6	1	40233	1	0.15	1	0	0	0	0	
+49058	7	1	40347	1	0.15	1	0	0	0	0	
+49058	8	1	40400	1	0.15	1	0	0	0	0	
+49058	9	1	40437	1	0.15	1	0	0	0	0	
 49058	10	1	40490	1	2	0	0	0	0	0	
 49058	11	1	40197	1	3	0	0	0	0	0	
 49058	12	1	40198	1	3	0	0	0	0	0	
@@ -1279,13 +1374,13 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49058	16	1	40345	1	3	0	0	0	0	0	
 49058	17	1	40403	1	3	0	0	0	0	0	
 49058	18	1	40441	1	3	0	0	0	0	0	
-49058	19	1	40362	2	52.7999992	0	0	0	0	0	
+49058	19	1	40362	2	52.8	0	0	0	0	0	
 49058	20	1	40033	160	2	0	0	0	0	0	
 49058	21	1	40034	120	2	0	0	0	0	0	
 49058	22	1	40035	95	2	0	0	0	0	0	
 49058	23	1	40036	80	2	0	0	0	0	0	
 49058	24	1	40037	70	2	0	0	0	0	0	
-49058	25	1	40038	160	1.85000002	0	0	0	0	0	
+49058	25	1	40038	160	1.85	0	0	0	0	0	
 49058	26	1	40039	120	2	0	0	0	0	0	
 49058	27	1	40104	95	2	0	0	0	0	0	
 49058	28	1	40105	80	2	0	0	0	0	0	
@@ -1366,8 +1461,8 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49061	25	1	40113	1	4	0	0	0	0	0	
 49061	26	1	40222	1	1	0	0	0	0	0	
 49061	27	1	40273	1	0.5	0	0	0	0	0	
-49061	28	1	40274	1	0.200000003	0	0	0	0	0	
-49061	29	1	40350	1	0.300000012	0	0	0	0	0	
+49061	28	1	40274	1	0.2	0	0	0	0	0	
+49061	29	1	40350	1	0.3	0	0	0	0	0	
 49061	30	1	40156	4	10	0	0	0	0	0	
 49061	31	1	40157	2	10	0	0	0	0	0	
 49061	32	1	40158	1	5	0	0	0	0	0	
@@ -1386,14 +1481,14 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49061	45	1	40104	95	0.5	0	0	0	0	0	
 49061	46	1	40105	80	0.5	0	0	0	0	0	
 49061	47	1	40106	70	0.5	0	0	0	0	0	
-49062	1	1	40331	1	0.800000012	1	0	0	0	0	
-49062	2	1	40332	1	0.200000003	1	0	0	0	0	
-49062	3	1	40265	1	0.800000012	1	0	0	0	0	
-49062	4	1	40266	1	0.200000003	1	0	0	0	0	
-49062	5	1	40267	1	0.800000012	1	0	0	0	0	
-49062	6	1	40268	1	0.200000003	1	0	0	0	0	
-49062	7	1	40335	1	0.800000012	1	0	0	0	0	
-49062	8	1	40336	1	0.200000003	1	0	0	0	0	
+49062	1	1	40331	1	0.8	1	0	0	0	0	
+49062	2	1	40332	1	0.2	1	0	0	0	0	
+49062	3	1	40265	1	0.8	1	0	0	0	0	
+49062	4	1	40266	1	0.2	1	0	0	0	0	
+49062	5	1	40267	1	0.8	1	0	0	0	0	
+49062	6	1	40268	1	0.2	1	0	0	0	0	
+49062	7	1	40335	1	0.8	1	0	0	0	0	
+49062	8	1	40336	1	0.2	1	0	0	0	0	
 49062	9	1	40333	1	2	0	0	0	0	0	
 49062	10	1	40334	1	1	0	0	0	0	0	
 49062	11	1	40269	1	2	0	0	0	0	0	
@@ -1416,8 +1511,8 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49066	1	1	40469	3	100	0	0	0	0	0	
 49066	2	2	40470	2	100	0	0	0	0	0	
 49067	1	1	34426	1	12	0	0	0	0	0	
-49067	2	1	33515	1	0.100000001	0	0	0	0	0	
-49067	3	1	33518	1	0.100000001	0	0	0	0	0	
+49067	2	1	33515	1	0.1	0	0	0	0	0	
+49067	3	1	33518	1	0.1	0	0	0	0	0	
 49067	4	1	34396	1	1	0	0	0	0	0	
 49067	5	1	34397	1	1	0	0	0	0	0	
 49067	6	1	34398	1	1	0	0	0	0	0	
@@ -1425,12 +1520,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49067	8	1	34400	1	1	0	0	0	0	0	
 49067	9	1	34401	1	1	0	0	0	0	0	
 49067	10	1	34402	1	1	0	0	0	0	0	
-49067	11	1	34427	1	0.100000001	0	0	0	0	0	
-49067	12	1	34428	1	0.100000001	0	0	0	0	0	
-49067	13	1	34429	1	0.100000001	0	0	0	0	0	
-49067	14	1	31510	30	0.100000001	0	0	0	0	0	
-49067	15	1	31511	30	0.100000001	0	0	0	0	0	
-49067	16	1	31512	30	0.100000001	0	0	0	0	0	
+49067	11	1	34427	1	0.1	0	0	0	0	0	
+49067	12	1	34428	1	0.1	0	0	0	0	0	
+49067	13	1	34429	1	0.1	0	0	0	0	0	
+49067	14	1	31510	30	0.1	0	0	0	0	0	
+49067	15	1	31511	30	0.1	0	0	0	0	0	
+49067	16	1	31512	30	0.1	0	0	0	0	0	
 49067	17	1	31601	30	0.5	0	0	0	0	0	
 49067	18	1	31602	30	0.5	0	0	0	0	0	
 49067	19	1	31603	30	1	0	0	0	0	0	
@@ -1458,7 +1553,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49067	41	1	40216	1	2	0	0	0	0	0	
 49067	42	1	40217	2	2	0	0	0	0	0	
 49067	43	1	40218	1	2	0	0	0	0	0	
-49067	44	1	34279	4	20.7000008	0	0	0	0	0	
+49067	44	1	34279	4	20.7	0	0	0	0	0	
 49067	45	1	40033	160	1	0	0	0	0	0	
 49067	46	1	40034	120	1	0	0	0	0	0	
 49067	47	1	40035	95	1	0	0	0	0	0	
@@ -1470,20 +1565,20 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49067	53	1	40105	80	2	0	0	0	0	0	
 49067	54	1	40106	70	2	0	0	0	0	0	
 49068	1	1	34426	1	12	0	0	0	0	0	
-49068	2	1	33516	1	0.100000001	0	0	0	0	0	
-49068	3	1	33519	1	0.100000001	0	0	0	0	0	
-49068	4	1	34403	1	1.20000005	0	0	0	0	0	
-49068	5	1	34404	1	1.20000005	0	0	0	0	0	
-49068	6	1	34405	1	1.20000005	0	0	0	0	0	
-49068	7	1	34406	1	1.20000005	0	0	0	0	0	
-49068	8	1	34407	1	1.20000005	0	0	0	0	0	
-49068	9	1	34408	1	1.20000005	0	0	0	0	0	
-49068	10	1	34427	1	0.100000001	0	0	0	0	0	
-49068	11	1	34428	1	0.100000001	0	0	0	0	0	
-49068	12	1	34429	1	0.100000001	0	0	0	0	0	
-49068	13	1	31510	30	0.100000001	0	0	0	0	0	
-49068	14	1	31511	30	0.100000001	0	0	0	0	0	
-49068	15	1	31512	30	0.100000001	0	0	0	0	0	
+49068	2	1	33516	1	0.1	0	0	0	0	0	
+49068	3	1	33519	1	0.1	0	0	0	0	0	
+49068	4	1	34403	1	1.2	0	0	0	0	0	
+49068	5	1	34404	1	1.2	0	0	0	0	0	
+49068	6	1	34405	1	1.2	0	0	0	0	0	
+49068	7	1	34406	1	1.2	0	0	0	0	0	
+49068	8	1	34407	1	1.2	0	0	0	0	0	
+49068	9	1	34408	1	1.2	0	0	0	0	0	
+49068	10	1	34427	1	0.1	0	0	0	0	0	
+49068	11	1	34428	1	0.1	0	0	0	0	0	
+49068	12	1	34429	1	0.1	0	0	0	0	0	
+49068	13	1	31510	30	0.1	0	0	0	0	0	
+49068	14	1	31511	30	0.1	0	0	0	0	0	
+49068	15	1	31512	30	0.1	0	0	0	0	0	
 49068	16	1	31601	30	0.5	0	0	0	0	0	
 49068	17	1	31602	30	0.5	0	0	0	0	0	
 49068	18	1	31603	30	1	0	0	0	0	0	
@@ -1523,20 +1618,20 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49068	52	1	40105	80	2	0	0	0	0	0	
 49068	53	1	40106	70	2	0	0	0	0	0	
 49069	1	1	34426	1	12	0	0	0	0	0	
-49069	2	1	33517	1	0.100000001	0	0	0	0	0	
-49069	3	1	33520	1	0.100000001	0	0	0	0	0	
-49069	4	1	34410	1	1.20000005	0	0	0	0	0	
-49069	5	1	34411	1	1.20000005	0	0	0	0	0	
-49069	6	1	34413	1	1.20000005	0	0	0	0	0	
-49069	7	1	34414	1	1.20000005	0	0	0	0	0	
-49069	8	1	34412	1	1.20000005	0	0	0	0	0	
-49069	9	1	34415	1	1.20000005	0	0	0	0	0	
-49069	10	1	34427	1	0.100000001	0	0	0	0	0	
-49069	11	1	34428	1	0.100000001	0	0	0	0	0	
-49069	12	1	34429	1	0.100000001	0	0	0	0	0	
-49069	13	1	31510	30	0.100000001	0	0	0	0	0	
-49069	14	1	31511	30	0.100000001	0	0	0	0	0	
-49069	15	1	31512	30	0.100000001	0	0	0	0	0	
+49069	2	1	33517	1	0.1	0	0	0	0	0	
+49069	3	1	33520	1	0.1	0	0	0	0	0	
+49069	4	1	34410	1	1.2	0	0	0	0	0	
+49069	5	1	34411	1	1.2	0	0	0	0	0	
+49069	6	1	34413	1	1.2	0	0	0	0	0	
+49069	7	1	34414	1	1.2	0	0	0	0	0	
+49069	8	1	34412	1	1.2	0	0	0	0	0	
+49069	9	1	34415	1	1.2	0	0	0	0	0	
+49069	10	1	34427	1	0.1	0	0	0	0	0	
+49069	11	1	34428	1	0.1	0	0	0	0	0	
+49069	12	1	34429	1	0.1	0	0	0	0	0	
+49069	13	1	31510	30	0.1	0	0	0	0	0	
+49069	14	1	31511	30	0.1	0	0	0	0	0	
+49069	15	1	31512	30	0.1	0	0	0	0	0	
 49069	16	1	31601	30	0.5	0	0	0	0	0	
 49069	17	1	31602	30	0.5	0	0	0	0	0	
 49069	18	1	31603	30	1	0	0	0	0	0	
@@ -1575,92 +1670,92 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49069	51	1	40104	95	1	0	0	0	0	0	
 49069	52	1	40105	80	2	0	0	0	0	0	
 49069	53	1	40106	70	2	0	0	0	0	0	
-49070	1	1	40022	2	20.8899994	0	0	0	0	0	
+49070	1	1	40022	2	20.89	0	0	0	0	0	
 49070	2	1	40158	1	50	0	0	0	0	0	
-49070	3	1	40200	4	0.200000003	0	0	0	0	0	
-49070	4	1	40370	1	0.00999999978	0	0	0	0	0	
-49070	5	1	40222	1	0.300000012	0	0	0	0	0	
+49070	3	1	40200	4	0.2	0	0	0	0	0	
+49070	4	1	40370	1	0.01	0	0	0	0	0	
+49070	5	1	40222	1	0.3	0	0	0	0	0	
 49070	6	1	40113	1	3	0	0	0	0	0	
-49070	7	1	40459	1	0.0500000007	1	0	0	0	0	
-49070	8	1	40268	1	0.200000003	0	0	0	0	0	
-49070	9	1	40312	1	0.200000003	0	0	0	0	0	
+49070	7	1	40459	1	0.05	1	0	0	0	0	
+49070	8	1	40268	1	0.2	0	0	0	0	0	
+49070	9	1	40312	1	0.2	0	0	0	0	0	
 49070	10	1	40184	1	7	0	0	0	0	0	
-49070	11	1	40362	2	15.9499998	0	0	0	0	0	
+49070	11	1	40362	2	15.95	0	0	0	0	0	
 49070	12	1	41091	1	2	0	0	0	0	0	
-49070	13	1	40232	1	0.200000003	0	0	0	0	0	
-49071	3	1	40371	1	0.600000024	0	0	0	0	0	
-49071	4	1	40372	1	0.300000012	0	0	0	0	0	
+49070	13	1	40232	1	0.2	0	0	0	0	0	
+49071	3	1	40371	1	0.6	0	0	0	0	0	
+49071	4	1	40372	1	0.3	0	0	0	0	0	
 49071	6	1	40364	1	3	0	0	0	0	0	
 49071	7	1	40261	1	2	0	0	0	0	0	
 49071	8	1	40236	1	1	0	0	0	0	0	
-49071	20	1	40432	1	0.200000003	0	0	0	0	0	
-49071	21	1	40433	1	0.200000003	0	0	0	0	0	
-49071	22	1	40434	1	0.200000003	0	0	0	0	0	
-49071	23	1	40435	1	0.200000003	0	0	0	0	0	
-49071	24	1	40436	1	0.200000003	0	0	0	0	0	
+49071	20	1	40432	1	0.2	0	0	0	0	0	
+49071	21	1	40433	1	0.2	0	0	0	0	0	
+49071	22	1	40434	1	0.2	0	0	0	0	0	
+49071	23	1	40435	1	0.2	0	0	0	0	0	
+49071	24	1	40436	1	0.2	0	0	0	0	0	
 49071	25	1	41091	1	1	0	0	0	0	0	
 49071	26	1	41092	1	1	0	0	0	0	0	
 49071	27	1	41093	3	2	0	0	0	0	0	
 49071	28	1	40368	1	1.5	0	0	0	0	0	
 49071	29	1	40369	1	0.5	0	0	0	0	0	
-49071	33	1	34432	1	0.100000001	0	0	0	0	0	
-49071	34	1	34433	1	0.100000001	0	0	0	0	0	
-49071	35	1	34434	1	0.100000001	0	0	0	0	0	
-49071	36	1	34435	1	0.100000001	0	0	0	0	0	
+49071	33	1	34432	1	0.1	0	0	0	0	0	
+49071	34	1	34433	1	0.1	0	0	0	0	0	
+49071	35	1	34434	1	0.1	0	0	0	0	0	
+49071	36	1	34435	1	0.1	0	0	0	0	0	
 49071	37	1	34426	1	3	0	0	0	0	0	
-49071	42	1	33519	1	0.0500000007	0	0	0	0	0	
-49071	43	1	33520	1	0.0500000007	0	0	0	0	0	
-49071	44	1	33483	1	0.699999988	0	0	0	0	0	
-49071	13	1	40425	1	0.200000003	0	0	0	0	0	
-49071	14	1	40426	1	0.200000003	0	0	0	0	0	
-49071	19	1	40431	1	0.200000003	0	0	0	0	0	
-49071	49	1	33488	1	0.699999988	0	0	0	0	0	
-49071	50	1	33489	1	0.699999988	0	0	0	0	0	
-49071	53	1	33492	1	0.699999988	0	0	0	0	0	
-49071	54	1	40273	1	0.100000001	0	0	0	0	0	
+49071	42	1	33519	1	0.05	0	0	0	0	0	
+49071	43	1	33520	1	0.05	0	0	0	0	0	
+49071	44	1	33483	1	0.7	0	0	0	0	0	
+49071	13	1	40425	1	0.2	0	0	0	0	0	
+49071	14	1	40426	1	0.2	0	0	0	0	0	
+49071	19	1	40431	1	0.2	0	0	0	0	0	
+49071	49	1	33488	1	0.7	0	0	0	0	0	
+49071	50	1	33489	1	0.7	0	0	0	0	0	
+49071	53	1	33492	1	0.7	0	0	0	0	0	
+49071	54	1	40273	1	0.1	0	0	0	0	0	
 49071	56	1	40516	1	1	0	0	0	0	0	
 49071	57	1	40514	1	2.5	0	0	0	0	0	
 49071	58	1	40515	1	10	0	0	0	0	0	
 49071	59	1	40023	4	2	0	0	0	0	0	
 49071	60	1	40024	2	2	0	0	0	0	0	
 49071	61	1	40025	4	2	0	0	0	0	0	
-49071	2	1	40374	1	0.0199999996	0	0	0	0	0	
+49071	2	1	40374	1	0.02	0	0	0	0	0	
 49071	62	1	40026	2	2	0	0	0	0	0	
 49071	63	1	40027	4	2	0	0	0	0	0	
 49071	64	1	40028	2	2	0	0	0	0	0	
-49071	51	1	33490	1	0.699999988	0	0	0	0	0	
-49071	52	1	33491	1	0.699999988	0	0	0	0	0	
+49071	51	1	33490	1	0.7	0	0	0	0	0	
+49071	52	1	33491	1	0.7	0	0	0	0	0	
 49071	65	1	40029	4	2	0	0	0	0	0	
 49071	66	1	40030	2	2	0	0	0	0	0	
 49071	67	1	40031	4	2	0	0	0	0	0	
 49071	68	1	40032	2	2	0	0	0	0	0	
-49071	9	1	40421	1	0.200000003	0	0	0	0	0	
-49071	10	1	40422	1	0.200000003	0	0	0	0	0	
-49071	11	1	40423	1	0.200000003	0	0	0	0	0	
-49071	12	1	40424	1	0.200000003	0	0	0	0	0	
+49071	9	1	40421	1	0.2	0	0	0	0	0	
+49071	10	1	40422	1	0.2	0	0	0	0	0	
+49071	11	1	40423	1	0.2	0	0	0	0	0	
+49071	12	1	40424	1	0.2	0	0	0	0	0	
 49071	69	1	40209	2	2	0	0	0	0	0	
 49071	70	1	40210	1	2	0	0	0	0	0	
-49071	71	1	40211	2	2.29999995	0	0	0	0	0	
-49071	30	1	40370	1	0.00999999978	0	0	0	0	0	
-49071	31	1	34430	1	0.100000001	0	0	0	0	0	
-49071	32	1	34431	1	0.100000001	0	0	0	0	0	
+49071	71	1	40211	2	2.3	0	0	0	0	0	
+49071	30	1	40370	1	0.01	0	0	0	0	0	
+49071	31	1	34430	1	0.1	0	0	0	0	0	
+49071	32	1	34431	1	0.1	0	0	0	0	0	
 49071	72	1	40212	1	2	0	0	0	0	0	
-49071	38	1	33515	1	0.0500000007	0	0	0	0	0	
-49071	39	1	33516	1	0.0500000007	0	0	0	0	0	
-49071	40	1	33517	1	0.0500000007	0	0	0	0	0	
-49071	41	1	33518	1	0.0500000007	0	0	0	0	0	
+49071	38	1	33515	1	0.05	0	0	0	0	0	
+49071	39	1	33516	1	0.05	0	0	0	0	0	
+49071	40	1	33517	1	0.05	0	0	0	0	0	
+49071	41	1	33518	1	0.05	0	0	0	0	0	
 49071	73	1	40213	2	2	0	0	0	0	0	
-49071	45	1	33484	1	0.699999988	0	0	0	0	0	
-49071	48	1	33487	1	0.699999988	0	0	0	0	0	
+49071	45	1	33484	1	0.7	0	0	0	0	0	
+49071	48	1	33487	1	0.7	0	0	0	0	0	
 49071	74	1	40214	1	2	0	0	0	0	0	
 49071	75	1	40215	2	2	0	0	0	0	0	
 49071	76	1	40216	1	2	0	0	0	0	0	
-49071	15	1	40427	1	0.200000003	0	0	0	0	0	
-49071	16	1	40428	1	0.200000003	0	0	0	0	0	
-49071	17	1	40429	1	0.200000003	0	0	0	0	0	
-49071	18	1	40430	1	0.200000003	0	0	0	0	0	
+49071	15	1	40427	1	0.2	0	0	0	0	0	
+49071	16	1	40428	1	0.2	0	0	0	0	0	
+49071	17	1	40429	1	0.2	0	0	0	0	0	
+49071	18	1	40430	1	0.2	0	0	0	0	0	
 49071	77	1	40217	2	2	0	0	0	0	0	
-49071	1	1	40373	1	0.100000001	0	0	0	0	0	
+49071	1	1	40373	1	0.1	0	0	0	0	0	
 49071	78	1	40218	1	2	0	0	0	0	0	
 49071	5	1	40363	1	3	0	0	0	0	0	
 49071	80	1	40033	160	1	0	0	0	0	0	
@@ -1674,7 +1769,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49071	86	1	40039	120	1	0	0	0	0	0	
 49071	87	1	40104	95	2	0	0	0	0	0	
 49071	88	1	40105	80	2	0	0	0	0	0	
-49071	89	1	40106	70	2.36999989	0	0	0	0	0	
+49071	89	1	40106	70	2.37	0	0	0	0	0	
 49073	1	1	34994	1	100	0	0	0	0	0	
 49073	2	2	34928	40	100	0	0	0	0	0	
 49074	1	1	34995	1	100	0	0	0	0	0	
@@ -1713,7 +1808,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49090	2	2	34928	30	100	0	0	0	0	0	
 49091	1	1	34989	1	100	0	0	0	0	0	
 49091	2	2	34928	30	100	0	0	0	0	0	
-49092	1	1	34983	1	0.300000012	1	0	0	0	0	
+49092	1	1	34983	1	0.3	1	0	0	0	0	
 49092	2	1	34988	1	1	1	0	0	0	0	
 49092	3	1	35006	1	1	0	0	0	0	0	
 49092	4	1	35011	1	3	0	0	0	0	0	
@@ -1732,14 +1827,14 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49092	27	1	40218	2	2	0	0	0	0	0	
 49092	28	1	40113	1	4	0	0	0	0	0	
 49092	29	1	40273	1	0.5	0	0	0	0	0	
-49092	30	1	40274	1	0.200000003	0	0	0	0	0	
-49092	31	1	40350	1	0.300000012	0	0	0	0	0	
+49092	30	1	40274	1	0.2	0	0	0	0	0	
+49092	31	1	40350	1	0.3	0	0	0	0	0	
 49092	32	1	40156	4	10	0	0	0	0	0	
 49092	33	1	40157	2	10	0	0	0	0	0	
 49092	34	1	40158	1	5	0	0	0	0	0	
 49092	35	1	40181	3	3	0	0	0	0	0	
 49092	36	1	40182	1	3	0	0	0	0	0	
-49092	37	1	41088	45	11.6999998	0	0	0	0	0	
+49092	37	1	41088	45	11.7	0	0	0	0	0	
 49092	38	1	40122	10	5	0	0	0	0	0	
 49092	39	1	40362	2	5	0	0	0	0	0	
 49092	40	1	40034	160	0.5	0	0	0	0	0	
@@ -1750,7 +1845,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49092	45	1	40104	95	0.5	0	0	0	0	0	
 49092	46	1	40105	80	0.5	0	0	0	0	0	
 49092	47	1	40106	70	0.5	0	0	0	0	0	
-49093	1	1	34981	1	0.600000024	1	0	0	0	0	
+49093	1	1	34981	1	0.6	1	0	0	0	0	
 49093	2	1	34986	1	1.5	1	0	0	0	0	
 49093	3	1	34990	1	1	1	0	0	0	0	
 49093	4	1	34992	1	1	1	0	0	0	0	
@@ -1773,14 +1868,14 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49093	21	1	40218	2	2	0	0	0	0	0	
 49093	22	1	40113	1	4	0	0	0	0	0	
 49093	23	1	40273	1	0.5	0	0	0	0	0	
-49093	24	1	40274	1	0.200000003	0	0	0	0	0	
-49093	25	1	40350	1	0.300000012	0	0	0	0	0	
+49093	24	1	40274	1	0.2	0	0	0	0	0	
+49093	25	1	40350	1	0.3	0	0	0	0	0	
 49093	26	1	40156	4	10	0	0	0	0	0	
 49093	27	1	40157	2	10	0	0	0	0	0	
 49093	28	1	40158	1	5	0	0	0	0	0	
 49093	29	1	40181	3	3	0	0	0	0	0	
 49093	30	1	40182	1	3	0	0	0	0	0	
-49093	31	1	41088	45	5.9000001	0	0	0	0	0	
+49093	31	1	41088	45	5.9	0	0	0	0	0	
 49093	32	1	40122	10	5	0	0	0	0	0	
 49093	33	1	40362	2	5	0	0	0	0	0	
 49093	34	1	40034	160	0.5	0	0	0	0	0	
@@ -1799,10 +1894,10 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49095	6	1	34942	1	3	0	0	0	0	0	
 49095	7	1	40368	1	2	0	0	0	0	0	
 49095	8	1	40369	1	1	0	0	0	0	0	
-49095	9	1	40370	1	0.0500000007	0	0	0	0	0	
+49095	9	1	40370	1	0.05	0	0	0	0	0	
 49095	10	1	34426	1	12	0	0	0	0	0	
-49095	11	1	33515	1	0.100000001	0	0	0	0	0	
-49095	12	1	33518	1	0.100000001	0	0	0	0	0	
+49095	11	1	33515	1	0.1	0	0	0	0	0	
+49095	12	1	33518	1	0.1	0	0	0	0	0	
 49095	13	1	34396	1	1	0	0	0	0	0	
 49095	14	1	34397	1	1	0	0	0	0	0	
 49095	15	1	34398	1	1	0	0	0	0	0	
@@ -1810,12 +1905,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49095	17	1	34400	1	1	0	0	0	0	0	
 49095	18	1	34401	1	1	0	0	0	0	0	
 49095	19	1	34402	1	1	0	0	0	0	0	
-49095	20	1	34427	1	0.100000001	0	0	0	0	0	
-49095	21	1	34428	1	0.100000001	0	0	0	0	0	
-49095	22	1	34429	1	0.100000001	0	0	0	0	0	
-49095	23	1	31510	30	0.100000001	0	0	0	0	0	
-49095	24	1	31511	30	0.100000001	0	0	0	0	0	
-49095	25	1	31512	30	0.100000001	0	0	0	0	0	
+49095	20	1	34427	1	0.1	0	0	0	0	0	
+49095	21	1	34428	1	0.1	0	0	0	0	0	
+49095	22	1	34429	1	0.1	0	0	0	0	0	
+49095	23	1	31510	30	0.1	0	0	0	0	0	
+49095	24	1	31511	30	0.1	0	0	0	0	0	
+49095	25	1	31512	30	0.1	0	0	0	0	0	
 49095	26	1	31601	30	0.5	0	0	0	0	0	
 49095	27	1	31602	30	0.5	0	0	0	0	0	
 49095	28	1	31603	30	1	0	0	0	0	0	
@@ -1843,7 +1938,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49095	50	1	40216	1	1	0	0	0	0	0	
 49095	51	1	40217	2	1	0	0	0	0	0	
 49095	52	1	40218	1	1	0	0	0	0	0	
-49095	53	1	34279	4	11.6499996	0	0	0	0	0	
+49095	53	1	34279	4	11.65	0	0	0	0	0	
 49095	54	1	40033	160	1	0	0	0	0	0	
 49095	55	1	40034	160	1	0	0	0	0	0	
 49095	56	1	40035	95	1	0	0	0	0	0	
@@ -1862,22 +1957,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49096	6	1	34942	1	3	0	0	0	0	0	
 49096	7	1	40368	1	2	0	0	0	0	0	
 49096	8	1	40369	1	1	0	0	0	0	0	
-49096	9	1	40370	1	0.0500000007	0	0	0	0	0	
+49096	9	1	40370	1	0.05	0	0	0	0	0	
 49096	10	1	34426	1	12	0	0	0	0	0	
-49096	11	1	33516	1	0.100000001	0	0	0	0	0	
-49096	12	1	33519	1	0.100000001	0	0	0	0	0	
-49096	13	1	34403	1	1.20000005	0	0	0	0	0	
-49096	14	1	34404	1	1.20000005	0	0	0	0	0	
-49096	15	1	34405	1	1.20000005	0	0	0	0	0	
-49096	16	1	34406	1	1.20000005	0	0	0	0	0	
-49096	17	1	34407	1	1.20000005	0	0	0	0	0	
-49096	18	1	34408	1	1.20000005	0	0	0	0	0	
-49096	19	1	34427	1	0.100000001	0	0	0	0	0	
-49096	20	1	34428	1	0.100000001	0	0	0	0	0	
-49096	21	1	34429	1	0.100000001	0	0	0	0	0	
-49096	22	1	31510	30	0.100000001	0	0	0	0	0	
-49096	23	1	31511	30	0.100000001	0	0	0	0	0	
-49096	24	1	31512	30	0.100000001	0	0	0	0	0	
+49096	11	1	33516	1	0.1	0	0	0	0	0	
+49096	12	1	33519	1	0.1	0	0	0	0	0	
+49096	13	1	34403	1	1.2	0	0	0	0	0	
+49096	14	1	34404	1	1.2	0	0	0	0	0	
+49096	15	1	34405	1	1.2	0	0	0	0	0	
+49096	16	1	34406	1	1.2	0	0	0	0	0	
+49096	17	1	34407	1	1.2	0	0	0	0	0	
+49096	18	1	34408	1	1.2	0	0	0	0	0	
+49096	19	1	34427	1	0.1	0	0	0	0	0	
+49096	20	1	34428	1	0.1	0	0	0	0	0	
+49096	21	1	34429	1	0.1	0	0	0	0	0	
+49096	22	1	31510	30	0.1	0	0	0	0	0	
+49096	23	1	31511	30	0.1	0	0	0	0	0	
+49096	24	1	31512	30	0.1	0	0	0	0	0	
 49096	25	1	31601	30	0.5	0	0	0	0	0	
 49096	26	1	31602	30	0.5	0	0	0	0	0	
 49096	27	1	31603	30	1	0	0	0	0	0	
@@ -1905,7 +2000,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49096	49	1	40216	1	1	0	0	0	0	0	
 49096	50	1	40217	2	1	0	0	0	0	0	
 49096	51	1	40218	1	1	0	0	0	0	0	
-49096	52	1	34279	4	11.4499998	0	0	0	0	0	
+49096	52	1	34279	4	11.45	0	0	0	0	0	
 49096	53	1	40033	160	1	0	0	0	0	0	
 49096	54	1	40034	160	1	0	0	0	0	0	
 49096	55	1	40035	95	1	0	0	0	0	0	
@@ -1924,22 +2019,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49097	6	1	34942	1	3	0	0	0	0	0	
 49097	7	1	40368	1	2	0	0	0	0	0	
 49097	8	1	40369	1	1	0	0	0	0	0	
-49097	9	1	40370	1	0.0500000007	0	0	0	0	0	
+49097	9	1	40370	1	0.05	0	0	0	0	0	
 49097	10	1	34426	1	12	0	0	0	0	0	
-49097	11	1	33517	1	0.100000001	0	0	0	0	0	
-49097	12	1	33520	1	0.100000001	0	0	0	0	0	
-49097	13	1	34410	1	1.20000005	0	0	0	0	0	
-49097	14	1	34411	1	1.20000005	0	0	0	0	0	
-49097	15	1	34413	1	1.20000005	0	0	0	0	0	
-49097	16	1	34414	1	1.20000005	0	0	0	0	0	
-49097	17	1	34412	1	1.20000005	0	0	0	0	0	
-49097	18	1	34415	1	1.20000005	0	0	0	0	0	
-49097	19	1	34427	1	0.100000001	0	0	0	0	0	
-49097	20	1	34428	1	0.100000001	0	0	0	0	0	
-49097	21	1	34429	1	0.100000001	0	0	0	0	0	
-49097	22	1	31510	30	0.100000001	0	0	0	0	0	
-49097	23	1	31511	30	0.100000001	0	0	0	0	0	
-49097	24	1	31512	30	0.100000001	0	0	0	0	0	
+49097	11	1	33517	1	0.1	0	0	0	0	0	
+49097	12	1	33520	1	0.1	0	0	0	0	0	
+49097	13	1	34410	1	1.2	0	0	0	0	0	
+49097	14	1	34411	1	1.2	0	0	0	0	0	
+49097	15	1	34413	1	1.2	0	0	0	0	0	
+49097	16	1	34414	1	1.2	0	0	0	0	0	
+49097	17	1	34412	1	1.2	0	0	0	0	0	
+49097	18	1	34415	1	1.2	0	0	0	0	0	
+49097	19	1	34427	1	0.1	0	0	0	0	0	
+49097	20	1	34428	1	0.1	0	0	0	0	0	
+49097	21	1	34429	1	0.1	0	0	0	0	0	
+49097	22	1	31510	30	0.1	0	0	0	0	0	
+49097	23	1	31511	30	0.1	0	0	0	0	0	
+49097	24	1	31512	30	0.1	0	0	0	0	0	
 49097	25	1	31601	30	0.5	0	0	0	0	0	
 49097	26	1	31602	30	0.5	0	0	0	0	0	
 49097	27	1	31603	30	1	0	0	0	0	0	
@@ -1967,7 +2062,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49097	49	1	40216	1	1	0	0	0	0	0	
 49097	50	1	40217	2	1	0	0	0	0	0	
 49097	51	1	40218	1	1	0	0	0	0	0	
-49097	52	1	34279	4	11.4499998	0	0	0	0	0	
+49097	52	1	34279	4	11.45	0	0	0	0	0	
 49097	53	1	40033	160	1	0	0	0	0	0	
 49097	54	1	40034	160	1	0	0	0	0	0	
 49097	55	1	40035	95	1	0	0	0	0	0	
@@ -2065,36 +2160,36 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49099	42	1	40183	40	1	0	0	0	0	0	
 49100	1	1	40538	1	100	0	0	0	0	0	
 49100	2	2	40539	20	100	0	0	0	0	0	
-49103	1	1	34148	1	0.00999999978	1	0	0	0	0	
-49103	2	1	34149	1	0.00499999989	1	0	0	0	0	
-49103	3	1	40373	1	0.00999999978	1	0	0	0	0	
-49103	4	1	40374	1	0.00499999989	1	0	0	0	0	
-49103	5	1	40459	1	0.00999999978	1	0	0	0	0	
-49103	6	1	40460	1	0.00499999989	1	0	0	0	0	
-49103	7	1	40461	1	0.00999999978	1	0	0	0	0	
-49103	8	1	40462	1	0.00499999989	1	0	0	0	0	
-49103	9	1	40463	1	0.00999999978	1	0	0	0	0	
-49103	10	1	40464	1	0.00499999989	1	0	0	0	0	
+49103	1	1	34148	1	0.01	1	0	0	0	0	
+49103	2	1	34149	1	0.005	1	0	0	0	0	
+49103	3	1	40373	1	0.01	1	0	0	0	0	
+49103	4	1	40374	1	0.005	1	0	0	0	0	
+49103	5	1	40459	1	0.01	1	0	0	0	0	
+49103	6	1	40460	1	0.005	1	0	0	0	0	
+49103	7	1	40461	1	0.01	1	0	0	0	0	
+49103	8	1	40462	1	0.005	1	0	0	0	0	
+49103	9	1	40463	1	0.01	1	0	0	0	0	
+49103	10	1	40464	1	0.005	1	0	0	0	0	
 49103	11	1	34937	2	3	0	0	0	0	0	
 49103	12	1	34938	2	3	0	0	0	0	0	
 49103	13	1	34939	2	3	0	0	0	0	0	
 49103	14	1	34940	2	3	0	0	0	0	0	
 49103	15	1	34941	2	3	0	0	0	0	0	
 49103	16	1	34942	2	3	0	0	0	0	0	
-49103	17	1	34943	1	0.300000012	0	0	0	0	0	
-49103	18	1	34944	1	0.300000012	0	0	0	0	0	
-49103	19	1	34945	1	0.300000012	0	0	0	0	0	
-49103	20	1	34946	1	0.300000012	0	0	0	0	0	
-49103	21	1	34947	1	0.200000003	0	0	0	0	0	
-49103	22	1	34948	1	0.200000003	0	0	0	0	0	
-49103	23	1	34949	1	0.200000003	0	0	0	0	0	
-49103	24	1	34950	1	0.200000003	0	0	0	0	0	
-49103	25	1	34951	1	0.100000001	0	0	0	0	0	
-49103	26	1	34952	1	0.100000001	0	0	0	0	0	
-49103	27	1	34953	1	0.100000001	0	0	0	0	0	
-49103	28	1	34954	1	0.100000001	0	0	0	0	0	
-49103	29	1	34932	1	0.0199999996	1	0	0	0	0	
-49103	30	1	34933	1	0.00999999978	1	0	0	0	0	
+49103	17	1	34943	1	0.3	0	0	0	0	0	
+49103	18	1	34944	1	0.3	0	0	0	0	0	
+49103	19	1	34945	1	0.3	0	0	0	0	0	
+49103	20	1	34946	1	0.3	0	0	0	0	0	
+49103	21	1	34947	1	0.2	0	0	0	0	0	
+49103	22	1	34948	1	0.2	0	0	0	0	0	
+49103	23	1	34949	1	0.2	0	0	0	0	0	
+49103	24	1	34950	1	0.2	0	0	0	0	0	
+49103	25	1	34951	1	0.1	0	0	0	0	0	
+49103	26	1	34952	1	0.1	0	0	0	0	0	
+49103	27	1	34953	1	0.1	0	0	0	0	0	
+49103	28	1	34954	1	0.1	0	0	0	0	0	
+49103	29	1	34932	1	0.02	1	0	0	0	0	
+49103	30	1	34933	1	0.01	1	0	0	0	0	
 49103	31	1	31969	3	3	0	0	0	0	0	
 49103	32	1	31970	3	3	0	0	0	0	0	
 49103	33	1	31971	3	3	0	0	0	0	0	
@@ -2105,34 +2200,34 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49103	38	1	31976	3	3	0	0	0	0	0	
 49103	39	1	31977	3	3	0	0	0	0	0	
 49103	40	1	31978	3	3	0	0	0	0	0	
-49103	41	1	34396	1	0.400000006	0	0	0	0	0	
-49103	42	1	34397	1	0.400000006	0	0	0	0	0	
-49103	43	1	34398	1	0.400000006	0	0	0	0	0	
-49103	44	1	34399	1	0.400000006	0	0	0	0	0	
-49103	45	1	34400	1	0.400000006	0	0	0	0	0	
-49103	46	1	34401	1	0.400000006	0	0	0	0	0	
-49103	47	1	34402	1	0.400000006	0	0	0	0	0	
-49103	48	1	34403	1	0.400000006	0	0	0	0	0	
-49103	49	1	34404	1	0.400000006	0	0	0	0	0	
-49103	50	1	34405	1	0.400000006	0	0	0	0	0	
-49103	51	1	34406	1	0.400000006	0	0	0	0	0	
-49103	52	1	34407	1	0.400000006	0	0	0	0	0	
-49103	53	1	34408	1	0.400000006	0	0	0	0	0	
-49103	54	1	34410	1	0.400000006	0	0	0	0	0	
-49103	55	1	34411	1	0.400000006	0	0	0	0	0	
-49103	56	1	34412	1	0.400000006	0	0	0	0	0	
-49103	57	1	34413	1	0.400000006	0	0	0	0	0	
-49103	58	1	34414	1	0.400000006	0	0	0	0	0	
-49103	59	1	34415	1	0.400000006	0	0	0	0	0	
+49103	41	1	34396	1	0.4	0	0	0	0	0	
+49103	42	1	34397	1	0.4	0	0	0	0	0	
+49103	43	1	34398	1	0.4	0	0	0	0	0	
+49103	44	1	34399	1	0.4	0	0	0	0	0	
+49103	45	1	34400	1	0.4	0	0	0	0	0	
+49103	46	1	34401	1	0.4	0	0	0	0	0	
+49103	47	1	34402	1	0.4	0	0	0	0	0	
+49103	48	1	34403	1	0.4	0	0	0	0	0	
+49103	49	1	34404	1	0.4	0	0	0	0	0	
+49103	50	1	34405	1	0.4	0	0	0	0	0	
+49103	51	1	34406	1	0.4	0	0	0	0	0	
+49103	52	1	34407	1	0.4	0	0	0	0	0	
+49103	53	1	34408	1	0.4	0	0	0	0	0	
+49103	54	1	34410	1	0.4	0	0	0	0	0	
+49103	55	1	34411	1	0.4	0	0	0	0	0	
+49103	56	1	34412	1	0.4	0	0	0	0	0	
+49103	57	1	34413	1	0.4	0	0	0	0	0	
+49103	58	1	34414	1	0.4	0	0	0	0	0	
+49103	59	1	34415	1	0.4	0	0	0	0	0	
 49103	60	1	34886	2	5	0	0	0	0	0	
 49103	61	1	34887	2	5	0	0	0	0	0	
 49103	62	1	34888	2	2	0	0	0	0	0	
 49103	63	1	34889	2	2	0	0	0	0	0	
 49103	64	1	34426	2	3	0	0	0	0	0	
-49103	65	1	34427	1	0.100000001	0	0	0	0	0	
-49103	66	1	34428	1	0.100000001	0	0	0	0	0	
-49103	67	1	34429	1	0.100000001	0	0	0	0	0	
-49103	68	1	34279	4	14.5950003	0	0	0	0	0	
+49103	65	1	34427	1	0.1	0	0	0	0	0	
+49103	66	1	34428	1	0.1	0	0	0	0	0	
+49103	67	1	34429	1	0.1	0	0	0	0	0	
+49103	68	1	34279	4	14.595	0	0	0	0	0	
 49103	69	1	40292	3	2	0	0	0	0	0	
 49103	70	1	40293	3	2	0	0	0	0	0	
 49103	71	1	40294	3	2	0	0	0	0	0	
@@ -2179,8 +2274,8 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49105	13	1	40225	1	3	0	0	0	0	0	
 49105	14	1	40312	1	1	0	0	0	0	0	
 49105	15	1	40372	1	0.5	0	0	0	0	0	
-49105	16	1	40336	1	0.300000012	1	0	0	0	0	
-49105	17	1	40511	1	0.200000003	1	0	0	0	0	
+49105	16	1	40336	1	0.3	1	0	0	0	0	
+49105	17	1	40511	1	0.2	1	0	0	0	0	
 49106	1	1	34994	1	100	0	0	0	0	0	
 49106	2	2	34928	26	100	0	0	0	0	0	
 49107	1	1	34995	1	100	0	0	0	0	0	
@@ -2320,9 +2415,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49102	2	1	40544	1	1.5	0	0	0	0	0	
 49102	3	1	40545	1	1	0	0	0	0	0	
 49102	4	1	40546	1	0.5	1	0	0	0	0	
-49102	5	1	40368	1	0.800000012	0	0	0	0	0	
-49102	6	1	40369	1	0.200000003	0	0	0	0	0	
-49102	7	1	40370	1	0.0500000007	1	0	0	0	0	
+49102	5	1	40368	1	0.8	0	0	0	0	0	
+49102	6	1	40369	1	0.2	0	0	0	0	0	
+49102	7	1	40370	1	0.05	1	0	0	0	0	
 49102	8	1	40156	3	3	0	0	0	0	0	
 49102	9	1	40157	1	3	0	0	0	0	0	
 49102	10	1	40158	1	2	0	0	0	0	0	
@@ -2365,29 +2460,29 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49102	47	1	35747	7	1.5	0	0	0	0	0	
 49102	48	1	35748	7	1.5	0	0	0	0	0	
 49102	49	1	35749	7	1.5	0	0	0	0	0	
-49102	50	1	34396	1	0.400000006	0	0	0	0	0	
-49102	51	1	34397	1	0.400000006	0	0	0	0	0	
-49102	52	1	34398	1	0.400000006	0	0	0	0	0	
-49102	53	1	34399	1	0.400000006	0	0	0	0	0	
-49102	54	1	34400	1	0.400000006	0	0	0	0	0	
-49102	55	1	34401	1	0.400000006	0	0	0	0	0	
-49102	56	1	34402	1	0.400000006	0	0	0	0	0	
-49102	57	1	34403	1	0.400000006	0	0	0	0	0	
-49102	58	1	34404	1	0.400000006	0	0	0	0	0	
-49102	59	1	34405	1	0.400000006	0	0	0	0	0	
-49102	60	1	34406	1	0.400000006	0	0	0	0	0	
-49102	61	1	34407	1	0.400000006	0	0	0	0	0	
-49102	62	1	34408	1	0.400000006	0	0	0	0	0	
-49102	63	1	34410	1	0.400000006	0	0	0	0	0	
-49102	64	1	34411	1	0.400000006	0	0	0	0	0	
-49102	65	1	34412	1	0.400000006	0	0	0	0	0	
-49102	66	1	34413	1	0.400000006	0	0	0	0	0	
-49102	67	1	34414	1	0.400000006	0	0	0	0	0	
-49102	68	1	34415	1	0.400000006	0	0	0	0	0	
+49102	50	1	34396	1	0.4	0	0	0	0	0	
+49102	51	1	34397	1	0.4	0	0	0	0	0	
+49102	52	1	34398	1	0.4	0	0	0	0	0	
+49102	53	1	34399	1	0.4	0	0	0	0	0	
+49102	54	1	34400	1	0.4	0	0	0	0	0	
+49102	55	1	34401	1	0.4	0	0	0	0	0	
+49102	56	1	34402	1	0.4	0	0	0	0	0	
+49102	57	1	34403	1	0.4	0	0	0	0	0	
+49102	58	1	34404	1	0.4	0	0	0	0	0	
+49102	59	1	34405	1	0.4	0	0	0	0	0	
+49102	60	1	34406	1	0.4	0	0	0	0	0	
+49102	61	1	34407	1	0.4	0	0	0	0	0	
+49102	62	1	34408	1	0.4	0	0	0	0	0	
+49102	63	1	34410	1	0.4	0	0	0	0	0	
+49102	64	1	34411	1	0.4	0	0	0	0	0	
+49102	65	1	34412	1	0.4	0	0	0	0	0	
+49102	66	1	34413	1	0.4	0	0	0	0	0	
+49102	67	1	34414	1	0.4	0	0	0	0	0	
+49102	68	1	34415	1	0.4	0	0	0	0	0	
 49102	69	1	34937	2	2	0	0	0	0	0	
 49102	70	1	34938	2	1	0	0	0	0	0	
 49102	71	1	34939	2	1	0	0	0	0	0	
-49102	72	1	34940	2	1.35000002	0	0	0	0	0	
+49102	72	1	34940	2	1.35	0	0	0	0	0	
 49102	73	1	34941	2	1	0	0	0	0	0	
 49102	74	1	34942	2	1	0	0	0	0	0	
 49102	75	1	34943	1	1	0	0	0	0	0	
@@ -2480,12 +2575,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49139	23	1	35477	1	5	0	0	0	0	0	
 49139	24	1	35478	1	3.5	0	0	0	0	0	
 49139	25	1	35479	1	3.5	0	0	0	0	0	
-49142	1	1	40195	1	0.300000012	1	0	0	0	0	
+49142	1	1	40195	1	0.3	1	0	0	0	0	
 49142	2	1	40198	1	2	0	0	0	0	0	
 49142	3	1	40488	1	1	1	0	0	0	0	
 49142	4	1	40662	1	3	0	0	0	0	0	
 49142	5	1	40665	1	0.5	1	0	0	0	0	
-49142	6	1	40666	1	2.20000005	0	0	0	0	0	
+49142	6	1	40666	1	2.2	0	0	0	0	0	
 49142	7	1	40638	1	1.5	0	0	0	0	0	
 49142	8	1	40639	1	1.5	0	0	0	0	0	
 49142	9	1	40640	1	1.5	0	0	0	0	0	
@@ -2608,26 +2703,26 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49155	32	1	40192	11	2	0	0	0	0	0	
 49155	33	1	40193	11	2	0	0	0	0	0	
 49155	34	1	40183	22	5	0	0	0	0	0	
-49156	1	1	40159	1	0.300000012	0	0	0	0	0	
-49156	2	1	40160	1	0.300000012	0	0	0	0	0	
-49156	3	1	40161	1	0.300000012	0	0	0	0	0	
-49156	4	1	40162	1	0.300000012	0	0	0	0	0	
-49156	5	1	40163	1	0.300000012	0	0	0	0	0	
-49156	6	1	40164	1	0.300000012	0	0	0	0	0	
-49156	7	1	40165	1	0.300000012	0	0	0	0	0	
-49156	8	1	40166	1	0.300000012	0	0	0	0	0	
-49156	9	1	40167	1	0.300000012	0	0	0	0	0	
-49156	10	1	40168	1	0.300000012	0	0	0	0	0	
-49156	11	1	40223	1	0.300000012	0	0	0	0	0	
-49156	12	1	40224	1	0.300000012	0	0	0	0	0	
-49156	13	1	40225	1	0.300000012	0	0	0	0	0	
-49156	14	1	40226	1	0.300000012	0	0	0	0	0	
-49156	15	1	40227	1	0.300000012	0	0	0	0	0	
-49156	16	1	40228	1	0.300000012	0	0	0	0	0	
-49156	17	1	40229	1	0.300000012	0	0	0	0	0	
-49156	18	1	40230	1	0.300000012	0	0	0	0	0	
-49156	19	1	40231	1	0.300000012	0	0	0	0	0	
-49156	20	1	40247	1	0.300000012	0	0	0	0	0	
+49156	1	1	40159	1	0.3	0	0	0	0	0	
+49156	2	1	40160	1	0.3	0	0	0	0	0	
+49156	3	1	40161	1	0.3	0	0	0	0	0	
+49156	4	1	40162	1	0.3	0	0	0	0	0	
+49156	5	1	40163	1	0.3	0	0	0	0	0	
+49156	6	1	40164	1	0.3	0	0	0	0	0	
+49156	7	1	40165	1	0.3	0	0	0	0	0	
+49156	8	1	40166	1	0.3	0	0	0	0	0	
+49156	9	1	40167	1	0.3	0	0	0	0	0	
+49156	10	1	40168	1	0.3	0	0	0	0	0	
+49156	11	1	40223	1	0.3	0	0	0	0	0	
+49156	12	1	40224	1	0.3	0	0	0	0	0	
+49156	13	1	40225	1	0.3	0	0	0	0	0	
+49156	14	1	40226	1	0.3	0	0	0	0	0	
+49156	15	1	40227	1	0.3	0	0	0	0	0	
+49156	16	1	40228	1	0.3	0	0	0	0	0	
+49156	17	1	40229	1	0.3	0	0	0	0	0	
+49156	18	1	40230	1	0.3	0	0	0	0	0	
+49156	19	1	40231	1	0.3	0	0	0	0	0	
+49156	20	1	40247	1	0.3	0	0	0	0	0	
 49156	21	1	40170	1	1.5	0	0	0	0	0	
 49156	22	1	40171	1	1.5	0	0	0	0	0	
 49156	23	1	40172	1	1.5	0	0	0	0	0	
@@ -2647,14 +2742,14 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49156	37	1	40254	1	1.5	0	0	0	0	0	
 49156	38	1	40255	1	1.5	0	0	0	0	0	
 49156	39	1	40256	1	1.5	0	0	0	0	0	
-49156	40	1	40327	1	0.300000012	0	0	0	0	0	
-49156	41	1	40328	1	0.300000012	0	0	0	0	0	
-49156	42	1	40329	1	0.300000012	0	0	0	0	0	
+49156	40	1	40327	1	0.3	0	0	0	0	0	
+49156	41	1	40328	1	0.3	0	0	0	0	0	
+49156	42	1	40329	1	0.3	0	0	0	0	0	
 49156	43	1	40330	1	1.5	0	0	0	0	0	
 49156	44	1	40344	1	1.5	0	0	0	0	0	
 49156	45	1	40346	1	2	0	0	0	0	0	
-49156	46	1	40438	1	1.20000005	0	0	0	0	0	
-49156	47	1	40362	2	28.3999996	0	0	0	0	0	
+49156	46	1	40438	1	1.2	0	0	0	0	0	
+49156	47	1	40362	2	28.4	0	0	0	0	0	
 49156	48	1	40033	160	3	0	0	0	0	0	
 49156	49	1	40034	160	3	0	0	0	0	0	
 49156	50	1	40035	95	3	0	0	0	0	0	
@@ -2665,15 +2760,15 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49156	55	1	40104	95	3	0	0	0	0	0	
 49156	56	1	40105	80	3	0	0	0	0	0	
 49156	57	1	40106	70	3	0	0	0	0	0	
-49157	1	1	40194	1	0.150000006	1	0	0	0	0	
-49157	2	1	40375	1	0.150000006	1	0	0	0	0	
-49157	3	1	40195	1	0.150000006	1	0	0	0	0	
-49157	4	1	40196	1	0.150000006	1	0	0	0	0	
-49157	5	1	40232	1	0.150000006	1	0	0	0	0	
-49157	6	1	40233	1	0.150000006	1	0	0	0	0	
-49157	7	1	40347	1	0.150000006	1	0	0	0	0	
-49157	8	1	40400	1	0.150000006	1	0	0	0	0	
-49157	9	1	40437	1	0.150000006	1	0	0	0	0	
+49157	1	1	40194	1	0.15	1	0	0	0	0	
+49157	2	1	40375	1	0.15	1	0	0	0	0	
+49157	3	1	40195	1	0.15	1	0	0	0	0	
+49157	4	1	40196	1	0.15	1	0	0	0	0	
+49157	5	1	40232	1	0.15	1	0	0	0	0	
+49157	6	1	40233	1	0.15	1	0	0	0	0	
+49157	7	1	40347	1	0.15	1	0	0	0	0	
+49157	8	1	40400	1	0.15	1	0	0	0	0	
+49157	9	1	40437	1	0.15	1	0	0	0	0	
 49157	10	1	40490	1	2	0	0	0	0	0	
 49157	11	1	40197	1	3	0	0	0	0	0	
 49157	12	1	40198	1	3	0	0	0	0	0	
@@ -2683,13 +2778,13 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49157	16	1	40345	1	3	0	0	0	0	0	
 49157	17	1	40403	1	3	0	0	0	0	0	
 49157	18	1	40441	1	3	0	0	0	0	0	
-49157	19	1	40362	2	52.7999992	0	0	0	0	0	
+49157	19	1	40362	2	52.8	0	0	0	0	0	
 49157	20	1	40033	160	2	0	0	0	0	0	
 49157	21	1	40034	160	2	0	0	0	0	0	
 49157	22	1	40035	95	2	0	0	0	0	0	
 49157	23	1	40036	80	2	0	0	0	0	0	
 49157	24	1	40037	70	2	0	0	0	0	0	
-49157	25	1	40038	160	1.85000002	0	0	0	0	0	
+49157	25	1	40038	160	1.85	0	0	0	0	0	
 49157	26	1	40039	120	2	0	0	0	0	0	
 49157	27	1	40104	95	2	0	0	0	0	0	
 49157	28	1	40105	80	2	0	0	0	0	0	
@@ -2770,8 +2865,8 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49160	25	1	40113	1	4	0	0	0	0	0	
 49160	26	1	40222	1	1	0	0	0	0	0	
 49160	27	1	40273	1	0.5	0	0	0	0	0	
-49160	28	1	40274	1	0.200000003	0	0	0	0	0	
-49160	29	1	40350	1	0.300000012	0	0	0	0	0	
+49160	28	1	40274	1	0.2	0	0	0	0	0	
+49160	29	1	40350	1	0.3	0	0	0	0	0	
 49160	30	1	40156	4	10	0	0	0	0	0	
 49160	31	1	40157	2	10	0	0	0	0	0	
 49160	32	1	40158	1	5	0	0	0	0	0	
@@ -2790,14 +2885,14 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49160	45	1	40104	95	0.5	0	0	0	0	0	
 49160	46	1	40105	80	0.5	0	0	0	0	0	
 49160	47	1	40106	70	0.5	0	0	0	0	0	
-49161	1	1	40331	1	0.800000012	1	0	0	0	0	
-49161	2	1	40332	1	0.200000003	1	0	0	0	0	
-49161	3	1	40265	1	0.800000012	1	0	0	0	0	
-49161	4	1	40266	1	0.200000003	1	0	0	0	0	
-49161	5	1	40267	1	0.800000012	1	0	0	0	0	
-49161	6	1	40268	1	0.200000003	1	0	0	0	0	
-49161	7	1	40335	1	0.800000012	1	0	0	0	0	
-49161	8	1	40336	1	0.200000003	1	0	0	0	0	
+49161	1	1	40331	1	0.8	1	0	0	0	0	
+49161	2	1	40332	1	0.2	1	0	0	0	0	
+49161	3	1	40265	1	0.8	1	0	0	0	0	
+49161	4	1	40266	1	0.2	1	0	0	0	0	
+49161	5	1	40267	1	0.8	1	0	0	0	0	
+49161	6	1	40268	1	0.2	1	0	0	0	0	
+49161	7	1	40335	1	0.8	1	0	0	0	0	
+49161	8	1	40336	1	0.2	1	0	0	0	0	
 49161	9	1	40333	1	2	0	0	0	0	0	
 49161	10	1	40334	1	1	0	0	0	0	0	
 49161	11	1	40269	1	2	0	0	0	0	0	
@@ -2825,10 +2920,10 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49162	6	1	34942	1	3	0	0	0	0	0	
 49162	7	1	40368	1	2	0	0	0	0	0	
 49162	8	1	40369	1	1	0	0	0	0	0	
-49162	9	1	40370	1	0.0500000007	0	0	0	0	0	
+49162	9	1	40370	1	0.05	0	0	0	0	0	
 49162	10	1	34426	1	12	0	0	0	0	0	
-49162	11	1	33515	1	0.100000001	0	0	0	0	0	
-49162	12	1	33518	1	0.100000001	0	0	0	0	0	
+49162	11	1	33515	1	0.1	0	0	0	0	0	
+49162	12	1	33518	1	0.1	0	0	0	0	0	
 49162	13	1	34396	1	1	0	0	0	0	0	
 49162	14	1	34397	1	1	0	0	0	0	0	
 49162	15	1	34398	1	1	0	0	0	0	0	
@@ -2836,12 +2931,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49162	17	1	34400	1	1	0	0	0	0	0	
 49162	18	1	34401	1	1	0	0	0	0	0	
 49162	19	1	34402	1	1	0	0	0	0	0	
-49162	20	1	34427	1	0.100000001	0	0	0	0	0	
-49162	21	1	34428	1	0.100000001	0	0	0	0	0	
-49162	22	1	34429	1	0.100000001	0	0	0	0	0	
-49162	23	1	31510	30	0.100000001	0	0	0	0	0	
-49162	24	1	31511	30	0.100000001	0	0	0	0	0	
-49162	25	1	31512	30	0.100000001	0	0	0	0	0	
+49162	20	1	34427	1	0.1	0	0	0	0	0	
+49162	21	1	34428	1	0.1	0	0	0	0	0	
+49162	22	1	34429	1	0.1	0	0	0	0	0	
+49162	23	1	31510	30	0.1	0	0	0	0	0	
+49162	24	1	31511	30	0.1	0	0	0	0	0	
+49162	25	1	31512	30	0.1	0	0	0	0	0	
 49162	26	1	31601	30	0.5	0	0	0	0	0	
 49162	27	1	31602	30	0.5	0	0	0	0	0	
 49162	28	1	31603	30	1	0	0	0	0	0	
@@ -2869,7 +2964,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49162	50	1	40216	1	1	0	0	0	0	0	
 49162	51	1	40217	2	1	0	0	0	0	0	
 49162	52	1	40218	1	1	0	0	0	0	0	
-49162	53	1	34279	4	11.6499996	0	0	0	0	0	
+49162	53	1	34279	4	11.65	0	0	0	0	0	
 49162	54	1	40033	160	1	0	0	0	0	0	
 49162	55	1	40034	160	1	0	0	0	0	0	
 49162	56	1	40035	95	1	0	0	0	0	0	
@@ -2888,22 +2983,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49163	6	1	34942	1	3	0	0	0	0	0	
 49163	7	1	40368	1	2	0	0	0	0	0	
 49163	8	1	40369	1	1	0	0	0	0	0	
-49163	9	1	40370	1	0.0500000007	0	0	0	0	0	
+49163	9	1	40370	1	0.05	0	0	0	0	0	
 49163	10	1	34426	1	12	0	0	0	0	0	
-49163	11	1	33516	1	0.100000001	0	0	0	0	0	
-49163	12	1	33519	1	0.100000001	0	0	0	0	0	
-49163	13	1	34403	1	1.20000005	0	0	0	0	0	
-49163	14	1	34404	1	1.20000005	0	0	0	0	0	
-49163	15	1	34405	1	1.20000005	0	0	0	0	0	
-49163	16	1	34406	1	1.20000005	0	0	0	0	0	
-49163	17	1	34407	1	1.20000005	0	0	0	0	0	
-49163	18	1	34408	1	1.20000005	0	0	0	0	0	
-49163	19	1	34427	1	0.100000001	0	0	0	0	0	
-49163	20	1	34428	1	0.100000001	0	0	0	0	0	
-49163	21	1	34429	1	0.100000001	0	0	0	0	0	
-49163	22	1	31510	30	0.100000001	0	0	0	0	0	
-49163	23	1	31511	30	0.100000001	0	0	0	0	0	
-49163	24	1	31512	30	0.100000001	0	0	0	0	0	
+49163	11	1	33516	1	0.1	0	0	0	0	0	
+49163	12	1	33519	1	0.1	0	0	0	0	0	
+49163	13	1	34403	1	1.2	0	0	0	0	0	
+49163	14	1	34404	1	1.2	0	0	0	0	0	
+49163	15	1	34405	1	1.2	0	0	0	0	0	
+49163	16	1	34406	1	1.2	0	0	0	0	0	
+49163	17	1	34407	1	1.2	0	0	0	0	0	
+49163	18	1	34408	1	1.2	0	0	0	0	0	
+49163	19	1	34427	1	0.1	0	0	0	0	0	
+49163	20	1	34428	1	0.1	0	0	0	0	0	
+49163	21	1	34429	1	0.1	0	0	0	0	0	
+49163	22	1	31510	30	0.1	0	0	0	0	0	
+49163	23	1	31511	30	0.1	0	0	0	0	0	
+49163	24	1	31512	30	0.1	0	0	0	0	0	
 49163	25	1	31601	30	0.5	0	0	0	0	0	
 49163	26	1	31602	30	0.5	0	0	0	0	0	
 49163	27	1	31603	30	1	0	0	0	0	0	
@@ -2931,7 +3026,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49163	49	1	40216	1	1	0	0	0	0	0	
 49163	50	1	40217	2	1	0	0	0	0	0	
 49163	51	1	40218	1	1	0	0	0	0	0	
-49163	52	1	34279	4	11.4499998	0	0	0	0	0	
+49163	52	1	34279	4	11.45	0	0	0	0	0	
 49163	53	1	40033	160	1	0	0	0	0	0	
 49163	54	1	40034	160	1	0	0	0	0	0	
 49163	55	1	40035	95	1	0	0	0	0	0	
@@ -2950,22 +3045,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49164	6	1	34942	1	3	0	0	0	0	0	
 49164	7	1	40368	1	2	0	0	0	0	0	
 49164	8	1	40369	1	1	0	0	0	0	0	
-49164	9	1	40370	1	0.0500000007	0	0	0	0	0	
+49164	9	1	40370	1	0.05	0	0	0	0	0	
 49164	10	1	34426	1	12	0	0	0	0	0	
-49164	11	1	33517	1	0.100000001	0	0	0	0	0	
-49164	12	1	33520	1	0.100000001	0	0	0	0	0	
-49164	13	1	34410	1	1.20000005	0	0	0	0	0	
-49164	14	1	34411	1	1.20000005	0	0	0	0	0	
-49164	15	1	34413	1	1.20000005	0	0	0	0	0	
-49164	16	1	34414	1	1.20000005	0	0	0	0	0	
-49164	17	1	34412	1	1.20000005	0	0	0	0	0	
-49164	18	1	34415	1	1.20000005	0	0	0	0	0	
-49164	19	1	34427	1	0.100000001	0	0	0	0	0	
-49164	20	1	34428	1	0.100000001	0	0	0	0	0	
-49164	21	1	34429	1	0.100000001	0	0	0	0	0	
-49164	22	1	31510	30	0.100000001	0	0	0	0	0	
-49164	23	1	31511	30	0.100000001	0	0	0	0	0	
-49164	24	1	31512	30	0.100000001	0	0	0	0	0	
+49164	11	1	33517	1	0.1	0	0	0	0	0	
+49164	12	1	33520	1	0.1	0	0	0	0	0	
+49164	13	1	34410	1	1.2	0	0	0	0	0	
+49164	14	1	34411	1	1.2	0	0	0	0	0	
+49164	15	1	34413	1	1.2	0	0	0	0	0	
+49164	16	1	34414	1	1.2	0	0	0	0	0	
+49164	17	1	34412	1	1.2	0	0	0	0	0	
+49164	18	1	34415	1	1.2	0	0	0	0	0	
+49164	19	1	34427	1	0.1	0	0	0	0	0	
+49164	20	1	34428	1	0.1	0	0	0	0	0	
+49164	21	1	34429	1	0.1	0	0	0	0	0	
+49164	22	1	31510	30	0.1	0	0	0	0	0	
+49164	23	1	31511	30	0.1	0	0	0	0	0	
+49164	24	1	31512	30	0.1	0	0	0	0	0	
 49164	25	1	31601	30	0.5	0	0	0	0	0	
 49164	26	1	31602	30	0.5	0	0	0	0	0	
 49164	27	1	31603	30	1	0	0	0	0	0	
@@ -2993,7 +3088,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49164	49	1	40216	1	1	0	0	0	0	0	
 49164	50	1	40217	2	1	0	0	0	0	0	
 49164	51	1	40218	1	1	0	0	0	0	0	
-49164	52	1	34279	4	11.4499998	0	0	0	0	0	
+49164	52	1	34279	4	11.45	0	0	0	0	0	
 49164	53	1	40033	160	1	0	0	0	0	0	
 49164	54	1	40034	160	1	0	0	0	0	0	
 49164	55	1	40035	95	1	0	0	0	0	0	
@@ -3004,15 +3099,15 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49164	60	1	40104	95	1	0	0	0	0	0	
 49164	61	1	40105	80	1	0	0	0	0	0	
 49164	62	1	40106	70	1	0	0	0	0	0	
-49165	1	1	40691	1	0.800000012	1	0	0	0	0	
+49165	1	1	40691	1	0.8	1	0	0	0	0	
 49165	2	1	40692	1	0.5	1	0	0	0	0	
 49165	3	1	40693	1	1	1	0	0	0	0	
-49165	4	1	40196	1	0.300000012	1	0	0	0	0	
-49165	5	1	40511	1	0.100000001	1	0	0	0	0	
-49165	6	1	40512	1	0.0199999996	1	0	0	0	0	
+49165	4	1	40196	1	0.3	1	0	0	0	0	
+49165	5	1	40511	1	0.1	1	0	0	0	0	
+49165	6	1	40512	1	0.02	1	0	0	0	0	
 49165	7	1	40694	1	3	0	0	0	0	0	
 49165	8	1	40199	1	2.5	0	0	0	0	0	
-49165	9	1	40157	2	8.39999962	0	0	0	0	0	
+49165	9	1	40157	2	8.4	0	0	0	0	0	
 49165	10	1	40182	2	3	0	0	0	0	0	
 49165	11	1	40021	3	5	0	0	0	0	0	
 49165	12	1	40367	1	2	0	0	0	0	0	
@@ -3056,8 +3151,8 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49167	17	1	40022	2	3	0	0	0	0	0	
 49167	18	1	40185	3	2	0	0	0	0	0	
 49167	19	1	40273	1	0.5	0	0	0	0	0	
-49167	20	1	40274	1	0.200000003	0	0	0	0	0	
-49167	21	1	40350	1	0.300000012	0	0	0	0	0	
+49167	20	1	40274	1	0.2	0	0	0	0	0	
+49167	21	1	40350	1	0.3	0	0	0	0	0	
 49167	22	1	40317	1	1.5	0	0	0	0	0	
 49167	23	1	34279	2	25	0	0	0	0	0	
 49167	24	1	41089	1	5	0	0	0	0	0	
@@ -3071,7 +3166,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49167	33	1	40105	80	4	0	0	0	0	0	
 49167	34	1	40106	70	4	0	0	0	0	0	
 49169	1	1	40702	1	0.25	1	0	0	0	0	
-49169	2	1	40742	1	1.20000005	0	0	0	0	0	
+49169	2	1	40742	1	1.2	0	0	0	0	0	
 49169	3	1	40335	1	1	1	0	0	0	0	
 49169	4	1	40337	1	2	0	0	0	0	0	
 49169	5	1	40336	1	0.5	1	0	0	0	0	
@@ -3081,7 +3176,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49169	9	1	40114	1	2	0	0	0	0	0	
 49169	10	1	40022	2	4	0	0	0	0	0	
 49169	11	1	40317	1	2	0	0	0	0	0	
-49169	12	1	40572	1	7.55000019	0	0	0	0	0	
+49169	12	1	40572	1	7.55	0	0	0	0	0	
 49169	13	1	40362	2	28	0	0	0	0	0	
 49169	14	1	41088	45	6	0	0	0	0	0	
 49169	15	1	40183	22	5	0	0	0	0	0	
@@ -3127,11 +3222,11 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49170	30	1	40106	70	3.5	0	0	0	0	0	
 49171	1	1	40737	1	0.5	1	0	0	0	0	
 49171	2	1	40738	1	1.75	0	0	0	0	0	
-49171	3	1	40755	1	0.300000012	1	0	0	0	0	
+49171	3	1	40755	1	0.3	1	0	0	0	0	
 49171	4	1	40756	1	1.5	0	0	0	0	0	
 49171	5	1	40331	1	1.5	0	0	0	0	0	
 49171	6	1	40332	1	0.75	1	0	0	0	0	
-49171	7	1	40333	1	3.20000005	0	0	0	0	0	
+49171	7	1	40333	1	3.2	0	0	0	0	0	
 49171	8	1	40334	1	2	0	0	0	0	0	
 49171	9	1	40509	3	10	0	0	0	0	0	
 49171	10	1	40367	1	2	0	0	0	0	0	
@@ -3156,7 +3251,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49172	2	2	40758	1	100	0	0	0	0	0	
 49173	1	1	40757	1	100	0	0	0	0	0	
 49173	2	2	40759	1	100	0	0	0	0	0	
-49174	1	1	40665	1	0.400000006	1	0	0	0	0	
+49174	1	1	40665	1	0.4	1	0	0	0	0	
 49174	2	1	40666	1	2	0	0	0	0	0	
 49174	3	1	40693	1	0.75	1	0	0	0	0	
 49174	4	1	40694	1	2	0	0	0	0	0	
@@ -3176,18 +3271,18 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49174	17	1	40572	1	13.5	0	0	0	0	0	
 49174	18	1	40033	160	3.5	0	0	0	0	0	
 49174	19	1	40034	120	3.5	0	0	0	0	0	
-49174	20	1	40035	95	3.5999999	0	0	0	0	0	
-49174	21	1	40036	80	3.5999999	0	0	0	0	0	
-49174	22	1	40037	70	3.5999999	0	0	0	0	0	
+49174	20	1	40035	95	3.6	0	0	0	0	0	
+49174	21	1	40036	80	3.6	0	0	0	0	0	
+49174	22	1	40037	70	3.6	0	0	0	0	0	
 49174	23	1	40038	160	3.5	0	0	0	0	0	
 49174	24	1	40039	120	3.5	0	0	0	0	0	
-49174	25	1	40104	95	3.5999999	0	0	0	0	0	
-49174	26	1	40105	80	3.5999999	0	0	0	0	0	
-49174	27	1	40106	70	3.5999999	0	0	0	0	0	
+49174	25	1	40104	95	3.6	0	0	0	0	0	
+49174	26	1	40105	80	3.6	0	0	0	0	0	
+49174	27	1	40106	70	3.6	0	0	0	0	0	
 49175	1	1	40791	1	100	0	0	0	0	0	
 49175	1	2	40794	1	100	0	0	0	0	0	
-49192	1	1	40511	1	0.100000001	1	0	0	0	0	
-49192	2	1	40512	1	0.0199999996	1	0	0	0	0	
+49192	1	1	40511	1	0.1	1	0	0	0	0	
+49192	2	1	40512	1	0.02	1	0	0	0	0	
 49192	3	1	40797	1	1	1	0	0	0	0	
 49192	4	1	40798	1	2	0	0	0	0	0	
 49192	5	1	40130	1	1	0	0	0	0	0	
@@ -3205,7 +3300,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49192	17	1	40021	3	5	0	0	0	0	0	
 49192	18	1	40022	2	2	0	0	0	0	0	
 49192	19	1	41093	3	2	0	0	0	0	0	
-49192	20	1	40572	1	12.8800001	0	0	0	0	0	
+49192	20	1	40572	1	12.88	0	0	0	0	0	
 49192	21	1	40033	160	3.5	0	0	0	0	0	
 49192	22	1	40034	120	3.5	0	0	0	0	0	
 49192	23	1	40035	95	3.5	0	0	0	0	0	
@@ -3239,9 +3334,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49193	21	1	40828	1	1.5	0	0	0	0	0	
 49193	22	1	40829	1	1.5	0	0	0	0	0	
 49193	23	1	40772	1	1.5	0	0	0	0	0	
-49193	24	1	40766	1	4.4000001	0	0	0	0	0	
-49193	25	1	40768	1	4.30000019	0	0	0	0	0	
-49193	26	1	40687	1	0.300000012	1	0	0	0	0	
+49193	24	1	40766	1	4.4	0	0	0	0	0	
+49193	25	1	40768	1	4.3	0	0	0	0	0	
+49193	26	1	40687	1	0.3	1	0	0	0	0	
 49194	1	1	40701	1	0.5	1	0	0	0	0	
 49194	2	1	40702	1	0.5	1	0	0	0	0	
 49194	3	1	40665	1	1	0	0	0	0	0	
@@ -3297,13 +3392,13 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49214	2	1	40465	1	0.5	1	0	0	0	0	
 49214	3	1	40579	1	2	0	0	0	0	0	
 49214	4	1	40532	1	1.5	0	0	0	0	0	
-49214	5	1	40437	1	0.400000006	1	0	0	0	0	
-49214	6	1	40441	1	1.39999998	0	0	0	0	0	
+49214	5	1	40437	1	0.4	1	0	0	0	0	
+49214	6	1	40441	1	1.4	0	0	0	0	0	
 49214	7	1	40604	1	1	0	0	0	0	0	
 49214	8	1	40605	1	0.5	1	0	0	0	0	
 49214	9	1	40606	1	2	0	0	0	0	0	
 49214	10	1	40607	1	1	0	0	0	0	0	
-49214	11	1	40509	3	14.1999998	0	0	0	0	0	
+49214	11	1	40509	3	14.2	0	0	0	0	0	
 49214	12	1	40317	1	2.5	0	0	0	0	0	
 49214	13	1	40380	1	3	0	0	0	0	0	
 49214	14	1	40157	2	10	0	0	0	0	0	
@@ -3322,24 +3417,24 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49214	27	1	40104	95	3.5	0	0	0	0	0	
 49214	28	1	40105	80	3.5	0	0	0	0	0	
 49214	29	1	40106	70	3.5	0	0	0	0	0	
-49215	1	1	40814	1	0.800000012	1	0	0	0	0	
-49215	2	1	40816	1	0.800000012	1	0	0	0	0	
+49215	1	1	40814	1	0.8	1	0	0	0	0	
+49215	2	1	40816	1	0.8	1	0	0	0	0	
 49215	3	1	40822	1	1.5	0	0	0	0	0	
 49215	4	1	40824	1	1.5	0	0	0	0	0	
-49215	5	1	40818	1	0.300000012	1	0	0	0	0	
+49215	5	1	40818	1	0.3	1	0	0	0	0	
 49215	6	1	40815	1	2	0	0	0	0	0	
 49215	7	1	40817	1	2	0	0	0	0	0	
 49215	8	1	40823	1	3	0	0	0	0	0	
 49215	9	1	40825	1	3	0	0	0	0	0	
 49215	10	1	40819	1	1.5	0	0	0	0	0	
 49215	11	1	40509	3	5	0	0	0	0	0	
-49215	12	1	40367	1	1.39999998	0	0	0	0	0	
+49215	12	1	40367	1	1.4	0	0	0	0	0	
 49215	13	1	41090	40	5	0	0	0	0	0	
 49215	14	1	40115	1	1	0	0	0	0	0	
 49215	15	1	40022	2	2	0	0	0	0	0	
 49215	16	1	41088	45	8	0	0	0	0	0	
 49215	17	1	40122	10	5	0	0	0	0	0	
-49215	18	1	40572	1	14.1999998	0	0	0	0	0	
+49215	18	1	40572	1	14.2	0	0	0	0	0	
 49215	19	1	40190	5	3	0	0	0	0	0	
 49215	20	1	40191	11	5	0	0	0	0	0	
 49215	21	1	40192	11	5	0	0	0	0	0	
@@ -3498,9 +3593,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49250	1	3	41119	2	100	0	0	0	0	0	
 49250	1	4	41101	2	100	0	0	0	0	0	
 49251	1	1	40226	1	1	0	0	0	0	0	
-49251	2	1	40069	1	0.300000012	1	0	0	0	0	
+49251	2	1	40069	1	0.3	1	0	0	0	0	
 49251	3	1	40267	1	1	0	0	0	0	0	
-49251	4	1	40268	1	0.699999988	1	0	0	0	0	
+49251	4	1	40268	1	0.7	1	0	0	0	0	
 49251	5	1	34981	1	0.5	1	0	0	0	0	
 49251	6	1	40251	1	3	0	0	0	0	0	
 49251	7	1	40271	1	2.5	0	0	0	0	0	
@@ -3548,18 +3643,18 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49255	3	1	41162	1	1.5	0	0	0	0	0	
 49255	4	1	40233	1	0.5	1	0	0	0	0	
 49255	5	1	40258	1	3	0	0	0	0	0	
-49255	6	1	40427	1	0.800000012	0	0	0	0	0	
-49255	7	1	40428	1	1.29999995	0	0	0	0	0	
-49255	8	1	40440	1	0.800000012	1	0	0	0	0	
+49255	6	1	40427	1	0.8	0	0	0	0	0	
+49255	7	1	40428	1	1.3	0	0	0	0	0	
+49255	8	1	40440	1	0.8	1	0	0	0	0	
 49255	9	1	40442	1	3	0	0	0	0	0	
 49255	10	1	40509	3	15	0	0	0	0	0	
 49255	11	1	40367	1	1.5	0	0	0	0	0	
 49255	12	1	41090	40	12	0	0	0	0	0	
 49255	13	1	40273	1	0.5	0	0	0	0	0	
-49255	14	1	40274	1	0.200000003	0	0	0	0	0	
-49255	15	1	40350	1	0.300000012	0	0	0	0	0	
+49255	14	1	40274	1	0.2	0	0	0	0	0	
+49255	15	1	40350	1	0.3	0	0	0	0	0	
 49255	16	1	41091	1	3	0	0	0	0	0	
-49255	17	1	40380	1	4.0999999	0	0	0	0	0	
+49255	17	1	40380	1	4.1	0	0	0	0	0	
 49255	18	1	41092	1	3	0	0	0	0	0	
 49255	19	1	40190	5	4	0	0	0	0	0	
 49255	20	1	40191	11	6	0	0	0	0	0	
@@ -3571,9 +3666,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49255	26	1	40122	10	6	0	0	0	0	0	
 49256	1	1	40040	1	100	0	0	0	0	0	
 49256	1	2	40042	1	100	0	0	0	0	0	
-49257	1	1	41155	1	0.400000006	1	0	0	0	0	
+49257	1	1	41155	1	0.4	1	0	0	0	0	
 49257	2	1	41157	1	1.5	0	0	0	0	0	
-49257	3	1	41161	1	0.800000012	0	0	0	0	0	
+49257	3	1	41161	1	0.8	0	0	0	0	0	
 49257	4	1	40236	1	1	1	0	0	0	0	
 49257	5	1	34992	1	1	1	0	0	0	0	
 49257	6	1	40261	1	3	0	0	0	0	0	
@@ -3587,15 +3682,15 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49257	14	1	40022	2	2	0	0	0	0	0	
 49257	15	1	40317	1	2.5	0	0	0	0	0	
 49257	16	1	40024	2	3	0	0	0	0	0	
-49257	17	1	40026	2	3.4000001	0	0	0	0	0	
-49257	18	1	40028	2	3.4000001	0	0	0	0	0	
-49257	19	1	40030	2	3.4000001	0	0	0	0	0	
+49257	17	1	40026	2	3.4	0	0	0	0	0	
+49257	18	1	40028	2	3.4	0	0	0	0	0	
+49257	19	1	40030	2	3.4	0	0	0	0	0	
 49257	20	1	40032	2	3	0	0	0	0	0	
 49257	21	1	40313	10	6	0	0	0	0	0	
 49257	22	1	40314	10	6	0	0	0	0	0	
 49257	23	1	40315	10	6	0	0	0	0	0	
 49257	24	1	41163	10	4	0	0	0	0	0	
-49257	25	1	41088	45	7.0999999	0	0	0	0	0	
+49257	25	1	41088	45	7.1	0	0	0	0	0	
 49258	1	1	33384	1	10	0	0	0	0	0	
 49258	2	1	30006	5	15	0	0	0	0	0	
 49258	3	1	30011	5	15	0	0	0	0	0	
@@ -3622,22 +3717,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49259	13	1	49319	1	7	0	0	0	0	0	
 49259	14	1	49311	1	5	0	0	0	0	0	
 49259	15	1	49005	1	5	0	0	0	0	0	
-49260	1	1	40465	1	0.200000003	0	0	0	0	0	
-49260	2	1	40466	1	0.200000003	0	0	0	0	0	
-49260	3	1	40691	1	0.200000003	0	0	0	0	0	
-49260	4	1	40692	1	0.200000003	0	0	0	0	0	
-49260	5	1	40697	1	0.200000003	0	0	0	0	0	
-49260	6	1	40743	1	0.200000003	1	0	0	0	0	
-49260	7	1	40745	1	0.200000003	1	0	0	0	0	
-49260	8	1	40758	1	0.200000003	0	0	0	0	0	
-49260	9	1	40759	1	0.200000003	0	0	0	0	0	
-49260	10	1	40766	1	0.200000003	1	0	0	0	0	
-49260	11	1	40768	1	0.200000003	1	0	0	0	0	
-49260	12	1	40791	1	0.200000003	0	0	0	0	0	
-49260	13	1	40814	1	0.200000003	1	0	0	0	0	
-49260	14	1	40816	1	0.200000003	1	0	0	0	0	
-49260	15	1	41174	1	0.200000003	1	0	0	0	0	
-49260	16	1	41182	1	0.200000003	1	0	0	0	0	
+49260	1	1	40465	1	0.2	0	0	0	0	0	
+49260	2	1	40466	1	0.2	0	0	0	0	0	
+49260	3	1	40691	1	0.2	0	0	0	0	0	
+49260	4	1	40692	1	0.2	0	0	0	0	0	
+49260	5	1	40697	1	0.2	0	0	0	0	0	
+49260	6	1	40743	1	0.2	1	0	0	0	0	
+49260	7	1	40745	1	0.2	1	0	0	0	0	
+49260	8	1	40758	1	0.2	0	0	0	0	0	
+49260	9	1	40759	1	0.2	0	0	0	0	0	
+49260	10	1	40766	1	0.2	1	0	0	0	0	
+49260	11	1	40768	1	0.2	1	0	0	0	0	
+49260	12	1	40791	1	0.2	0	0	0	0	0	
+49260	13	1	40814	1	0.2	1	0	0	0	0	
+49260	14	1	40816	1	0.2	1	0	0	0	0	
+49260	15	1	41174	1	0.2	1	0	0	0	0	
+49260	16	1	41182	1	0.2	1	0	0	0	0	
 49260	17	1	40532	1	2	0	0	0	0	0	
 49260	18	1	40533	1	2	0	0	0	0	0	
 49260	19	1	40739	1	2	0	0	0	0	0	
@@ -3653,7 +3748,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49260	29	1	40817	1	2	0	0	0	0	0	
 49260	30	1	41175	1	2	0	0	0	0	0	
 49260	31	1	41183	1	2	0	0	0	0	0	
-49260	32	1	40362	3	46.7999992	0	0	0	0	0	
+49260	32	1	40362	3	46.8	0	0	0	0	0	
 49260	33	1	40033	160	2	0	0	0	0	0	
 49260	34	1	40034	120	2	0	0	0	0	0	
 49260	35	1	40035	95	2	0	0	0	0	0	
@@ -3670,14 +3765,14 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49262	1	2	40615	1	100	0	0	0	0	0	
 49263	1	1	41233	1	0.5	1	0	0	0	0	
 49263	2	1	41234	1	1.5	0	0	0	0	0	
-49263	3	1	41237	1	0.300000012	1	0	0	0	0	
+49263	3	1	41237	1	0.3	1	0	0	0	0	
 49263	4	1	41238	1	1.5	0	0	0	0	0	
-49263	5	1	37084	1	0.300000012	0	0	0	0	0	
+49263	5	1	37084	1	0.3	0	0	0	0	0	
 49263	6	1	37085	1	1	0	0	0	0	0	
 49263	7	1	40702	1	0.5	0	0	0	0	0	
 49263	8	1	40742	1	2	0	0	0	0	0	
-49263	9	1	41196	1	0.400000006	1	0	0	0	0	
-49263	10	1	41197	1	0.200000003	1	0	0	0	0	
+49263	9	1	41196	1	0.4	1	0	0	0	0	
+49263	10	1	41197	1	0.2	1	0	0	0	0	
 49263	11	1	40509	3	8	0	0	0	0	0	
 49263	12	1	40367	1	2	0	0	0	0	0	
 49263	13	1	41090	45	8	0	0	0	0	0	
@@ -3685,7 +3780,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49263	15	1	40022	2	2	0	0	0	0	0	
 49263	16	1	41192	1	2	0	0	0	0	0	
 49263	17	1	41193	1	1	0	0	0	0	0	
-49263	18	1	40572	1	11.8000002	0	0	0	0	0	
+49263	18	1	40572	1	11.8	0	0	0	0	0	
 49263	19	1	40190	5	4	0	0	0	0	0	
 49263	20	1	40191	11	6	0	0	0	0	0	
 49263	21	1	40192	11	6	0	0	0	0	0	
@@ -3698,15 +3793,15 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49263	28	1	41189	1	2	0	0	0	0	0	
 49264	1	1	41225	1	0.5	1	0	0	0	0	
 49264	2	1	41226	1	2	0	0	0	0	0	
-49264	3	1	41229	1	0.300000012	1	0	0	0	0	
+49264	3	1	41229	1	0.3	1	0	0	0	0	
 49264	4	1	41230	1	2	0	0	0	0	0	
 49264	5	1	40327	1	1	0	0	0	0	0	
-49264	6	1	41200	1	0.300000012	1	0	0	0	0	
-49264	7	1	41201	1	1.20000005	0	0	0	0	0	
+49264	6	1	41200	1	0.3	1	0	0	0	0	
+49264	7	1	41201	1	1.2	0	0	0	0	0	
 49264	8	1	41208	1	0.5	1	0	0	0	0	
-49264	9	1	41209	1	1.20000005	0	0	0	0	0	
-49264	10	1	41196	1	0.349999994	1	0	0	0	0	
-49264	11	1	41197	1	0.150000006	1	0	0	0	0	
+49264	9	1	41209	1	1.2	0	0	0	0	0	
+49264	10	1	41196	1	0.35	1	0	0	0	0	
+49264	11	1	41197	1	0.15	1	0	0	0	0	
 49264	12	1	40509	3	9	0	0	0	0	0	
 49264	13	1	40158	1	5	0	0	0	0	0	
 49264	14	1	41090	45	10	0	0	0	0	0	
@@ -3813,16 +3908,16 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49278	1	3	38748	1	100	0	0	0	0	0	
 49278	1	4	38749	1	100	0	0	0	0	0	
 49278	1	5	38750	1	100	0	0	0	0	0	
-49279	1	1	41170	1	0.699999988	1	0	0	0	0	
+49279	1	1	41170	1	0.7	1	0	0	0	0	
 49279	2	1	41171	1	2.5	0	0	0	0	0	
-49279	3	1	41178	1	0.400000006	1	0	0	0	0	
+49279	3	1	41178	1	0.4	1	0	0	0	0	
 49279	4	1	41179	1	2	0	0	0	0	0	
-49279	5	1	40682	1	0.300000012	1	0	0	0	0	
-49279	6	1	40683	1	1.79999995	0	0	0	0	0	
-49279	7	1	40195	1	0.449999988	1	0	0	0	0	
+49279	5	1	40682	1	0.3	1	0	0	0	0	
+49279	6	1	40683	1	1.8	0	0	0	0	0	
+49279	7	1	40195	1	0.45	1	0	0	0	0	
 49279	8	1	40198	1	2	0	0	0	0	0	
-49279	9	1	41196	1	0.349999994	1	0	0	0	0	
-49279	10	1	41197	1	0.150000006	1	0	0	0	0	
+49279	9	1	41196	1	0.35	1	0	0	0	0	
+49279	10	1	41197	1	0.15	1	0	0	0	0	
 49279	11	1	40509	3	10	0	0	0	0	0	
 49279	12	1	40367	1	2	0	0	0	0	0	
 49279	13	1	41090	45	10	0	0	0	0	0	
@@ -3837,7 +3932,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49279	22	1	40193	11	5	0	0	0	0	0	
 49279	23	1	41093	3	3	0	0	0	0	0	
 49279	24	1	40202	7	7	0	0	0	0	0	
-49279	25	1	40040	12	6.3499999	0	0	0	0	0	
+49279	25	1	40040	12	6.35	0	0	0	0	0	
 49279	26	1	40042	5	6	0	0	0	0	0	
 49279	27	1	41188	1	4	0	0	0	0	0	
 49279	28	1	41189	1	2	0	0	0	0	0	
@@ -3848,16 +3943,16 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49280	5	1	40747	1	10	0	0	0	0	0	
 49280	1	2	40754	1	100	0	0	0	0	0	
 49281	1	1	40572	1	14	0	0	0	0	0	
-49281	2	1	41277	1	0.600000024	1	0	0	0	0	
+49281	2	1	41277	1	0.6	1	0	0	0	0	
 49281	3	1	41278	1	2.5	0	0	0	0	0	
-49281	4	1	41281	1	0.300000012	1	0	0	0	0	
+49281	4	1	41281	1	0.3	1	0	0	0	0	
 49281	5	1	41282	1	2	0	0	0	0	0	
-49281	6	1	41306	1	0.300000012	1	0	0	0	0	
-49281	7	1	41307	1	1.20000005	0	0	0	0	0	
+49281	6	1	41306	1	0.3	1	0	0	0	0	
+49281	7	1	41307	1	1.2	0	0	0	0	0	
 49281	8	1	41208	1	0.5	1	0	0	0	0	
-49281	9	1	41209	1	1.20000005	0	0	0	0	0	
-49281	10	1	41196	1	0.349999994	0	0	0	0	0	
-49281	11	1	41197	1	0.150000006	0	0	0	0	0	
+49281	9	1	41209	1	1.2	0	0	0	0	0	
+49281	10	1	41196	1	0.35	0	0	0	0	0	
+49281	11	1	41197	1	0.15	0	0	0	0	0	
 49281	12	1	40509	3	9	0	0	0	0	0	
 49281	13	1	41091	1	3	0	0	0	0	0	
 49281	14	1	41090	45	10	0	0	0	0	0	
@@ -3876,9 +3971,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49282	1	1	40368	1	4	0	0	0	0	0	
 49282	2	1	40022	4	5	0	0	0	0	0	
 49282	3	1	41304	1	1.25	0	0	0	0	0	
-49282	4	1	41301	1	0.0500000007	1	0	0	0	0	
+49282	4	1	41301	1	0.05	1	0	0	0	0	
 49282	5	1	41302	1	1	0	0	0	0	0	
-49282	6	1	40687	1	0.100000001	1	0	0	0	0	
+49282	6	1	40687	1	0.1	1	0	0	0	0	
 49282	7	1	40546	1	2	0	0	0	0	0	
 49282	8	1	40772	1	0.25	1	0	0	0	0	
 49282	9	1	40773	1	2	0	0	0	0	0	
@@ -3897,7 +3992,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49282	22	1	41188	2	6	0	0	0	0	0	
 49282	23	1	41187	3	9	0	0	0	0	0	
 49282	24	1	41186	6	12	0	0	0	0	0	
-49282	25	1	40362	6	19.3500004	0	0	0	0	0	
+49282	25	1	40362	6	19.35	0	0	0	0	0	
 49283	1	1	41297	50	100	0	0	0	0	0	
 49284	1	1	41298	50	100	0	0	0	0	0	
 49285	1	1	41259	1	3	1	0	0	0	0	
@@ -3917,13 +4012,13 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49286	3	1	41266	1	1.5	0	0	0	0	0	
 49286	4	1	41269	1	0.5	1	0	0	0	0	
 49286	5	1	41270	1	3	0	0	0	0	0	
-49286	6	1	41273	1	0.449999988	1	0	0	0	0	
+49286	6	1	41273	1	0.45	1	0	0	0	0	
 49286	7	1	41274	1	3	0	0	0	0	0	
 49286	8	1	40487	1	1	0	0	0	0	0	
 49286	9	1	40489	1	2.5	0	0	0	0	0	
 49286	10	1	40577	1	0.5	1	0	0	0	0	
-49286	11	1	41196	1	0.400000006	0	0	0	0	0	
-49286	12	1	41197	1	0.200000003	0	0	0	0	0	
+49286	11	1	41196	1	0.4	0	0	0	0	0	
+49286	12	1	41197	1	0.2	0	0	0	0	0	
 49286	13	1	40509	3	10	0	0	0	0	0	
 49286	14	1	40021	2	3	0	0	0	0	0	
 49286	15	1	41089	1	5	0	0	0	0	0	
@@ -3935,7 +4030,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49286	21	1	40193	11	6	0	0	0	0	0	
 49286	22	1	41093	3	3	0	0	0	0	0	
 49286	23	1	40183	22	6	0	0	0	0	0	
-49286	24	1	41188	1	3.70000005	0	0	0	0	0	
+49286	24	1	41188	1	3.7	0	0	0	0	0	
 49286	25	1	41189	1	2	0	0	0	0	0	
 49286	26	1	40190	5	5	0	0	0	0	0	
 49286	27	1	40202	7	5	0	0	0	0	0	
@@ -3954,22 +4049,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49288	6	2	40037	20	30	0	0	0	0	0	
 49288	7	2	40106	20	30	0	0	0	0	0	
 49289	1	1	40572	1	12	0	0	0	0	0	
-49289	2	1	41332	1	0.600000024	1	0	0	0	0	
+49289	2	1	41332	1	0.6	1	0	0	0	0	
 49289	3	1	41333	1	2.5	0	0	0	0	0	
-49289	4	1	41328	1	0.400000006	1	0	0	0	0	
+49289	4	1	41328	1	0.4	1	0	0	0	0	
 49289	5	1	41329	1	2	0	0	0	0	0	
-49289	6	1	41344	1	0.349999994	1	0	0	0	0	
+49289	6	1	41344	1	0.35	1	0	0	0	0	
 49289	7	1	41345	1	1.5	0	0	0	0	0	
-49289	8	1	41340	1	0.400000006	1	0	0	0	0	
-49289	9	1	41341	1	1.79999995	0	0	0	0	0	
-49289	10	1	41196	1	0.349999994	0	0	0	0	0	
-49289	11	1	41197	1	0.150000006	0	0	0	0	0	
+49289	8	1	41340	1	0.4	1	0	0	0	0	
+49289	9	1	41341	1	1.8	0	0	0	0	0	
+49289	10	1	41196	1	0.35	0	0	0	0	0	
+49289	11	1	41197	1	0.15	0	0	0	0	0	
 49289	12	1	41300	1	1.5	0	0	0	0	0	
 49289	13	1	40509	3	9	0	0	0	0	0	
 49289	14	1	40367	1	1.5	0	0	0	0	0	
 49289	15	1	40022	2	2	0	0	0	0	0	
 49289	16	1	41090	45	10	0	0	0	0	0	
-49289	17	1	49290	1	5.94999981	0	0	0	0	0	
+49289	17	1	49290	1	5.95	0	0	0	0	0	
 49289	18	1	41192	1	2	0	0	0	0	0	
 49289	19	1	41193	1	1	0	0	0	0	0	
 49289	20	1	40190	5	4	0	0	0	0	0	
@@ -4013,14 +4108,14 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49295	6	1	40049	1	3	0	0	0	0	0	
 49295	7	1	40050	1	3	0	0	0	0	0	
 49295	8	1	40051	1	3	0	0	0	0	0	
-49295	9	1	41378	1	0.300000012	0	0	0	0	0	
-49295	10	1	41380	1	0.300000012	0	0	0	0	0	
-49295	11	1	41381	1	0.300000012	0	0	0	0	0	
-49295	12	1	41382	1	0.300000012	0	0	0	0	0	
-49295	13	1	41383	1	0.300000012	0	0	0	0	0	
-49295	14	1	41384	1	0.300000012	0	0	0	0	0	
-49295	15	1	41377	1	0.300000012	0	0	0	0	0	
-49295	16	1	41379	1	0.300000012	0	0	0	0	0	
+49295	9	1	41378	1	0.3	0	0	0	0	0	
+49295	10	1	41380	1	0.3	0	0	0	0	0	
+49295	11	1	41381	1	0.3	0	0	0	0	0	
+49295	12	1	41382	1	0.3	0	0	0	0	0	
+49295	13	1	41383	1	0.3	0	0	0	0	0	
+49295	14	1	41384	1	0.3	0	0	0	0	0	
+49295	15	1	41377	1	0.3	0	0	0	0	0	
+49295	16	1	41379	1	0.3	0	0	0	0	0	
 49295	17	1	40061	1	1	0	0	0	0	0	
 49295	18	1	40063	1	1	0	0	0	0	0	
 49295	19	1	40064	1	1	0	0	0	0	0	
@@ -4029,14 +4124,14 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49295	22	1	40097	1	1	0	0	0	0	0	
 49295	23	1	40060	1	1	0	0	0	0	0	
 49295	24	1	40062	1	1	0	0	0	0	0	
-49295	25	1	40066	1	0.300000012	0	0	0	0	0	
-49295	26	1	40067	1	0.300000012	0	0	0	0	0	
-49295	27	1	40068	1	0.300000012	0	0	0	0	0	
-49295	28	1	40069	1	0.300000012	0	0	0	0	0	
-49295	29	1	40070	1	0.300000012	0	0	0	0	0	
-49295	30	1	40071	1	0.300000012	0	0	0	0	0	
-49295	31	1	40098	1	0.300000012	0	0	0	0	0	
-49295	32	1	40099	1	0.300000012	0	0	0	0	0	
+49295	25	1	40066	1	0.3	0	0	0	0	0	
+49295	26	1	40067	1	0.3	0	0	0	0	0	
+49295	27	1	40068	1	0.3	0	0	0	0	0	
+49295	28	1	40069	1	0.3	0	0	0	0	0	
+49295	29	1	40070	1	0.3	0	0	0	0	0	
+49295	30	1	40071	1	0.3	0	0	0	0	0	
+49295	31	1	40098	1	0.3	0	0	0	0	0	
+49295	32	1	40099	1	0.3	0	0	0	0	0	
 49295	33	1	41369	1	1	0	0	0	0	0	
 49295	34	1	41370	1	1	0	0	0	0	0	
 49295	35	1	41371	1	1	0	0	0	0	0	
@@ -4049,12 +4144,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49295	42	1	40106	70	4	0	0	0	0	0	
 49295	43	1	40105	80	4	0	0	0	0	0	
 49295	44	1	40104	95	3.5	0	0	0	0	0	
-49295	45	1	40039	120	3.0999999	0	0	0	0	0	
+49295	45	1	40039	120	3.1	0	0	0	0	0	
 49295	46	1	41297	60	5	0	0	0	0	0	
 49295	47	1	40037	70	4	0	0	0	0	0	
 49295	48	1	40036	80	4	0	0	0	0	0	
 49295	49	1	40035	95	3.5	0	0	0	0	0	
-49295	50	1	40034	120	3.0999999	0	0	0	0	0	
+49295	50	1	40034	120	3.1	0	0	0	0	0	
 49295	51	1	40202	7	4	0	0	0	0	0	
 49295	52	1	40190	5	3	0	0	0	0	0	
 49295	53	1	40191	11	3	0	0	0	0	0	
@@ -4067,18 +4162,18 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49296	5	1	40055	1	3	0	0	0	0	0	
 49296	6	1	40057	1	3	0	0	0	0	0	
 49296	7	1	40058	1	3	0	0	0	0	0	
-49296	8	1	41385	1	0.300000012	0	0	0	0	0	
-49296	9	1	41386	1	0.300000012	0	0	0	0	0	
-49296	10	1	41387	1	0.300000012	0	0	0	0	0	
-49296	11	1	41388	1	0.300000012	0	0	0	0	0	
-49296	12	1	41389	1	0.300000012	0	0	0	0	0	
-49296	13	1	41390	1	0.300000012	0	0	0	0	0	
-49296	14	1	41391	1	0.300000012	0	0	0	0	0	
-49296	15	1	41392	1	0.300000012	0	0	0	0	0	
-49296	16	1	41393	1	0.300000012	0	0	0	0	0	
-49296	17	1	41394	1	0.300000012	0	0	0	0	0	
-49296	18	1	41395	1	0.300000012	0	0	0	0	0	
-49296	19	1	41396	1	0.300000012	0	0	0	0	0	
+49296	8	1	41385	1	0.3	0	0	0	0	0	
+49296	9	1	41386	1	0.3	0	0	0	0	0	
+49296	10	1	41387	1	0.3	0	0	0	0	0	
+49296	11	1	41388	1	0.3	0	0	0	0	0	
+49296	12	1	41389	1	0.3	0	0	0	0	0	
+49296	13	1	41390	1	0.3	0	0	0	0	0	
+49296	14	1	41391	1	0.3	0	0	0	0	0	
+49296	15	1	41392	1	0.3	0	0	0	0	0	
+49296	16	1	41393	1	0.3	0	0	0	0	0	
+49296	17	1	41394	1	0.3	0	0	0	0	0	
+49296	18	1	41395	1	0.3	0	0	0	0	0	
+49296	19	1	41396	1	0.3	0	0	0	0	0	
 49296	20	1	40072	1	1	0	0	0	0	0	
 49296	21	1	40073	1	1	0	0	0	0	0	
 49296	22	1	40074	1	1	0	0	0	0	0	
@@ -4095,12 +4190,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49296	33	1	40106	70	4	0	0	0	0	0	
 49296	34	1	40105	80	4	0	0	0	0	0	
 49296	35	1	40104	95	3.5	0	0	0	0	0	
-49296	36	1	40039	120	3.0999999	0	0	0	0	0	
+49296	36	1	40039	120	3.1	0	0	0	0	0	
 49296	37	1	41297	60	5	0	0	0	0	0	
 49296	38	1	40037	70	4	0	0	0	0	0	
 49296	39	1	40036	80	4	0	0	0	0	0	
 49296	40	1	40035	95	3.5	0	0	0	0	0	
-49296	41	1	40034	120	3.0999999	0	0	0	0	0	
+49296	41	1	40034	120	3.1	0	0	0	0	0	
 49296	42	1	40202	7	4	0	0	0	0	0	
 49296	43	1	40190	5	3	0	0	0	0	0	
 49296	44	1	40191	11	3	0	0	0	0	0	
@@ -4108,16 +4203,16 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49296	46	1	40193	11	3	0	0	0	0	0	
 49296	47	1	49292	1	3	0	0	0	0	0	
 49296	48	1	49293	1	3	0	0	0	0	0	
-49296	49	1	49294	1	2.20000005	0	0	0	0	0	
-49297	1	1	40737	1	0.150000006	1	0	0	0	0	
-49297	2	1	41155	1	0.100000001	1	0	0	0	0	
-49297	3	1	41156	1	0.150000006	1	0	0	0	0	
-49297	4	1	41314	1	0.150000006	1	0	0	0	0	
-49297	5	1	41200	1	0.150000006	1	0	0	0	0	
-49297	6	1	40467	1	0.150000006	1	0	0	0	0	
-49297	7	1	40684	1	0.150000006	1	0	0	0	0	
-49297	8	1	40477	1	0.150000006	1	0	0	0	0	
-49297	9	1	40831	1	0.150000006	1	0	0	0	0	
+49296	49	1	49294	1	2.2	0	0	0	0	0	
+49297	1	1	40737	1	0.15	1	0	0	0	0	
+49297	2	1	41155	1	0.1	1	0	0	0	0	
+49297	3	1	41156	1	0.15	1	0	0	0	0	
+49297	4	1	41314	1	0.15	1	0	0	0	0	
+49297	5	1	41200	1	0.15	1	0	0	0	0	
+49297	6	1	40467	1	0.15	1	0	0	0	0	
+49297	7	1	40684	1	0.15	1	0	0	0	0	
+49297	8	1	40477	1	0.15	1	0	0	0	0	
+49297	9	1	40831	1	0.15	1	0	0	0	0	
 49297	10	1	41157	1	2.5	0	0	0	0	0	
 49297	11	1	40738	1	3	0	0	0	0	0	
 49297	12	1	41158	1	3	0	0	0	0	0	
@@ -4127,7 +4222,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49297	16	1	40468	1	3	0	0	0	0	0	
 49297	17	1	40496	1	3	0	0	0	0	0	
 49297	18	1	40670	1	3	0	0	0	0	0	
-49297	19	1	40362	3	52.2000008	0	0	0	0	0	
+49297	19	1	40362	3	52.2	0	0	0	0	0	
 49297	20	1	40034	120	2	0	0	0	0	0	
 49297	21	1	40035	95	2	0	0	0	0	0	
 49297	22	1	40036	80	2	0	0	0	0	0	
@@ -4138,11 +4233,11 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49297	27	1	40105	80	2	0	0	0	0	0	
 49297	28	1	40106	70	2	0	0	0	0	0	
 49297	29	1	41298	60	2	0	0	0	0	0	
-49298	1	1	40755	1	0.800000012	1	0	0	0	0	
-49298	2	1	40797	1	0.800000012	1	0	0	0	0	
+49298	1	1	40755	1	0.8	1	0	0	0	0	
+49298	2	1	40797	1	0.8	1	0	0	0	0	
 49298	3	1	41208	1	0.5	1	0	0	0	0	
 49298	4	1	41293	1	0.5	1	0	0	0	0	
-49298	5	1	40774	1	0.800000012	1	0	0	0	0	
+49298	5	1	40774	1	0.8	1	0	0	0	0	
 49298	6	1	40471	1	0.5	1	0	0	0	0	
 49298	7	1	40756	1	4.5	0	0	0	0	0	
 49298	8	1	40798	1	5	0	0	0	0	0	
@@ -4150,7 +4245,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49298	10	1	41294	1	4	0	0	0	0	0	
 49298	11	1	40775	1	5	0	0	0	0	0	
 49298	12	1	41408	1	4	0	0	0	0	0	
-49298	13	1	40362	3	49.5999985	0	0	0	0	0	
+49298	13	1	40362	3	49.6	0	0	0	0	0	
 49298	14	1	40034	120	2	0	0	0	0	0	
 49298	15	1	40035	95	2	0	0	0	0	0	
 49298	16	1	40036	80	2	0	0	0	0	0	
@@ -4164,11 +4259,11 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49303	1	1	41336	1	1	1	0	0	0	0	
 49303	2	1	41337	1	3	0	0	0	0	0	
 49303	3	1	41285	1	0.5	1	0	0	0	0	
-49303	4	1	41286	1	2.29999995	0	0	0	0	0	
-49303	5	1	41364	1	0.800000012	1	0	0	0	0	
+49303	4	1	41286	1	2.3	0	0	0	0	0	
+49303	5	1	41364	1	0.8	1	0	0	0	0	
 49303	6	1	41365	1	2.5	0	0	0	0	0	
-49303	7	1	41196	1	0.400000006	1	0	0	0	0	
-49303	8	1	41197	1	0.200000003	1	0	0	0	0	
+49303	7	1	41196	1	0.4	1	0	0	0	0	
+49303	8	1	41197	1	0.2	1	0	0	0	0	
 49303	9	1	41300	1	1.5	0	0	0	0	0	
 49303	10	1	49290	1	5	0	0	0	0	0	
 49303	11	1	40509	3	8	0	0	0	0	0	
@@ -4184,7 +4279,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49303	21	1	40192	11	4	0	0	0	0	0	
 49303	22	1	40193	11	4	0	0	0	0	0	
 49303	23	1	41093	3	4	0	0	0	0	0	
-49303	24	1	40202	7	4.80000019	0	0	0	0	0	
+49303	24	1	40202	7	4.8	0	0	0	0	0	
 49303	25	1	40040	12	6	0	0	0	0	0	
 49303	26	1	40042	5	6	0	0	0	0	0	
 49303	27	1	41188	1	4	0	0	0	0	0	
@@ -4192,15 +4287,15 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49304	1	1	40509	3	7	0	0	0	0	0	
 49304	2	1	40183	22	3	0	0	0	0	0	
 49304	3	1	41519	1	1.5	0	0	0	0	0	
-49304	4	1	41520	1	2.70000005	0	0	0	0	0	
-49304	5	1	41523	1	0.800000012	1	0	0	0	0	
-49304	6	1	41524	1	2.5999999	0	0	0	0	0	
-49304	7	1	41356	1	0.600000024	1	0	0	0	0	
-49304	8	1	41357	1	2.0999999	0	0	0	0	0	
-49304	9	1	40702	1	0.349999994	1	0	0	0	0	
+49304	4	1	41520	1	2.7	0	0	0	0	0	
+49304	5	1	41523	1	0.8	1	0	0	0	0	
+49304	6	1	41524	1	2.6	0	0	0	0	0	
+49304	7	1	41356	1	0.6	1	0	0	0	0	
+49304	8	1	41357	1	2.1	0	0	0	0	0	
+49304	9	1	40702	1	0.35	1	0	0	0	0	
 49304	10	1	40742	1	1.25	0	0	0	0	0	
-49304	11	1	41196	1	0.400000006	1	0	0	0	0	
-49304	12	1	41197	1	0.200000003	1	0	0	0	0	
+49304	11	1	41196	1	0.4	1	0	0	0	0	
+49304	12	1	41197	1	0.2	1	0	0	0	0	
 49304	13	1	41300	1	1.5	0	0	0	0	0	
 49304	14	1	40021	2	3	0	0	0	0	0	
 49304	15	1	41090	45	7	0	0	0	0	0	
@@ -4231,41 +4326,41 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49306	1	5	40218	1	100	0	0	0	0	0	
 49309	1	1	40509	3	10	0	0	0	0	0	
 49309	2	1	41091	1	3	0	0	0	0	0	
-49309	3	1	41324	1	0.800000012	1	0	0	0	0	
+49309	3	1	41324	1	0.8	1	0	0	0	0	
 49309	4	1	41325	1	2	0	0	0	0	0	
-49309	5	1	41528	1	0.800000012	1	0	0	0	0	
+49309	5	1	41528	1	0.8	1	0	0	0	0	
 49309	6	1	41529	1	2	0	0	0	0	0	
 49309	7	1	40437	1	0.5	0	0	0	0	0	
 49309	8	1	40441	1	1.5	0	0	0	0	0	
-49309	9	1	41348	1	0.349999994	1	0	0	0	0	
+49309	9	1	41348	1	0.35	1	0	0	0	0	
 49309	10	1	41349	1	1.25	0	0	0	0	0	
-49309	11	1	41196	1	0.400000006	0	0	0	0	0	
-49309	12	1	41197	1	0.200000003	0	0	0	0	0	
+49309	11	1	41196	1	0.4	0	0	0	0	0	
+49309	12	1	41197	1	0.2	0	0	0	0	0	
 49309	13	1	41300	1	1.5	0	0	0	0	0	
 49309	14	1	40222	1	1	0	0	0	0	0	
-49309	15	1	41493	1	2.29999995	0	0	0	0	0	
+49309	15	1	41493	1	2.3	0	0	0	0	0	
 49309	16	1	49290	1	6	0	0	0	0	0	
 49309	17	1	41192	1	2	0	0	0	0	0	
 49309	18	1	41193	1	1	0	0	0	0	0	
 49309	19	1	40572	1	12	0	0	0	0	0	
 49309	20	1	40380	1	3	0	0	0	0	0	
-49309	21	1	40190	5	3.20000005	0	0	0	0	0	
+49309	21	1	40190	5	3.2	0	0	0	0	0	
 49309	22	1	40191	11	4	0	0	0	0	0	
 49309	23	1	40192	11	6	0	0	0	0	0	
 49309	24	1	40193	11	6	0	0	0	0	0	
-49309	25	1	41093	3	3.20000005	0	0	0	0	0	
+49309	25	1	41093	3	3.2	0	0	0	0	0	
 49309	26	1	40202	7	4	0	0	0	0	0	
 49309	27	1	41188	1	4	0	0	0	0	0	
 49309	28	1	41189	1	2	0	0	0	0	0	
 49309	29	1	40040	12	8	0	0	0	0	0	
 49309	30	1	40042	5	8	0	0	0	0	0	
-49310	1	1	40658	1	0.0599999987	1	0	0	0	0	
+49310	1	1	40658	1	0.06	1	0	0	0	0	
 49310	2	1	40665	1	0.5	1	0	0	0	0	
 49310	3	1	40701	1	0.5	1	0	0	0	0	
-49310	4	1	40753	1	0.200000003	1	0	0	0	0	
-49310	5	1	40682	1	0.200000003	1	0	0	0	0	
-49310	6	1	40365	1	0.800000012	1	0	0	0	0	
-49310	7	1	40366	1	0.200000003	1	0	0	0	0	
+49310	4	1	40753	1	0.2	1	0	0	0	0	
+49310	5	1	40682	1	0.2	1	0	0	0	0	
+49310	6	1	40365	1	0.8	1	0	0	0	0	
+49310	7	1	40366	1	0.2	1	0	0	0	0	
 49310	8	1	41344	1	0.5	1	0	0	0	0	
 49310	9	1	40659	1	1	0	0	0	0	0	
 49310	10	1	40666	1	2	0	0	0	0	0	
@@ -4274,7 +4369,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49310	13	1	41611	1	2.5	0	0	0	0	0	
 49310	14	1	41612	1	2	0	0	0	0	0	
 49310	15	1	41345	1	2	0	0	0	0	0	
-49310	16	1	40362	3	43.5400009	0	0	0	0	0	
+49310	16	1	40362	3	43.54	0	0	0	0	0	
 49310	17	1	40033	160	3	0	0	0	0	0	
 49310	18	1	40034	120	3.5	0	0	0	0	0	
 49310	19	1	40035	95	4	0	0	0	0	0	
@@ -4285,10 +4380,10 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49310	24	1	40104	95	4	0	0	0	0	0	
 49310	25	1	40105	80	4.5	0	0	0	0	0	
 49310	26	1	40106	70	5.5	0	0	0	0	0	
-49311	1	1	40573	1	0.300000012	1	0	0	0	0	
-49311	2	1	40574	1	0.300000012	1	0	0	0	0	
-49311	3	1	41269	1	0.300000012	1	0	0	0	0	
-49311	4	1	41273	1	0.300000012	1	0	0	0	0	
+49311	1	1	40573	1	0.3	1	0	0	0	0	
+49311	2	1	40574	1	0.3	1	0	0	0	0	
+49311	3	1	41269	1	0.3	1	0	0	0	0	
+49311	4	1	41273	1	0.3	1	0	0	0	0	
 49311	5	1	40320	1	0.5	0	0	0	0	0	
 49311	6	1	40321	1	0.5	0	0	0	0	0	
 49311	7	1	40401	1	0.5	0	0	0	0	0	
@@ -4303,7 +4398,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49311	16	1	40348	1	2	0	0	0	0	0	
 49311	17	1	40040	12	5.5	0	0	0	0	0	
 49311	18	1	40041	4	3	0	0	0	0	0	
-49311	19	1	40042	5	5.30000019	0	0	0	0	0	
+49311	19	1	40042	5	5.3	0	0	0	0	0	
 49311	20	1	40043	3	3	0	0	0	0	0	
 49311	21	1	41082	1	3	0	0	0	0	0	
 49311	22	1	41083	1	2	0	0	0	0	0	
@@ -4323,18 +4418,18 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49311	36	1	40021	2	2.5	0	0	0	0	0	
 49311	37	1	40020	3	3.5	0	0	0	0	0	
 49311	38	1	40019	5	4	0	0	0	0	0	
-49312	1	1	40509	3	10.8000002	0	0	0	0	0	
+49312	1	1	40509	3	10.8	0	0	0	0	0	
 49312	2	1	41091	1	3	0	0	0	0	0	
-49312	3	1	41320	1	0.699999988	1	0	0	0	0	
+49312	3	1	41320	1	0.7	1	0	0	0	0	
 49312	4	1	41321	1	2	0	0	0	0	0	
-49312	5	1	41543	1	0.699999988	1	0	0	0	0	
+49312	5	1	41543	1	0.7	1	0	0	0	0	
 49312	6	1	41544	1	2	0	0	0	0	0	
-49312	7	1	40399	1	0.400000006	0	0	0	0	0	
+49312	7	1	40399	1	0.4	0	0	0	0	0	
 49312	8	1	40402	1	1.5	0	0	0	0	0	
 49312	9	1	40238	1	0.5	1	0	0	0	0	
-49312	10	1	40263	1	1.60000002	0	0	0	0	0	
-49312	11	1	41196	1	0.400000006	0	0	0	0	0	
-49312	12	1	41197	1	0.200000003	0	0	0	0	0	
+49312	10	1	40263	1	1.6	0	0	0	0	0	
+49312	11	1	41196	1	0.4	0	0	0	0	0	
+49312	12	1	41197	1	0.2	0	0	0	0	0	
 49312	13	1	41300	1	1.5	0	0	0	0	0	
 49312	14	1	40021	2	4	0	0	0	0	0	
 49312	15	1	40200	4	4	0	0	0	0	0	
@@ -4343,7 +4438,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49312	18	1	41193	1	1	0	0	0	0	0	
 49312	19	1	40572	1	12	0	0	0	0	0	
 49312	20	1	40380	1	3	0	0	0	0	0	
-49312	21	1	40190	5	3.20000005	0	0	0	0	0	
+49312	21	1	40190	5	3.2	0	0	0	0	0	
 49312	22	1	40191	11	5	0	0	0	0	0	
 49312	23	1	40192	11	3.5	0	0	0	0	0	
 49312	24	1	40193	11	6	0	0	0	0	0	
@@ -4356,9 +4451,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49313	1	1	40368	1	3.5	0	0	0	0	0	
 49313	2	1	40022	4	5	0	0	0	0	0	
 49313	3	1	41304	1	1.25	0	0	0	0	0	
-49313	4	1	41301	1	0.0500000007	1	0	0	0	0	
+49313	4	1	41301	1	0.05	1	0	0	0	0	
 49313	5	1	41302	1	1	0	0	0	0	0	
-49313	6	1	40687	1	0.100000001	1	0	0	0	0	
+49313	6	1	40687	1	0.1	1	0	0	0	0	
 49313	7	1	40546	1	2	0	0	0	0	0	
 49313	8	1	41289	1	0.5	1	0	0	0	0	
 49313	9	1	41290	1	4	0	0	0	0	0	
@@ -4379,19 +4474,19 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49313	24	1	41461	1	6	0	0	0	0	0	
 49313	25	1	41462	1	6	0	0	0	0	0	
 49313	26	1	41463	1	6	0	0	0	0	0	
-49313	27	1	40362	6	19.6000004	0	0	0	0	0	
-49317	1	1	40509	3	10.6999998	0	0	0	0	0	
-49317	2	1	41089	1	3.20000005	0	0	0	0	0	
-49317	3	1	41628	1	0.800000012	1	0	0	0	0	
-49317	4	1	41629	1	1.70000005	0	0	0	0	0	
-49317	5	1	40514	1	0.600000024	0	0	0	0	0	
+49313	27	1	40362	6	19.6	0	0	0	0	0	
+49317	1	1	40509	3	10.7	0	0	0	0	0	
+49317	2	1	41089	1	3.2	0	0	0	0	0	
+49317	3	1	41628	1	0.8	1	0	0	0	0	
+49317	4	1	41629	1	1.7	0	0	0	0	0	
+49317	5	1	40514	1	0.6	0	0	0	0	0	
 49317	6	1	40515	1	2	0	0	0	0	0	
-49317	7	1	41620	1	0.600000024	1	0	0	0	0	
+49317	7	1	41620	1	0.6	1	0	0	0	0	
 49317	8	1	41621	1	1.5	0	0	0	0	0	
-49317	9	1	41624	1	0.600000024	1	0	0	0	0	
+49317	9	1	41624	1	0.6	1	0	0	0	0	
 49317	10	1	41625	1	1.5	0	0	0	0	0	
-49317	11	1	41196	1	0.400000006	0	0	0	0	0	
-49317	12	1	41197	1	0.200000003	0	0	0	0	0	
+49317	11	1	41196	1	0.4	0	0	0	0	0	
+49317	12	1	41197	1	0.2	0	0	0	0	0	
 49317	13	1	41300	1	1.5	0	0	0	0	0	
 49317	14	1	40022	2	2	0	0	0	0	0	
 49317	15	1	49290	1	5	0	0	0	0	0	
@@ -4399,7 +4494,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49317	17	1	41193	1	1	0	0	0	0	0	
 49317	18	1	40572	1	12	0	0	0	0	0	
 49317	19	1	40380	1	3	0	0	0	0	0	
-49317	20	1	40190	5	3.20000005	0	0	0	0	0	
+49317	20	1	40190	5	3.2	0	0	0	0	0	
 49317	21	1	40191	11	5	0	0	0	0	0	
 49317	22	1	40192	11	3.5	0	0	0	0	0	
 49317	23	1	40193	11	6	0	0	0	0	0	
@@ -4411,32 +4506,32 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49317	29	1	40042	5	8	0	0	0	0	0	
 49318	1	1	40572	1	13.5	0	0	0	0	0	
 49318	2	1	40509	3	10	0	0	0	0	0	
-49318	3	1	41636	1	0.150000006	1	0	0	0	0	
-49318	4	1	41642	1	0.300000012	0	0	0	0	0	
-49318	5	1	41648	1	0.300000012	0	0	0	0	0	
-49318	6	1	41654	1	0.300000012	0	0	0	0	0	
-49318	7	1	41660	1	0.200000003	1	0	0	0	0	
-49318	8	1	41666	1	0.200000003	1	0	0	0	0	
-49318	9	1	41687	1	0.200000003	1	0	0	0	0	
-49318	10	1	41693	1	0.200000003	1	0	0	0	0	
-49318	11	1	41699	1	0.300000012	0	0	0	0	0	
-49318	12	1	41705	1	0.200000003	1	0	0	0	0	
-49318	13	1	41711	1	0.300000012	0	0	0	0	0	
-49318	14	1	41717	1	0.300000012	0	0	0	0	0	
-49318	15	1	41725	1	0.300000012	0	0	0	0	0	
+49318	3	1	41636	1	0.15	1	0	0	0	0	
+49318	4	1	41642	1	0.3	0	0	0	0	0	
+49318	5	1	41648	1	0.3	0	0	0	0	0	
+49318	6	1	41654	1	0.3	0	0	0	0	0	
+49318	7	1	41660	1	0.2	1	0	0	0	0	
+49318	8	1	41666	1	0.2	1	0	0	0	0	
+49318	9	1	41687	1	0.2	1	0	0	0	0	
+49318	10	1	41693	1	0.2	1	0	0	0	0	
+49318	11	1	41699	1	0.3	0	0	0	0	0	
+49318	12	1	41705	1	0.2	1	0	0	0	0	
+49318	13	1	41711	1	0.3	0	0	0	0	0	
+49318	14	1	41717	1	0.3	0	0	0	0	0	
+49318	15	1	41725	1	0.3	0	0	0	0	0	
 49318	16	1	41637	1	1	0	0	0	0	0	
-49318	17	1	41643	1	1.60000002	0	0	0	0	0	
-49318	18	1	41649	1	1.60000002	0	0	0	0	0	
-49318	19	1	41655	1	1.60000002	0	0	0	0	0	
-49318	20	1	41661	1	1.60000002	0	0	0	0	0	
-49318	21	1	41667	1	1.60000002	0	0	0	0	0	
-49318	22	1	41688	1	1.60000002	0	0	0	0	0	
-49318	23	1	41694	1	1.60000002	0	0	0	0	0	
-49318	24	1	41700	1	1.60000002	0	0	0	0	0	
-49318	25	1	41706	1	1.60000002	0	0	0	0	0	
-49318	26	1	41712	1	1.60000002	0	0	0	0	0	
-49318	27	1	41718	1	1.60000002	0	0	0	0	0	
-49318	28	1	41726	1	1.60000002	0	0	0	0	0	
+49318	17	1	41643	1	1.6	0	0	0	0	0	
+49318	18	1	41649	1	1.6	0	0	0	0	0	
+49318	19	1	41655	1	1.6	0	0	0	0	0	
+49318	20	1	41661	1	1.6	0	0	0	0	0	
+49318	21	1	41667	1	1.6	0	0	0	0	0	
+49318	22	1	41688	1	1.6	0	0	0	0	0	
+49318	23	1	41694	1	1.6	0	0	0	0	0	
+49318	24	1	41700	1	1.6	0	0	0	0	0	
+49318	25	1	41706	1	1.6	0	0	0	0	0	
+49318	26	1	41712	1	1.6	0	0	0	0	0	
+49318	27	1	41718	1	1.6	0	0	0	0	0	
+49318	28	1	41726	1	1.6	0	0	0	0	0	
 49318	29	1	40022	2	3	0	0	0	0	0	
 49318	30	1	40184	1	2	0	0	0	0	0	
 49318	31	1	40200	4	4	0	0	0	0	0	
@@ -4445,37 +4540,37 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49318	35	1	41614	6	5	0	0	0	0	0	
 49318	36	1	41615	6	5	0	0	0	0	0	
 49318	37	1	41616	6	5	0	0	0	0	0	
-49318	38	1	40191	11	5.05000019	0	0	0	0	0	
+49318	38	1	40191	11	5.05	0	0	0	0	0	
 49318	39	1	41093	3	5	0	0	0	0	0	
 49318	40	1	40190	5	4	0	0	0	0	0	
 49319	1	1	40572	1	13.5	0	0	0	0	0	
-49319	2	1	40509	3	7.55000019	0	0	0	0	0	
-49319	3	1	41639	1	0.150000006	1	0	0	0	0	
-49319	4	1	41645	1	0.300000012	0	0	0	0	0	
-49319	5	1	41651	1	0.300000012	0	0	0	0	0	
-49319	6	1	41657	1	0.300000012	0	0	0	0	0	
-49319	7	1	41663	1	0.200000003	1	0	0	0	0	
-49319	8	1	41669	1	0.200000003	1	0	0	0	0	
-49319	9	1	41690	1	0.200000003	1	0	0	0	0	
-49319	10	1	41696	1	0.200000003	1	0	0	0	0	
-49319	11	1	41702	1	0.300000012	0	0	0	0	0	
-49319	12	1	41708	1	0.200000003	1	0	0	0	0	
-49319	13	1	41714	1	0.300000012	0	0	0	0	0	
-49319	14	1	41721	1	0.300000012	0	0	0	0	0	
-49319	15	1	41728	1	0.300000012	0	0	0	0	0	
+49319	2	1	40509	3	7.55	0	0	0	0	0	
+49319	3	1	41639	1	0.15	1	0	0	0	0	
+49319	4	1	41645	1	0.3	0	0	0	0	0	
+49319	5	1	41651	1	0.3	0	0	0	0	0	
+49319	6	1	41657	1	0.3	0	0	0	0	0	
+49319	7	1	41663	1	0.2	1	0	0	0	0	
+49319	8	1	41669	1	0.2	1	0	0	0	0	
+49319	9	1	41690	1	0.2	1	0	0	0	0	
+49319	10	1	41696	1	0.2	1	0	0	0	0	
+49319	11	1	41702	1	0.3	0	0	0	0	0	
+49319	12	1	41708	1	0.2	1	0	0	0	0	
+49319	13	1	41714	1	0.3	0	0	0	0	0	
+49319	14	1	41721	1	0.3	0	0	0	0	0	
+49319	15	1	41728	1	0.3	0	0	0	0	0	
 49319	16	1	41640	1	1	0	0	0	0	0	
-49319	17	1	41646	1	1.60000002	0	0	0	0	0	
-49319	18	1	41652	1	1.60000002	0	0	0	0	0	
-49319	19	1	41658	1	1.60000002	0	0	0	0	0	
-49319	20	1	41664	1	1.60000002	0	0	0	0	0	
-49319	21	1	41670	1	1.60000002	0	0	0	0	0	
-49319	22	1	41691	1	1.60000002	0	0	0	0	0	
-49319	23	1	41697	1	1.60000002	0	0	0	0	0	
-49319	24	1	41703	1	1.60000002	0	0	0	0	0	
-49319	25	1	41709	1	1.60000002	0	0	0	0	0	
-49319	26	1	41715	1	1.60000002	0	0	0	0	0	
-49319	27	1	41722	1	1.60000002	0	0	0	0	0	
-49319	28	1	41729	1	1.60000002	0	0	0	0	0	
+49319	17	1	41646	1	1.6	0	0	0	0	0	
+49319	18	1	41652	1	1.6	0	0	0	0	0	
+49319	19	1	41658	1	1.6	0	0	0	0	0	
+49319	20	1	41664	1	1.6	0	0	0	0	0	
+49319	21	1	41670	1	1.6	0	0	0	0	0	
+49319	22	1	41691	1	1.6	0	0	0	0	0	
+49319	23	1	41697	1	1.6	0	0	0	0	0	
+49319	24	1	41703	1	1.6	0	0	0	0	0	
+49319	25	1	41709	1	1.6	0	0	0	0	0	
+49319	26	1	41715	1	1.6	0	0	0	0	0	
+49319	27	1	41722	1	1.6	0	0	0	0	0	
+49319	28	1	41729	1	1.6	0	0	0	0	0	
 49319	29	1	40022	2	2.5	0	0	0	0	0	
 49319	30	1	41542	1	4	0	0	0	0	0	
 49319	31	1	40200	4	4	0	0	0	0	0	
@@ -4490,19 +4585,19 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49320	1	1	40122	10	5	0	0	0	0	0	
 49320	2	1	40183	22	6	0	0	0	0	0	
 49320	3	1	41591	1	0.25	1	0	0	0	0	
-49320	4	1	41592	1	1.20000005	0	0	0	0	0	
+49320	4	1	41592	1	1.2	0	0	0	0	0	
 49320	5	1	40696	1	1	0	0	0	0	0	
 49320	6	1	40740	1	2	0	0	0	0	0	
-49320	7	1	40697	1	0.600000024	1	0	0	0	0	
+49320	7	1	40697	1	0.6	1	0	0	0	0	
 49320	8	1	40741	1	1.5	0	0	0	0	0	
-49320	9	1	40471	1	0.800000012	1	0	0	0	0	
+49320	9	1	40471	1	0.8	1	0	0	0	0	
 49320	10	1	41408	1	2	0	0	0	0	0	
-49320	11	1	41196	1	0.400000006	0	0	0	0	0	
-49320	12	1	41197	1	0.200000003	0	0	0	0	0	
+49320	11	1	41196	1	0.4	0	0	0	0	0	
+49320	12	1	41197	1	0.2	0	0	0	0	0	
 49320	13	1	41300	1	1.5	0	0	0	0	0	
 49320	14	1	40367	1	2	0	0	0	0	0	
 49320	15	1	40380	1	3	0	0	0	0	0	
-49320	16	1	40572	1	10.3000002	0	0	0	0	0	
+49320	16	1	40572	1	10.3	0	0	0	0	0	
 49320	17	1	41192	1	2	0	0	0	0	0	
 49320	18	1	41193	1	1	0	0	0	0	0	
 49320	19	1	40156	4	10	0	0	0	0	0	
@@ -4529,25 +4624,25 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49320	40	1	40217	2	2	0	0	0	0	0	
 49320	41	1	40218	1	2	0	0	0	0	0	
 49320	42	1	49292	1	3	0	0	0	0	0	
-49321	1	1	40509	3	10.6999998	0	0	0	0	0	
+49321	1	1	40509	3	10.7	0	0	0	0	0	
 49321	2	1	40367	1	2	0	0	0	0	0	
 49321	3	1	41607	1	0.25	1	0	0	0	0	
-49321	4	1	41608	1	1.70000005	0	0	0	0	0	
+49321	4	1	41608	1	1.7	0	0	0	0	0	
 49321	5	1	41583	1	0.5	1	0	0	0	0	
 49321	6	1	41584	1	2	0	0	0	0	0	
-49321	7	1	40788	1	0.600000024	1	0	0	0	0	
-49321	8	1	40789	1	2.29999995	0	0	0	0	0	
-49321	9	1	41196	1	0.400000006	0	0	0	0	0	
-49321	10	1	41197	1	0.200000003	0	0	0	0	0	
+49321	7	1	40788	1	0.6	1	0	0	0	0	
+49321	8	1	40789	1	2.3	0	0	0	0	0	
+49321	9	1	41196	1	0.4	0	0	0	0	0	
+49321	10	1	41197	1	0.2	0	0	0	0	0	
 49321	11	1	41300	1	1.5	0	0	0	0	0	
 49321	12	1	40022	2	2	0	0	0	0	0	
-49321	13	1	40156	4	6.1500001	0	0	0	0	0	
+49321	13	1	40156	4	6.15	0	0	0	0	0	
 49321	14	1	40122	10	5	0	0	0	0	0	
 49321	15	1	41192	1	2	0	0	0	0	0	
 49321	16	1	41193	1	1	0	0	0	0	0	
 49321	17	1	40572	1	12	0	0	0	0	0	
 49321	18	1	40380	1	3	0	0	0	0	0	
-49321	19	1	40190	5	3.20000005	0	0	0	0	0	
+49321	19	1	40190	5	3.2	0	0	0	0	0	
 49321	20	1	40191	11	5	0	0	0	0	0	
 49321	21	1	40192	11	3.5	0	0	0	0	0	
 49321	22	1	40193	11	6	0	0	0	0	0	
@@ -4557,12 +4652,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49321	26	1	41189	1	2	0	0	0	0	0	
 49321	27	1	40183	22	6	0	0	0	0	0	
 49321	28	1	41088	45	7	0	0	0	0	0	
-49323	1	1	40362	1	96.5899963	0	0	0	0	0	
+49323	1	1	40362	1	96.59	0	0	0	0	0	
 49323	2	1	40362	5	2.5	0	0	0	0	0	
-49323	3	1	40362	15	0.699999988	0	0	0	0	0	
-49323	4	1	40362	40	0.150000006	1	0	0	0	0	
-49323	5	1	40362	65	0.0500000007	1	0	0	0	0	
-49323	6	1	40362	100	0.00999999978	1	0	0	0	0	
+49323	3	1	40362	15	0.7	0	0	0	0	0	
+49323	4	1	40362	40	0.15	1	0	0	0	0	
+49323	5	1	40362	65	0.05	1	0	0	0	0	
+49323	6	1	40362	100	0.01	1	0	0	0	0	
 49324	1	1	40772	1	2	1	0	0	0	0	
 49324	2	1	40773	1	10	0	0	0	0	0	
 49324	3	1	41305	1	5.5	0	0	0	0	0	
@@ -4575,22 +4670,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49324	10	1	40021	3	6	0	0	0	0	0	
 49324	11	1	40362	5	13	0	0	0	0	0	
 49325	1	1	37977	1	100	1	0	0	0	0	
-49325	2	2	40022	10	10.9499998	0	0	0	0	0	
-49325	3	2	40687	1	0.0500000007	1	0	0	0	0	
+49325	2	2	40022	10	10.95	0	0	0	0	0	
+49325	3	2	40687	1	0.05	1	0	0	0	0	
 49325	4	2	40701	1	2	1	0	0	0	0	
 49325	5	2	40351	1	12	1	0	0	0	0	
 49325	6	2	41297	40	27	0	0	0	0	0	
 49325	7	2	41298	40	27	0	0	0	0	0	
 49325	8	2	41299	40	21	0	0	0	0	0	
 49326	1	1	37978	1	100	1	0	0	0	0	
-49326	2	2	40370	1	0.100000001	1	0	0	0	0	
-49326	3	2	40022	10	8.89999962	0	0	0	0	0	
+49326	2	2	40370	1	0.1	1	0	0	0	0	
+49326	3	2	40022	10	8.9	0	0	0	0	0	
 49326	4	2	40336	1	4	1	0	0	0	0	
 49326	5	2	40274	1	5	1	0	0	0	0	
 49326	6	2	40037	20	32	0	0	0	0	0	
 49326	7	2	40106	20	32	0	0	0	0	0	
 49326	8	2	40111	20	18	0	0	0	0	0	
-49327	1	1	39101	1	17.3999996	0	0	0	0	0	
+49327	1	1	39101	1	17.4	0	0	0	0	0	
 49327	2	1	31969	1	10	0	0	0	0	0	
 49327	3	1	31974	1	10	0	0	0	0	0	
 49327	4	1	31970	2	8	0	0	0	0	0	
@@ -4609,19 +4704,19 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49327	17	1	39096	1	1	0	0	0	0	0	
 49327	18	1	39097	1	1	0	0	0	0	0	
 49327	19	1	39075	1	0.25	0	0	0	0	0	
-49327	20	1	39077	1	0.200000003	0	0	0	0	0	
-49327	21	1	39092	1	0.0500000007	0	0	0	0	0	
-49327	22	1	39093	1	0.0500000007	0	0	0	0	0	
-49327	23	1	39094	1	0.0500000007	0	0	0	0	0	
+49327	20	1	39077	1	0.2	0	0	0	0	0	
+49327	21	1	39092	1	0.05	0	0	0	0	0	
+49327	22	1	39093	1	0.05	0	0	0	0	0	
+49327	23	1	39094	1	0.05	0	0	0	0	0	
 49328	1	1	40453	1	4	0	0	0	0	0	
 49328	2	1	40454	1	2	0	0	0	0	0	
 49328	3	1	40299	1	8	0	0	0	0	0	
 49328	4	1	40300	1	6	0	0	0	0	0	
 49328	5	1	40455	1	20	0	0	0	0	0	
 49328	6	1	41111	3	60	0	0	0	0	0	
-49329	15	1	41541	1	0.200000003	1	0	0	0	0	
-49329	16	1	41340	1	0.600000024	1	0	0	0	0	
-49329	17	1	40682	1	0.200000003	1	0	0	0	0	
+49329	15	1	41541	1	0.2	1	0	0	0	0	
+49329	16	1	41340	1	0.6	1	0	0	0	0	
+49329	17	1	40682	1	0.2	1	0	0	0	0	
 49329	12	1	41269	1	2	0	0	0	0	0	
 49329	13	1	41273	1	2.5	0	0	0	0	0	
 49329	14	1	40312	1	1	0	0	0	0	0	
@@ -4636,24 +4731,24 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49329	5	1	40201	1	12	0	0	0	0	0	
 49329	1	1	40153	3	9	0	0	0	0	0	
 49329	2	1	40155	3	9	0	0	0	0	0	
-49330	1	1	40509	3	12.1000004	0	0	0	0	0	
+49330	1	1	40509	3	12.1	0	0	0	0	0	
 49330	2	1	41091	1	3	0	0	0	0	0	
-49330	3	1	41764	1	0.800000012	1	0	0	0	0	
+49330	3	1	41764	1	0.8	1	0	0	0	0	
 49330	4	1	41765	1	2	0	0	0	0	0	
-49330	5	1	41768	1	0.600000024	1	0	0	0	0	
+49330	5	1	41768	1	0.6	1	0	0	0	0	
 49330	6	1	41769	1	1.5	0	0	0	0	0	
-49330	7	1	40437	1	0.400000006	1	0	0	0	0	
+49330	7	1	40437	1	0.4	1	0	0	0	0	
 49330	8	1	40441	1	1.5	0	0	0	0	0	
-49330	9	1	41196	1	0.400000006	0	0	0	0	0	
-49330	10	1	41197	1	0.200000003	0	0	0	0	0	
+49330	9	1	41196	1	0.4	0	0	0	0	0	
+49330	10	1	41197	1	0.2	0	0	0	0	0	
 49330	11	1	41300	1	1.5	0	0	0	0	0	
 49330	12	1	40022	2	2	0	0	0	0	0	
 49330	13	1	49290	1	6	0	0	0	0	0	
 49330	14	1	41192	1	2	0	0	0	0	0	
 49330	15	1	41193	1	1	0	0	0	0	0	
 49330	16	1	40572	1	13	0	0	0	0	0	
-49330	17	1	41493	1	2.29999995	0	0	0	0	0	
-49330	18	1	40190	5	3.20000005	0	0	0	0	0	
+49330	17	1	41493	1	2.3	0	0	0	0	0	
+49330	18	1	40190	5	3.2	0	0	0	0	0	
 49330	19	1	40191	11	5	0	0	0	0	0	
 49330	20	1	40192	11	3.5	0	0	0	0	0	
 49330	21	1	40193	11	6	0	0	0	0	0	
@@ -4665,14 +4760,14 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49330	27	1	40042	5	8	0	0	0	0	0	
 49331	1	1	40509	3	12	0	0	0	0	0	
 49331	2	1	40122	10	5	0	0	0	0	0	
-49331	3	1	41563	1	0.800000012	1	0	0	0	0	
+49331	3	1	41563	1	0.8	1	0	0	0	0	
 49331	4	1	41564	1	2	0	0	0	0	0	
-49331	5	1	41567	1	0.600000024	1	0	0	0	0	
+49331	5	1	41567	1	0.6	1	0	0	0	0	
 49331	6	1	41568	1	1.5	0	0	0	0	0	
-49331	7	1	40196	1	0.400000006	1	0	0	0	0	
+49331	7	1	40196	1	0.4	1	0	0	0	0	
 49331	8	1	40199	1	1.5	0	0	0	0	0	
-49331	9	1	41196	1	0.400000006	0	0	0	0	0	
-49331	10	1	41197	1	0.200000003	0	0	0	0	0	
+49331	9	1	41196	1	0.4	0	0	0	0	0	
+49331	10	1	41197	1	0.2	0	0	0	0	0	
 49331	11	1	41300	1	1.5	0	0	0	0	0	
 49331	12	1	40021	2	4	0	0	0	0	0	
 49331	13	1	41090	45	7	0	0	0	0	0	
@@ -4680,7 +4775,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49331	15	1	41193	1	1	0	0	0	0	0	
 49331	16	1	40572	1	12	0	0	0	0	0	
 49331	17	1	40184	1	2	0	0	0	0	0	
-49331	18	1	40190	5	3.20000005	0	0	0	0	0	
+49331	18	1	40190	5	3.2	0	0	0	0	0	
 49331	19	1	40191	11	5	0	0	0	0	0	
 49331	20	1	40192	11	3.5	0	0	0	0	0	
 49331	21	1	40193	11	6	0	0	0	0	0	
@@ -4688,26 +4783,26 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49331	23	1	40202	7	5	0	0	0	0	0	
 49331	24	1	41188	1	4	0	0	0	0	0	
 49331	25	1	41189	1	2	0	0	0	0	0	
-49331	26	1	41088	45	6.4000001	0	0	0	0	0	
+49331	26	1	41088	45	6.4	0	0	0	0	0	
 49331	27	1	40183	22	6	0	0	0	0	0	
 49332	1	1	40509	3	12	0	0	0	0	0	
 49332	2	1	49290	1	5	0	0	0	0	0	
-49332	3	1	41775	1	0.600000024	1	0	0	0	0	
+49332	3	1	41775	1	0.6	1	0	0	0	0	
 49332	4	1	41777	1	2	0	0	0	0	0	
-49332	5	1	41780	1	0.699999988	1	0	0	0	0	
+49332	5	1	41780	1	0.7	1	0	0	0	0	
 49332	6	1	41782	1	1.5	0	0	0	0	0	
-49332	7	1	41515	1	0.400000006	1	0	0	0	0	
+49332	7	1	41515	1	0.4	1	0	0	0	0	
 49332	8	1	41516	1	1.5	0	0	0	0	0	
-49332	9	1	41196	1	0.400000006	0	0	0	0	0	
-49332	10	1	41197	1	0.200000003	0	0	0	0	0	
+49332	9	1	41196	1	0.4	0	0	0	0	0	
+49332	10	1	41197	1	0.2	0	0	0	0	0	
 49332	11	1	41300	1	1.5	0	0	0	0	0	
 49332	12	1	40022	2	2	0	0	0	0	0	
 49332	13	1	41493	1	3	0	0	0	0	0	
 49332	14	1	41192	1	2	0	0	0	0	0	
 49332	15	1	41193	1	1	0	0	0	0	0	
-49332	16	1	40572	1	13.3999996	0	0	0	0	0	
+49332	16	1	40572	1	13.4	0	0	0	0	0	
 49332	17	1	40380	1	3	0	0	0	0	0	
-49332	18	1	40190	5	3.29999995	0	0	0	0	0	
+49332	18	1	40190	5	3.3	0	0	0	0	0	
 49332	19	1	40191	11	5	0	0	0	0	0	
 49332	20	1	40192	11	3.5	0	0	0	0	0	
 49332	21	1	40193	11	6	0	0	0	0	0	
@@ -4772,13 +4867,13 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49334	2	1	40544	1	1.5	0	0	0	0	0	
 49334	3	1	40545	1	1	0	0	0	0	0	
 49334	4	1	40546	1	0.5	0	0	0	0	0	
-49334	5	1	41302	1	0.200000003	0	0	0	0	0	
-49334	6	1	40368	1	0.800000012	0	0	0	0	0	
-49334	7	1	40369	1	0.200000003	0	0	0	0	0	
-49334	8	1	40370	1	0.0599999987	1	0	0	0	0	
-49334	9	1	40687	1	0.0199999996	1	0	0	0	0	
+49334	5	1	41302	1	0.2	0	0	0	0	0	
+49334	6	1	40368	1	0.8	0	0	0	0	0	
+49334	7	1	40369	1	0.2	0	0	0	0	0	
+49334	8	1	40370	1	0.06	1	0	0	0	0	
+49334	9	1	40687	1	0.02	1	0	0	0	0	
 49334	10	1	40156	3	3	0	0	0	0	0	
-49334	11	1	40157	1	2.92000008	0	0	0	0	0	
+49334	11	1	40157	1	2.92	0	0	0	0	0	
 49334	12	1	40158	1	2	0	0	0	0	0	
 49334	13	1	41415	1	2	0	0	0	0	0	
 49334	14	1	41416	1	2	0	0	0	0	0	
@@ -4793,12 +4888,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49334	23	1	41444	1	1	0	0	0	0	0	
 49334	24	1	41445	1	1	0	0	0	0	0	
 49334	25	1	41446	1	1	0	0	0	0	0	
-49334	26	1	41467	1	0.400000006	0	0	0	0	0	
-49334	27	1	41468	1	0.400000006	0	0	0	0	0	
-49334	28	1	41469	1	0.400000006	0	0	0	0	0	
-49334	29	1	41482	1	0.400000006	0	0	0	0	0	
-49334	30	1	41483	1	0.400000006	0	0	0	0	0	
-49334	31	1	41484	1	0.400000006	0	0	0	0	0	
+49334	26	1	41467	1	0.4	0	0	0	0	0	
+49334	27	1	41468	1	0.4	0	0	0	0	0	
+49334	28	1	41469	1	0.4	0	0	0	0	0	
+49334	29	1	41482	1	0.4	0	0	0	0	0	
+49334	30	1	41483	1	0.4	0	0	0	0	0	
+49334	31	1	41484	1	0.4	0	0	0	0	0	
 49334	32	1	34396	1	1	0	0	0	0	0	
 49334	33	1	34397	1	1	0	0	0	0	0	
 49334	34	1	34398	1	1	0	0	0	0	0	
@@ -4812,12 +4907,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49334	42	1	34406	1	2	0	0	0	0	0	
 49334	43	1	34407	1	2	0	0	0	0	0	
 49334	44	1	34408	1	2	0	0	0	0	0	
-49334	45	1	34410	1	0.400000006	0	0	0	0	0	
-49334	46	1	34411	1	0.400000006	0	0	0	0	0	
-49334	47	1	34412	1	0.400000006	0	0	0	0	0	
-49334	48	1	34413	1	0.400000006	0	0	0	0	0	
-49334	49	1	34414	1	0.400000006	0	0	0	0	0	
-49334	50	1	34415	1	0.400000006	0	0	0	0	0	
+49334	45	1	34410	1	0.4	0	0	0	0	0	
+49334	46	1	34411	1	0.4	0	0	0	0	0	
+49334	47	1	34412	1	0.4	0	0	0	0	0	
+49334	48	1	34413	1	0.4	0	0	0	0	0	
+49334	49	1	34414	1	0.4	0	0	0	0	0	
+49334	50	1	34415	1	0.4	0	0	0	0	0	
 49334	51	1	34937	2	1	0	0	0	0	0	
 49334	52	1	34938	2	1	0	0	0	0	0	
 49334	53	1	34939	2	1	0	0	0	0	0	
@@ -4858,22 +4953,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49334	88	1	40193	7	1	0	0	0	0	0	
 49335	1	1	40509	3	12	0	0	0	0	0	
 49335	2	1	41091	1	3	0	0	0	0	0	
-49335	3	1	41785	1	0.800000012	1	0	0	0	0	
+49335	3	1	41785	1	0.8	1	0	0	0	0	
 49335	4	1	41786	1	2	0	0	0	0	0	
-49335	5	1	41789	1	0.600000024	1	0	0	0	0	
+49335	5	1	41789	1	0.6	1	0	0	0	0	
 49335	6	1	41790	1	1.5	0	0	0	0	0	
-49335	7	1	41155	1	0.400000006	1	0	0	0	0	
+49335	7	1	41155	1	0.4	1	0	0	0	0	
 49335	8	1	41157	1	1.5	0	0	0	0	0	
-49335	9	1	41196	1	0.400000006	0	0	0	0	0	
-49335	10	1	41197	1	0.200000003	0	0	0	0	0	
+49335	9	1	41196	1	0.4	0	0	0	0	0	
+49335	10	1	41197	1	0.2	0	0	0	0	0	
 49335	11	1	41300	1	1.5	0	0	0	0	0	
 49335	12	1	40021	2	4	0	0	0	0	0	
 49335	13	1	41089	1	4	0	0	0	0	0	
 49335	14	1	41192	1	2	0	0	0	0	0	
 49335	15	1	41193	1	1	0	0	0	0	0	
-49335	16	1	40572	1	13.3000002	0	0	0	0	0	
+49335	16	1	40572	1	13.3	0	0	0	0	0	
 49335	17	1	40122	10	5	0	0	0	0	0	
-49335	19	1	40190	5	3.29999995	0	0	0	0	0	
+49335	19	1	40190	5	3.3	0	0	0	0	0	
 49335	20	1	40191	11	5	0	0	0	0	0	
 49335	21	1	40192	11	3.5	0	0	0	0	0	
 49335	22	1	40193	11	6	0	0	0	0	0	
@@ -4886,15 +4981,15 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49336	1	1	40368	1	4	0	0	0	0	0	
 49336	2	1	40022	4	5	0	0	0	0	0	
 49336	3	1	41304	1	1.25	0	0	0	0	0	
-49336	4	1	41301	1	0.0500000007	1	0	0	0	0	
+49336	4	1	41301	1	0.05	1	0	0	0	0	
 49336	5	1	41302	1	1	0	0	0	0	0	
-49336	6	1	40687	1	0.100000001	1	0	0	0	0	
+49336	6	1	40687	1	0.1	1	0	0	0	0	
 49336	7	1	40546	1	2	0	0	0	0	0	
 49336	8	1	41591	1	0.25	1	0	0	0	0	
-49336	9	1	41592	1	1.20000005	0	0	0	0	0	
+49336	9	1	41592	1	1.2	0	0	0	0	0	
 49336	10	1	41571	1	0.5	1	0	0	0	0	
 49336	11	1	41572	1	1.5	0	0	0	0	0	
-49336	12	1	41599	1	0.600000024	1	0	0	0	0	
+49336	12	1	41599	1	0.6	1	0	0	0	0	
 49336	13	1	41600	1	2	0	0	0	0	0	
 49336	14	1	40369	1	2	0	0	0	0	0	
 49336	15	1	40370	1	0.5	0	0	0	0	0	
@@ -4908,15 +5003,15 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49336	23	1	41188	2	6	0	0	0	0	0	
 49336	24	1	41187	3	9	0	0	0	0	0	
 49336	25	1	41186	6	12	0	0	0	0	0	
-49336	26	1	40362	6	17.0499992	0	0	0	0	0	
-49337	1	1	40509	3	11.9499998	0	0	0	0	0	
+49336	26	1	40362	6	17.05	0	0	0	0	0	
+49337	1	1	40509	3	11.95	0	0	0	0	0	
 49337	2	1	41090	40	5.5	0	0	0	0	0	
-49337	3	1	41595	1	0.800000012	1	0	0	0	0	
+49337	3	1	41595	1	0.8	1	0	0	0	0	
 49337	4	1	41596	1	2	0	0	0	0	0	
-49337	5	1	41852	1	0.349999994	1	0	0	0	0	
+49337	5	1	41852	1	0.35	1	0	0	0	0	
 49337	6	1	41853	1	1.5	0	0	0	0	0	
-49337	7	1	41196	1	0.400000006	0	0	0	0	0	
-49337	8	1	41197	1	0.200000003	0	0	0	0	0	
+49337	7	1	41196	1	0.4	0	0	0	0	0	
+49337	8	1	41197	1	0.2	0	0	0	0	0	
 49337	9	1	41300	1	1.5	0	0	0	0	0	
 49337	10	1	40021	2	4	0	0	0	0	0	
 49337	11	1	41089	1	4	0	0	0	0	0	
@@ -4924,7 +5019,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49337	13	1	41193	1	1	0	0	0	0	0	
 49337	14	1	40572	1	13	0	0	0	0	0	
 49337	15	1	40122	10	5	0	0	0	0	0	
-49337	16	1	40190	5	3.29999995	0	0	0	0	0	
+49337	16	1	40190	5	3.3	0	0	0	0	0	
 49337	17	1	40191	11	5	0	0	0	0	0	
 49337	18	1	40192	11	3.5	0	0	0	0	0	
 49337	19	1	40193	11	6	0	0	0	0	0	
@@ -4936,22 +5031,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49337	25	1	41088	45	7	0	0	0	0	0	
 49338	1	1	40509	3	12	0	0	0	0	0	
 49338	2	1	49290	1	5.5	0	0	0	0	0	
-49338	3	1	41156	1	0.600000024	1	0	0	0	0	
+49338	3	1	41156	1	0.6	1	0	0	0	0	
 49338	4	1	41158	1	2	0	0	0	0	0	
 49338	5	1	41575	1	0.5	1	0	0	0	0	
 49338	6	1	41576	1	1.5	0	0	0	0	0	
-49338	7	1	40702	1	0.349999994	1	0	0	0	0	
+49338	7	1	40702	1	0.35	1	0	0	0	0	
 49338	8	1	40742	1	1.25	0	0	0	0	0	
-49338	9	1	41196	1	0.400000006	0	0	0	0	0	
-49338	10	1	41197	1	0.200000003	0	0	0	0	0	
+49338	9	1	41196	1	0.4	0	0	0	0	0	
+49338	10	1	41197	1	0.2	0	0	0	0	0	
 49338	11	1	41300	1	1.5	0	0	0	0	0	
 49338	12	1	40022	2	2	0	0	0	0	0	
 49338	13	1	41493	1	3	0	0	0	0	0	
 49338	14	1	41192	1	2	0	0	0	0	0	
 49338	15	1	41193	1	1	0	0	0	0	0	
-49338	16	1	40572	1	13.3999996	0	0	0	0	0	
+49338	16	1	40572	1	13.4	0	0	0	0	0	
 49338	17	1	40380	1	3	0	0	0	0	0	
-49338	18	1	40190	5	3.29999995	0	0	0	0	0	
+49338	18	1	40190	5	3.3	0	0	0	0	0	
 49338	19	1	40191	11	5	0	0	0	0	0	
 49338	20	1	40192	11	3.5	0	0	0	0	0	
 49338	21	1	40193	11	6	0	0	0	0	0	
@@ -4963,22 +5058,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49338	27	1	40042	5	8	0	0	0	0	0	
 49339	1	1	40509	3	12	0	0	0	0	0	
 49339	2	1	41091	1	3	0	0	0	0	0	
-49339	3	1	41603	1	0.699999988	1	0	0	0	0	
+49339	3	1	41603	1	0.7	1	0	0	0	0	
 49339	4	1	41604	1	2	0	0	0	0	0	
-49339	5	1	41547	1	0.600000024	1	0	0	0	0	
+49339	5	1	41547	1	0.6	1	0	0	0	0	
 49339	6	1	41548	1	1.5	0	0	0	0	0	
-49339	7	1	41551	1	0.400000006	1	0	0	0	0	
+49339	7	1	41551	1	0.4	1	0	0	0	0	
 49339	8	1	41552	1	1.5	0	0	0	0	0	
-49339	9	1	41196	1	0.400000006	0	0	0	0	0	
-49339	10	1	41197	1	0.200000003	0	0	0	0	0	
+49339	9	1	41196	1	0.4	0	0	0	0	0	
+49339	10	1	41197	1	0.2	0	0	0	0	0	
 49339	11	1	41300	1	1.5	0	0	0	0	0	
 49339	12	1	40021	2	4	0	0	0	0	0	
 49339	13	1	41089	1	4	0	0	0	0	0	
 49339	14	1	41192	1	2	0	0	0	0	0	
 49339	15	1	41193	1	1	0	0	0	0	0	
-49339	16	1	40572	1	13.3999996	0	0	0	0	0	
+49339	16	1	40572	1	13.4	0	0	0	0	0	
 49339	17	1	40122	10	5	0	0	0	0	0	
-49339	19	1	40190	5	3.29999995	0	0	0	0	0	
+49339	19	1	40190	5	3.3	0	0	0	0	0	
 49339	20	1	40191	11	5	0	0	0	0	0	
 49339	21	1	40192	11	3.5	0	0	0	0	0	
 49339	22	1	40193	11	6	0	0	0	0	0	
@@ -4988,7 +5083,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49339	26	1	41189	1	2	0	0	0	0	0	
 49339	27	1	40183	22	6	0	0	0	0	0	
 49339	28	1	41088	45	7	0	0	0	0	0	
-49340	1	1	39101	1	17.3999996	0	0	0	0	0	
+49340	1	1	39101	1	17.4	0	0	0	0	0	
 49340	2	1	31969	1	10	0	0	0	0	0	
 49340	3	1	31974	1	10	0	0	0	0	0	
 49340	4	1	31970	2	8	0	0	0	0	0	
@@ -5001,32 +5096,32 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49340	11	1	31978	2	4	0	0	0	0	0	
 49340	12	1	34155	2	4	0	0	0	0	0	
 49340	13	1	34156	2	4	0	0	0	0	0	
-49340	14	1	41882	1	1.20000005	0	0	0	0	0	
-49340	15	1	41886	1	1.20000005	0	0	0	0	0	
+49340	14	1	41882	1	1.2	0	0	0	0	0	
+49340	15	1	41886	1	1.2	0	0	0	0	0	
 49340	16	1	41890	1	2	0	0	0	0	0	
 49340	17	1	41894	1	2	0	0	0	0	0	
-49340	18	1	41881	1	0.0500000007	0	0	0	0	0	
-49340	19	1	41885	1	0.0500000007	0	0	0	0	0	
-49340	20	1	41889	1	0.0500000007	0	0	0	0	0	
-49340	21	1	41893	1	0.0500000007	0	0	0	0	0	
+49340	18	1	41881	1	0.05	0	0	0	0	0	
+49340	19	1	41885	1	0.05	0	0	0	0	0	
+49340	20	1	41889	1	0.05	0	0	0	0	0	
+49340	21	1	41893	1	0.05	0	0	0	0	0	
 49341	1	1	40509	3	12	0	0	0	0	0	
 49341	2	1	49290	1	5.5	0	0	0	0	0	
-49341	3	1	41793	1	0.699999988	1	0	0	0	0	
+49341	3	1	41793	1	0.7	1	0	0	0	0	
 49341	4	1	41794	1	2	0	0	0	0	0	
-49341	5	1	41910	1	0.600000024	1	0	0	0	0	
+49341	5	1	41910	1	0.6	1	0	0	0	0	
 49341	6	1	41911	1	1.5	0	0	0	0	0	
-49341	7	1	41914	1	0.400000006	1	0	0	0	0	
+49341	7	1	41914	1	0.4	1	0	0	0	0	
 49341	8	1	41915	1	1	0	0	0	0	0	
-49341	9	1	41196	1	0.400000006	0	0	0	0	0	
-49341	10	1	41197	1	0.200000003	0	0	0	0	0	
+49341	9	1	41196	1	0.4	0	0	0	0	0	
+49341	10	1	41197	1	0.2	0	0	0	0	0	
 49341	11	1	41300	1	1.5	0	0	0	0	0	
 49341	12	1	40022	2	2	0	0	0	0	0	
 49341	13	1	41493	1	3	0	0	0	0	0	
 49341	14	1	41192	1	2	0	0	0	0	0	
 49341	15	1	41193	1	1	0	0	0	0	0	
-49341	16	1	40572	1	13.3999996	0	0	0	0	0	
+49341	16	1	40572	1	13.4	0	0	0	0	0	
 49341	17	1	40380	1	3	0	0	0	0	0	
-49341	18	1	40190	5	3.29999995	0	0	0	0	0	
+49341	18	1	40190	5	3.3	0	0	0	0	0	
 49341	19	1	40191	11	5	0	0	0	0	0	
 49341	20	1	40192	11	3.5	0	0	0	0	0	
 49341	21	1	40193	11	6	0	0	0	0	0	
@@ -5038,22 +5133,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49341	27	1	40042	5	8	0	0	0	0	0	
 49342	1	1	40509	3	12	0	0	0	0	0	
 49342	2	1	41091	1	3	0	0	0	0	0	
-49342	3	1	41856	1	0.800000012	1	0	0	0	0	
+49342	3	1	41856	1	0.8	1	0	0	0	0	
 49342	4	1	41857	1	2	0	0	0	0	0	
-49342	5	1	41860	1	0.600000024	1	0	0	0	0	
+49342	5	1	41860	1	0.6	1	0	0	0	0	
 49342	6	1	41861	1	1.5	0	0	0	0	0	
-49342	7	1	41314	1	0.400000006	1	0	0	0	0	
+49342	7	1	41314	1	0.4	1	0	0	0	0	
 49342	8	1	41315	1	1.5	0	0	0	0	0	
-49342	9	1	41196	1	0.400000006	0	0	0	0	0	
-49342	10	1	41197	1	0.200000003	0	0	0	0	0	
+49342	9	1	41196	1	0.4	0	0	0	0	0	
+49342	10	1	41197	1	0.2	0	0	0	0	0	
 49342	11	1	41300	1	1.5	0	0	0	0	0	
 49342	12	1	40021	2	4	0	0	0	0	0	
 49342	13	1	41089	1	4	0	0	0	0	0	
 49342	14	1	41192	1	2	0	0	0	0	0	
 49342	15	1	41193	1	1	0	0	0	0	0	
-49342	16	1	40572	1	13.3000002	0	0	0	0	0	
+49342	16	1	40572	1	13.3	0	0	0	0	0	
 49342	17	1	40122	10	5	0	0	0	0	0	
-49342	18	1	40190	5	3.29999995	0	0	0	0	0	
+49342	18	1	40190	5	3.3	0	0	0	0	0	
 49342	19	1	40191	11	5	0	0	0	0	0	
 49342	20	1	40192	11	3.5	0	0	0	0	0	
 49342	21	1	40193	11	6	0	0	0	0	0	
@@ -5063,16 +5158,16 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49342	25	1	41189	1	2	0	0	0	0	0	
 49342	26	1	40183	22	6	0	0	0	0	0	
 49342	27	1	41088	45	7	0	0	0	0	0	
-49343	1	1	40509	3	11.6000004	0	0	0	0	0	
+49343	1	1	40509	3	11.6	0	0	0	0	0	
 49343	2	1	41090	40	5.5	0	0	0	0	0	
-49343	3	1	41840	1	0.300000012	1	0	0	0	0	
+49343	3	1	41840	1	0.3	1	0	0	0	0	
 49343	4	1	41841	1	1	0	0	0	0	0	
-49343	5	1	41965	1	0.600000024	1	0	0	0	0	
+49343	5	1	41965	1	0.6	1	0	0	0	0	
 49343	6	1	41966	1	1.5	0	0	0	0	0	
-49343	7	1	41969	1	0.400000006	1	0	0	0	0	
-49343	8	1	41970	1	1.20000005	0	0	0	0	0	
-49343	9	1	41196	1	0.400000006	0	0	0	0	0	
-49343	10	1	41197	1	0.200000003	0	0	0	0	0	
+49343	7	1	41969	1	0.4	1	0	0	0	0	
+49343	8	1	41970	1	1.2	0	0	0	0	0	
+49343	9	1	41196	1	0.4	0	0	0	0	0	
+49343	10	1	41197	1	0.2	0	0	0	0	0	
 49343	11	1	41300	1	1.5	0	0	0	0	0	
 49343	12	1	40021	2	4	0	0	0	0	0	
 49343	13	1	41089	1	4	0	0	0	0	0	
@@ -5080,7 +5175,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49343	15	1	41193	1	1	0	0	0	0	0	
 49343	16	1	40572	1	13	0	0	0	0	0	
 49343	17	1	40122	10	5	0	0	0	0	0	
-49343	18	1	40190	5	3.29999995	0	0	0	0	0	
+49343	18	1	40190	5	3.3	0	0	0	0	0	
 49343	19	1	40191	11	5	0	0	0	0	0	
 49343	20	1	40192	11	3.5	0	0	0	0	0	
 49343	21	1	40193	11	6	0	0	0	0	0	
@@ -5090,24 +5185,24 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49343	25	1	41189	1	2	0	0	0	0	0	
 49343	26	1	40183	22	6	0	0	0	0	0	
 49343	27	1	41088	45	7	0	0	0	0	0	
-49344	1	1	40509	3	11.3999996	0	0	0	0	0	
+49344	1	1	40509	3	11.4	0	0	0	0	0	
 49344	2	1	49290	1	5.5	0	0	0	0	0	
-49344	3	1	40488	1	0.699999988	1	0	0	0	0	
-49344	4	1	40662	1	1.79999995	0	0	0	0	0	
-49344	5	1	41555	1	0.600000024	1	0	0	0	0	
+49344	3	1	40488	1	0.7	1	0	0	0	0	
+49344	4	1	40662	1	1.8	0	0	0	0	0	
+49344	5	1	41555	1	0.6	1	0	0	0	0	
 49344	6	1	41556	1	1.5	0	0	0	0	0	
-49344	7	1	41559	1	0.400000006	1	0	0	0	0	
-49344	8	1	41560	1	1.20000005	0	0	0	0	0	
-49344	9	1	41197	1	0.200000003	0	0	0	0	0	
-49344	10	1	41305	1	0.150000006	0	0	0	0	0	
+49344	7	1	41559	1	0.4	1	0	0	0	0	
+49344	8	1	41560	1	1.2	0	0	0	0	0	
+49344	9	1	41197	1	0.2	0	0	0	0	0	
+49344	10	1	41305	1	0.15	0	0	0	0	0	
 49344	11	1	41300	1	1.5	0	0	0	0	0	
 49344	12	1	40022	2	2	0	0	0	0	0	
 49344	13	1	40122	10	5	0	0	0	0	0	
 49344	14	1	41193	1	1	0	0	0	0	0	
-49344	15	1	41304	1	0.600000024	0	0	0	0	0	
+49344	15	1	41304	1	0.6	0	0	0	0	0	
 49344	16	1	40572	1	13	0	0	0	0	0	
-49344	17	1	40156	4	6.1500001	0	0	0	0	0	
-49344	18	1	40190	5	3.29999995	0	0	0	0	0	
+49344	17	1	40156	4	6.15	0	0	0	0	0	
+49344	18	1	40190	5	3.3	0	0	0	0	0	
 49344	19	1	40191	11	5	0	0	0	0	0	
 49344	20	1	40192	11	3.5	0	0	0	0	0	
 49344	21	1	40193	11	6	0	0	0	0	0	
@@ -5119,22 +5214,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49344	27	1	40042	5	8	0	0	0	0	0	
 49345	1	1	40509	3	15.5	0	0	0	0	0	
 49345	2	1	41091	1	3	0	0	0	0	0	
-49345	3	1	41918	1	0.600000024	1	0	0	0	0	
+49345	3	1	41918	1	0.6	1	0	0	0	0	
 49345	4	1	41919	1	2	0	0	0	0	0	
-49345	5	1	41922	1	0.400000006	1	0	0	0	0	
+49345	5	1	41922	1	0.4	1	0	0	0	0	
 49345	6	1	41923	1	1.5	0	0	0	0	0	
 49345	7	1	41926	1	0.25	1	0	0	0	0	
-49345	8	1	41927	1	1.20000005	0	0	0	0	0	
-49345	9	1	41197	1	0.200000003	0	0	0	0	0	
-49345	10	1	41305	1	0.150000006	0	0	0	0	0	
+49345	8	1	41927	1	1.2	0	0	0	0	0	
+49345	9	1	41197	1	0.2	0	0	0	0	0	
+49345	10	1	41305	1	0.15	0	0	0	0	0	
 49345	11	1	41300	1	1.5	0	0	0	0	0	
 49345	12	1	40022	2	2	0	0	0	0	0	
 49345	13	1	41089	1	4	0	0	0	0	0	
 49345	14	1	41193	1	1	0	0	0	0	0	
-49345	15	1	41304	1	0.600000024	0	0	0	0	0	
-49345	16	1	40572	1	16.7999992	0	0	0	0	0	
+49345	15	1	41304	1	0.6	0	0	0	0	0	
+49345	16	1	40572	1	16.8	0	0	0	0	0	
 49345	17	1	40122	10	5	0	0	0	0	0	
-49345	18	1	40190	5	3.29999995	0	0	0	0	0	
+49345	18	1	40190	5	3.3	0	0	0	0	0	
 49345	19	1	40191	11	5	0	0	0	0	0	
 49345	20	1	40192	11	3.5	0	0	0	0	0	
 49345	21	1	40193	11	6	0	0	0	0	0	
@@ -5150,11 +5245,11 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49347	4	1	40380	1	2	0	0	0	0	0	
 49347	5	1	40115	1	1	0	0	0	0	0	
 49347	6	1	48903	1	5	0	0	0	0	0	
-49347	7	1	41493	1	1.79999995	0	0	0	0	0	
+49347	7	1	41493	1	1.8	0	0	0	0	0	
 49347	8	1	40572	1	1	0	0	0	0	0	
 49347	9	1	49290	1	5	0	0	0	0	0	
 49347	10	1	41089	1	2	0	0	0	0	0	
-49347	11	1	40509	3	12.8999996	0	0	0	0	0	
+49347	11	1	40509	3	12.9	0	0	0	0	0	
 49347	12	1	41097	4	1	0	0	0	0	0	
 49347	13	1	40042	5	8	0	0	0	0	0	
 49347	14	1	40040	10	8	0	0	0	0	0	
@@ -5166,35 +5261,35 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49347	20	1	41300	1	1	0	0	0	0	0	
 49347	21	1	40022	2	2	0	0	0	0	0	
 49347	22	1	40021	3	4	0	0	0	0	0	
-49347	23	1	41196	1	0.349999994	0	0	0	0	0	
-49347	24	1	41197	1	0.200000003	0	0	0	0	0	
-49347	25	1	41305	1	0.150000006	0	0	0	0	0	
+49347	23	1	41196	1	0.35	0	0	0	0	0	
+49347	24	1	41197	1	0.2	0	0	0	0	0	
+49347	25	1	41305	1	0.15	0	0	0	0	0	
 49347	26	1	41192	1	2	0	0	0	0	0	
 49347	27	1	41193	1	1	0	0	0	0	0	
-49347	28	1	41304	1	0.600000024	0	0	0	0	0	
+49347	28	1	41304	1	0.6	0	0	0	0	0	
 49347	29	1	41188	1	2	0	0	0	0	0	
 49347	30	1	41189	1	1.5	0	0	0	0	0	
 49347	31	1	41303	1	1	0	0	0	0	0	
-49348	1	1	40509	3	11.6499996	0	0	0	0	0	
+49348	1	1	40509	3	11.65	0	0	0	0	0	
 49348	2	1	41091	1	3	0	0	0	0	0	
-49348	3	1	41999	1	0.600000024	1	0	0	0	0	
+49348	3	1	41999	1	0.6	1	0	0	0	0	
 49348	4	1	42000	1	2	0	0	0	0	0	
-49348	5	1	42003	1	0.600000024	1	0	0	0	0	
+49348	5	1	42003	1	0.6	1	0	0	0	0	
 49348	6	1	42004	1	2	0	0	0	0	0	
-49348	7	1	40751	1	0.300000012	1	0	0	0	0	
+49348	7	1	40751	1	0.3	1	0	0	0	0	
 49348	8	1	40752	1	2	0	0	0	0	0	
 49348	9	1	42023	1	0.5	1	0	0	0	0	
 49348	10	1	42024	1	2	0	0	0	0	0	
-49348	11	1	41197	1	0.200000003	0	0	0	0	0	
-49348	12	1	41305	1	0.150000006	0	0	0	0	0	
+49348	11	1	41197	1	0.2	0	0	0	0	0	
+49348	12	1	41305	1	0.15	0	0	0	0	0	
 49348	13	1	41300	1	1.5	0	0	0	0	0	
 49348	14	1	40022	2	2	0	0	0	0	0	
-49348	15	1	41493	1	2.29999995	0	0	0	0	0	
+49348	15	1	41493	1	2.3	0	0	0	0	0	
 49348	16	1	41193	1	1	0	0	0	0	0	
-49348	17	1	41304	1	0.600000024	0	0	0	0	0	
-49348	18	1	40572	1	16.7999992	0	0	0	0	0	
+49348	17	1	41304	1	0.6	0	0	0	0	0	
+49348	18	1	40572	1	16.8	0	0	0	0	0	
 49348	19	1	40122	10	5	0	0	0	0	0	
-49348	20	1	40190	5	3.29999995	0	0	0	0	0	
+49348	20	1	40190	5	3.3	0	0	0	0	0	
 49348	21	1	40191	11	5	0	0	0	0	0	
 49348	22	1	40192	11	3.5	0	0	0	0	0	
 49348	23	1	40193	11	5	0	0	0	0	0	
@@ -5204,24 +5299,24 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49348	27	1	41303	1	1	0	0	0	0	0	
 49348	28	1	40183	22	8	0	0	0	0	0	
 49348	29	1	41088	45	8	0	0	0	0	0	
-49359	1	1	40509	3	11.3999996	0	0	0	0	0	
+49359	1	1	40509	3	11.4	0	0	0	0	0	
 49359	2	1	49290	1	6	0	0	0	0	0	
-49359	3	1	41844	1	0.300000012	1	0	0	0	0	
+49359	3	1	41844	1	0.3	1	0	0	0	0	
 49359	4	1	41845	1	1	0	0	0	0	0	
-49359	5	1	40991	1	0.600000024	1	0	0	0	0	
+49359	5	1	40991	1	0.6	1	0	0	0	0	
 49359	6	1	40993	1	1.5	0	0	0	0	0	
-49359	7	1	40994	1	0.400000006	1	0	0	0	0	
-49359	8	1	40996	1	1.20000005	0	0	0	0	0	
-49359	9	1	41197	1	0.200000003	0	0	0	0	0	
-49359	10	1	41305	1	0.150000006	0	0	0	0	0	
+49359	7	1	40994	1	0.4	1	0	0	0	0	
+49359	8	1	40996	1	1.2	0	0	0	0	0	
+49359	9	1	41197	1	0.2	0	0	0	0	0	
+49359	10	1	41305	1	0.15	0	0	0	0	0	
 49359	11	1	41300	1	1.5	0	0	0	0	0	
 49359	12	1	40022	2	2	0	0	0	0	0	
 49359	13	1	40122	10	5	0	0	0	0	0	
 49359	14	1	41193	1	1	0	0	0	0	0	
-49359	15	1	41304	1	0.600000024	0	0	0	0	0	
+49359	15	1	41304	1	0.6	0	0	0	0	0	
 49359	16	1	40572	1	13	0	0	0	0	0	
-49359	17	1	40156	4	6.8499999	0	0	0	0	0	
-49359	18	1	40190	5	3.29999995	0	0	0	0	0	
+49359	17	1	40156	4	6.85	0	0	0	0	0	
+49359	18	1	40190	5	3.3	0	0	0	0	0	
 49359	19	1	40191	11	5	0	0	0	0	0	
 49359	20	1	40192	11	3.5	0	0	0	0	0	
 49359	21	1	40193	11	6	0	0	0	0	0	
@@ -5256,24 +5351,24 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49362	1	7	40184	1	100	0	0	0	0	0	
 49362	1	8	41494	1	100	0	0	0	0	0	
 49362	1	9	41246	1	100	0	0	0	0	0	
-49364	1	1	40509	3	12.9499998	0	0	0	0	0	
+49364	1	1	40509	3	12.95	0	0	0	0	0	
 49364	2	1	41091	1	3	0	0	0	0	0	
-49364	3	1	41543	1	0.600000024	1	0	0	0	0	
+49364	3	1	41543	1	0.6	1	0	0	0	0	
 49364	4	1	41544	1	2	0	0	0	0	0	
-49364	5	1	41360	1	0.400000006	1	0	0	0	0	
-49364	6	1	41361	1	1.79999995	0	0	0	0	0	
-49364	7	1	41901	1	0.400000006	1	0	0	0	0	
+49364	5	1	41360	1	0.4	1	0	0	0	0	
+49364	6	1	41361	1	1.8	0	0	0	0	0	
+49364	7	1	41901	1	0.4	1	0	0	0	0	
 49364	8	1	41902	1	2	0	0	0	0	0	
-49364	9	1	41197	1	0.200000003	0	0	0	0	0	
-49364	10	1	41305	1	0.150000006	0	0	0	0	0	
+49364	9	1	41197	1	0.2	0	0	0	0	0	
+49364	10	1	41305	1	0.15	0	0	0	0	0	
 49364	11	1	41300	1	1.5	0	0	0	0	0	
 49364	12	1	40022	2	2	0	0	0	0	0	
-49364	13	1	41493	1	2.29999995	0	0	0	0	0	
+49364	13	1	41493	1	2.3	0	0	0	0	0	
 49364	14	1	41193	1	1	0	0	0	0	0	
-49364	15	1	41304	1	0.600000024	0	0	0	0	0	
-49364	16	1	40572	1	16.7999992	0	0	0	0	0	
+49364	15	1	41304	1	0.6	0	0	0	0	0	
+49364	16	1	40572	1	16.8	0	0	0	0	0	
 49364	17	1	40122	10	5	0	0	0	0	0	
-49364	18	1	40190	5	3.29999995	0	0	0	0	0	
+49364	18	1	40190	5	3.3	0	0	0	0	0	
 49364	19	1	40191	11	5	0	0	0	0	0	
 49364	20	1	40192	11	3.5	0	0	0	0	0	
 49364	21	1	40193	11	6	0	0	0	0	0	
@@ -5286,16 +5381,16 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49365	1	1	40368	1	4	0	0	0	0	0	
 49365	2	1	40022	4	4	0	0	0	0	0	
 49365	3	1	41304	1	1.25	0	0	0	0	0	
-49365	4	1	41301	1	0.0500000007	1	0	0	0	0	
+49365	4	1	41301	1	0.05	1	0	0	0	0	
 49365	5	1	41302	1	1	0	0	0	0	0	
-49365	6	1	40687	1	0.100000001	1	0	0	0	0	
+49365	6	1	40687	1	0.1	1	0	0	0	0	
 49365	7	1	40546	1	2	0	0	0	0	0	
-49365	8	1	41289	1	0.449999988	1	0	0	0	0	
+49365	8	1	41289	1	0.45	1	0	0	0	0	
 49365	9	1	41290	1	2	0	0	0	0	0	
-49365	10	1	40772	1	0.300000012	1	0	0	0	0	
+49365	10	1	40772	1	0.3	1	0	0	0	0	
 49365	11	1	40773	1	2	0	0	0	0	0	
-49365	12	1	41539	1	0.899999976	1	0	0	0	0	
-49365	13	1	41540	1	1.39999998	1	0	0	0	0	
+49365	12	1	41539	1	0.9	1	0	0	0	0	
+49365	13	1	41540	1	1.4	1	0	0	0	0	
 49365	14	1	40369	1	2	0	0	0	0	0	
 49365	15	1	40370	1	0.5	1	0	0	0	0	
 49365	16	1	40184	2	3	0	0	0	0	0	
@@ -5308,7 +5403,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49365	23	1	41188	2	7	0	0	0	0	0	
 49365	24	1	41187	3	9	0	0	0	0	0	
 49365	25	1	41186	6	11	0	0	0	0	0	
-49365	26	1	40362	6	17.0499992	0	0	0	0	0	
+49365	26	1	40362	6	17.05	0	0	0	0	0	
 49366	1	1	40156	1	100	0	0	0	0	0	
 49367	1	1	40156	2	100	0	0	0	0	0	
 49367	2	2	41088	6	100	0	0	0	0	0	
@@ -5328,24 +5423,24 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49372	1	1	41492	1	77	0	0	0	0	0	
 49372	2	1	41493	1	20	0	0	0	0	0	
 49372	3	1	41494	1	3	0	0	0	0	0	
-49373	1	1	40509	3	12.1499996	0	0	0	0	0	
+49373	1	1	40509	3	12.15	0	0	0	0	0	
 49373	2	1	41091	1	3	0	0	0	0	0	
-49373	3	1	42045	1	0.600000024	1	0	0	0	0	
+49373	3	1	42045	1	0.6	1	0	0	0	0	
 49373	4	1	42046	1	2	0	0	0	0	0	
-49373	5	1	42053	1	0.800000012	1	0	0	0	0	
+49373	5	1	42053	1	0.8	1	0	0	0	0	
 49373	6	1	42054	1	2	0	0	0	0	0	
-49373	7	1	42061	1	0.600000024	1	0	0	0	0	
+49373	7	1	42061	1	0.6	1	0	0	0	0	
 49373	8	1	42062	1	3	0	0	0	0	0	
-49373	9	1	41197	1	0.200000003	0	0	0	0	0	
-49373	10	1	41305	1	0.150000006	0	0	0	0	0	
+49373	9	1	41197	1	0.2	0	0	0	0	0	
+49373	10	1	41305	1	0.15	0	0	0	0	0	
 49373	11	1	41300	1	1	0	0	0	0	0	
 49373	12	1	40022	2	1.5	0	0	0	0	0	
-49373	13	1	41493	1	1.79999995	0	0	0	0	0	
+49373	13	1	41493	1	1.8	0	0	0	0	0	
 49373	14	1	41193	1	1	0	0	0	0	0	
-49373	15	1	41304	1	0.600000024	0	0	0	0	0	
-49373	16	1	40572	1	16.2999992	0	0	0	0	0	
+49373	15	1	41304	1	0.6	0	0	0	0	0	
+49373	16	1	40572	1	16.3	0	0	0	0	0	
 49373	17	1	40122	10	5	0	0	0	0	0	
-49373	18	1	40190	5	3.29999995	0	0	0	0	0	
+49373	18	1	40190	5	3.3	0	0	0	0	0	
 49373	19	1	40191	11	5	0	0	0	0	0	
 49373	20	1	40192	11	3.5	0	0	0	0	0	
 49373	21	1	40193	11	6	0	0	0	0	0	
@@ -5356,10 +5451,10 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49373	26	1	40364	1	2	0	0	0	0	0	
 49373	27	1	40040	12	8	0	0	0	0	0	
 49373	28	1	40042	5	8	0	0	0	0	0	
-49374	2	1	41755	1	0.200000003	1	0	0	0	0	
-49374	3	1	42077	1	1.20000005	1	0	0	0	0	
-49374	4	1	42081	1	1.79999995	1	0	0	0	0	
-49374	5	1	42019	1	1.79999995	1	0	0	0	0	
+49374	2	1	41755	1	0.2	1	0	0	0	0	
+49374	3	1	42077	1	1.2	1	0	0	0	0	
+49374	4	1	42081	1	1.8	1	0	0	0	0	
+49374	5	1	42019	1	1.8	1	0	0	0	0	
 49374	6	1	40225	1	3	0	0	0	0	0	
 49374	7	1	40227	1	4	0	0	0	0	0	
 49374	7	1	40346	1	4	0	0	0	0	0	
@@ -5404,15 +5499,15 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49375	18	1	41881	1	1	0	0	0	0	0	
 49375	19	1	41212	1	5	0	0	0	0	0	
 49375	20	1	41216	1	1	0	0	0	0	0	
-49375	21	1	39092	1	1.29999995	0	0	0	0	0	
-49375	22	1	39093	1	0.100000001	0	0	0	0	0	
-49375	23	1	39094	1	1.60000002	0	0	0	0	0	
-49375	24	1	36933	1	0.100000001	1	0	0	0	0	
-49375	25	1	41302	1	0.600000024	1	0	0	0	0	
-49375	26	1	41301	1	0.300000012	1	0	0	0	0	
-49376	1	1	42073	1	0.300000012	1	0	0	0	0	
-49376	2	1	42077	1	1.20000005	1	0	0	0	0	
-49376	3	1	42081	1	1.79999995	1	0	0	0	0	
+49375	21	1	39092	1	1.3	0	0	0	0	0	
+49375	22	1	39093	1	0.1	0	0	0	0	0	
+49375	23	1	39094	1	1.6	0	0	0	0	0	
+49375	24	1	36933	1	0.1	1	0	0	0	0	
+49375	25	1	41302	1	0.6	1	0	0	0	0	
+49375	26	1	41301	1	0.3	1	0	0	0	0	
+49376	1	1	42073	1	0.3	1	0	0	0	0	
+49376	2	1	42077	1	1.2	1	0	0	0	0	
+49376	3	1	42081	1	1.8	1	0	0	0	0	
 49376	4	1	40755	1	1	1	0	0	0	0	
 49376	5	1	40229	1	4	0	0	0	0	0	
 49376	6	1	40327	1	4	0	0	0	0	0	
@@ -5431,7 +5526,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49376	19	1	41193	1	3	0	0	0	0	0	
 49376	20	1	40367	3	12	0	0	0	0	0	
 49376	21	1	41300	1	8	0	0	0	0	0	
-49376	22	1	41493	3	9.69999981	0	0	0	0	0	
+49376	22	1	41493	3	9.7	0	0	0	0	0	
 49376	1	2	39262	1	16	0	0	0	0	0	
 49376	2	2	39263	1	16	0	0	0	0	0	
 49376	3	2	39264	1	16	0	0	0	0	0	
@@ -5471,31 +5566,31 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49377	30	1	41881	1	1	0	0	0	0	0	
 49377	31	1	41212	1	2	0	0	0	0	0	
 49377	32	1	41216	1	1	0	0	0	0	0	
-49377	33	1	39092	1	1.29999995	0	0	0	0	0	
-49377	34	1	39093	1	0.100000001	0	0	0	0	0	
+49377	33	1	39092	1	1.3	0	0	0	0	0	
+49377	34	1	39093	1	0.1	0	0	0	0	0	
 49377	35	1	39094	1	1.5	0	0	0	0	0	
-49377	36	1	36933	1	0.100000001	1	0	0	0	0	
-49377	37	1	36934	1	0.0500000007	1	0	0	0	0	
-49377	38	1	41302	1	0.550000012	1	0	0	0	0	
-49377	39	1	41301	1	0.400000006	1	0	0	0	0	
-49378	1	1	40509	3	12.1499996	0	0	0	0	0	
+49377	36	1	36933	1	0.1	1	0	0	0	0	
+49377	37	1	36934	1	0.05	1	0	0	0	0	
+49377	38	1	41302	1	0.55	1	0	0	0	0	
+49377	39	1	41301	1	0.4	1	0	0	0	0	
+49378	1	1	40509	3	12.15	0	0	0	0	0	
 49378	2	1	41091	1	3	0	0	0	0	0	
-49378	3	1	42113	1	0.600000024	1	0	0	0	0	
+49378	3	1	42113	1	0.6	1	0	0	0	0	
 49378	4	1	42114	1	2	0	0	0	0	0	
-49378	5	1	42109	1	0.800000012	1	0	0	0	0	
+49378	5	1	42109	1	0.8	1	0	0	0	0	
 49378	6	1	42110	1	2	0	0	0	0	0	
-49378	7	1	42105	1	0.600000024	1	0	0	0	0	
+49378	7	1	42105	1	0.6	1	0	0	0	0	
 49378	8	1	42106	1	3	0	0	0	0	0	
-49378	9	1	41197	1	0.200000003	0	0	0	0	0	
-49378	10	1	41305	1	0.150000006	0	0	0	0	0	
+49378	9	1	41197	1	0.2	0	0	0	0	0	
+49378	10	1	41305	1	0.15	0	0	0	0	0	
 49378	11	1	41300	1	1	0	0	0	0	0	
 49378	12	1	40022	2	1.5	0	0	0	0	0	
-49378	13	1	41493	1	1.79999995	0	0	0	0	0	
+49378	13	1	41493	1	1.8	0	0	0	0	0	
 49378	14	1	41193	1	1	0	0	0	0	0	
-49378	15	1	41304	1	0.600000024	0	0	0	0	0	
-49378	16	1	40572	1	16.2999992	0	0	0	0	0	
+49378	15	1	41304	1	0.6	0	0	0	0	0	
+49378	16	1	40572	1	16.3	0	0	0	0	0	
 49378	17	1	40122	10	5	0	0	0	0	0	
-49378	18	1	40190	5	3.29999995	0	0	0	0	0	
+49378	18	1	40190	5	3.3	0	0	0	0	0	
 49378	19	1	40191	11	5	0	0	0	0	0	
 49378	20	1	40192	11	3.5	0	0	0	0	0	
 49378	21	1	40193	11	6	0	0	0	0	0	
@@ -5558,26 +5653,26 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49383	16	1	49319	1	5	0	0	0	0	0	
 49383	17	1	49311	1	4	0	0	0	0	0	
 49383	18	1	49005	1	4	0	0	0	0	0	
-49384	1	1	40760	1	0.200000003	1	0	0	0	0	
+49384	1	1	40760	1	0.2	1	0	0	0	0	
 49384	2	1	40761	1	2	0	0	0	0	0	
-49384	3	1	40826	1	0.0500000007	1	0	0	0	0	
+49384	3	1	40826	1	0.05	1	0	0	0	0	
 49384	4	1	40827	1	2	0	0	0	0	0	
 49384	5	1	40812	1	1	1	0	0	0	0	
-49384	6	1	40813	1	0.649999976	0	0	0	0	0	
+49384	6	1	40813	1	0.65	0	0	0	0	0	
 49384	7	1	40814	1	1	1	0	0	0	0	
 49384	8	1	40815	1	1	0	0	0	0	0	
-49384	9	1	40816	1	0.800000012	1	0	0	0	0	
+49384	9	1	40816	1	0.8	1	0	0	0	0	
 49384	10	1	40817	1	1	0	0	0	0	0	
-49384	11	1	40822	1	0.800000012	1	0	0	0	0	
+49384	11	1	40822	1	0.8	1	0	0	0	0	
 49384	12	1	40823	1	1	0	0	0	0	0	
-49384	13	1	40236	1	0.800000012	1	0	0	0	0	
+49384	13	1	40236	1	0.8	1	0	0	0	0	
 49384	14	1	40261	1	1	0	0	0	0	0	
 49384	15	1	41189	1	2	0	0	0	0	0	
 49384	16	1	41303	1	1.5	0	0	0	0	0	
 49384	17	1	41193	1	1	0	0	0	0	0	
-49384	18	1	41304	1	0.600000024	0	0	0	0	0	
-49384	19	1	41197	1	0.200000003	0	0	0	0	0	
-49384	20	1	41305	1	0.150000006	0	0	0	0	0	
+49384	18	1	41304	1	0.6	0	0	0	0	0	
+49384	19	1	41197	1	0.2	0	0	0	0	0	
+49384	20	1	41305	1	0.15	0	0	0	0	0	
 49384	21	1	41300	1	1.5	0	0	0	0	0	
 49384	22	1	40022	2	7	0	0	0	0	0	
 49384	23	1	41493	2	8	0	0	0	0	0	
@@ -5588,27 +5683,27 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49384	28	1	41089	1	8	0	0	0	0	0	
 49384	29	1	41090	45	12	0	0	0	0	0	
 49384	30	1	49290	1	8	0	0	0	0	0	
-49385	1	1	40760	1	0.200000003	1	0	0	0	0	
+49385	1	1	40760	1	0.2	1	0	0	0	0	
 49385	2	1	40761	1	3	0	0	0	0	0	
-49385	3	1	40826	1	0.0500000007	1	0	0	0	0	
+49385	3	1	40826	1	0.05	1	0	0	0	0	
 49385	4	1	40827	1	2	0	0	0	0	0	
-49385	5	1	42105	1	1.20000005	1	0	0	0	0	
-49385	6	1	42106	1	2.6500001	0	0	0	0	0	
-49385	7	1	40230	1	1.20000005	1	0	0	0	0	
+49385	5	1	42105	1	1.2	1	0	0	0	0	
+49385	6	1	42106	1	2.65	0	0	0	0	0	
+49385	7	1	40230	1	1.2	1	0	0	0	0	
 49385	8	1	40255	1	1	0	0	0	0	0	
-49385	9	1	40247	1	1.20000005	1	0	0	0	0	
+49385	9	1	40247	1	1.2	1	0	0	0	0	
 49385	15	1	41189	1	2	0	0	0	0	0	
 49385	16	1	41303	1	1.5	0	0	0	0	0	
 49385	17	1	41193	1	1	0	0	0	0	0	
-49385	18	1	41304	1	0.600000024	0	0	0	0	0	
-49385	19	1	41197	1	0.200000003	0	0	0	0	0	
-49385	20	1	41305	1	0.150000006	0	0	0	0	0	
+49385	18	1	41304	1	0.6	0	0	0	0	0	
+49385	19	1	41197	1	0.2	0	0	0	0	0	
+49385	20	1	41305	1	0.15	0	0	0	0	0	
 49385	21	1	41300	1	1.5	0	0	0	0	0	
 49385	22	1	40022	2	7	0	0	0	0	0	
 49385	23	1	41493	2	8	0	0	0	0	0	
 49385	24	1	40183	22	10	0	0	0	0	0	
 49385	25	1	41088	45	10	0	0	0	0	0	
-49385	26	1	40572	1	12.5500002	0	0	0	0	0	
+49385	26	1	40572	1	12.55	0	0	0	0	0	
 49385	27	1	40122	10	5	0	0	0	0	0	
 49385	28	1	41089	1	8	0	0	0	0	0	
 49385	29	1	41090	45	12	0	0	0	0	0	
@@ -5631,12 +5726,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49386	16	1	41914	1	5	1	0	0	0	0	
 49386	17	1	41300	1	4	1	0	0	0	0	
 49386	18	1	40312	1	1	1	0	0	0	0	
-49386	19	1	41541	1	0.49000001	1	0	0	0	0	
-49386	20	1	41340	1	1.00010002	1	0	0	0	0	
-49386	21	1	41344	1	0.509800017	1	0	0	0	0	
-49386	22	1	41352	1	9.99999975e-05	1	0	0	0	0	
-49387	1	1	41301	1	0.0799999982	1	0	0	0	0	
-49387	2	1	40687	1	0.100000001	1	0	0	0	0	
+49386	19	1	41541	1	0.49	1	0	0	0	0	
+49386	20	1	41340	1	1.0001	1	0	0	0	0	
+49386	21	1	41344	1	0.5098	1	0	0	0	0	
+49386	22	1	41352	1	0.0001	1	0	0	0	0	
+49387	1	1	41301	1	0.08	1	0	0	0	0	
+49387	2	1	40687	1	0.1	1	0	0	0	0	
 49387	3	1	40370	1	0.5	1	0	0	0	0	
 49387	4	1	40369	1	1	0	0	0	0	0	
 49387	5	1	40368	1	2	0	0	0	0	0	
@@ -5653,7 +5748,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49387	16	1	41303	1	5	0	0	0	0	0	
 49387	17	1	41189	2	6	0	0	0	0	0	
 49387	18	1	41188	3	7	0	0	0	0	0	
-49387	19	1	41352	1	0.300000012	1	0	0	0	0	
+49387	19	1	41352	1	0.3	1	0	0	0	0	
 49387	20	1	40195	1	1	1	0	0	0	0	
 49387	21	1	40196	1	1	1	0	0	0	0	
 49387	22	1	42204	1	2.5	1	0	0	0	0	
@@ -5661,13 +5756,13 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49387	24	1	41563	1	1.5	1	0	0	0	0	
 49387	25	1	41567	1	1.5	1	0	0	0	0	
 49387	26	1	41539	2	2	0	0	0	0	0	
-49387	27	1	41540	1	1.39999998	0	0	0	0	0	
-49387	28	1	41541	1	0.200000003	1	0	0	0	0	
-49387	29	1	40372	1	0.100000001	1	0	0	0	0	
+49387	27	1	41540	1	1.4	0	0	0	0	0	
+49387	28	1	41541	1	0.2	1	0	0	0	0	
+49387	29	1	40372	1	0.1	1	0	0	0	0	
 49387	30	1	40184	2	5	0	0	0	0	0	
 49387	31	1	41300	1	2	0	0	0	0	0	
 49387	32	1	40380	1	6	0	0	0	0	0	
-49387	33	1	41542	6	15.3199997	0	0	0	0	0	
+49387	33	1	41542	6	15.32	0	0	0	0	0	
 49387	34	1	40201	2	7	0	0	0	0	0	
 49387	35	1	40363	1	3	0	0	0	0	0	
 49387	36	1	40371	1	0.5	0	0	0	0	0	
@@ -5676,15 +5771,15 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49387	3	2	40315	10	20	0	0	0	0	0	
 49387	4	2	42191	10	40	0	0	0	0	0	
 49387	1	3	49269	1	0.5	0	0	0	0	0	
-49387	2	3	40362	6	96.0899963	0	0	0	0	0	
+49387	2	3	40362	6	96.09	0	0	0	0	0	
 49387	3	3	40362	25	2.5	0	0	0	0	0	
-49387	4	3	40362	75	0.699999988	0	0	0	0	0	
-49387	5	3	49213	2	0.150000006	1	0	0	0	0	
-49387	6	3	49213	3	0.0500000007	1	0	0	0	0	
-49387	7	3	49213	5	0.00999999978	1	0	0	0	0	
+49387	4	3	40362	75	0.7	0	0	0	0	0	
+49387	5	3	49213	2	0.15	1	0	0	0	0	
+49387	6	3	49213	3	0.05	1	0	0	0	0	
+49387	7	3	49213	5	0.01	1	0	0	0	0	
 49388	1	1	40022	5	5	0	0	0	0	0	
-49388	2	1	41301	1	0.0799999982	1	0	0	0	0	
-49388	3	1	40687	1	0.100000001	1	0	0	0	0	
+49388	2	1	41301	1	0.08	1	0	0	0	0	
+49388	3	1	40687	1	0.1	1	0	0	0	0	
 49388	4	1	40370	1	0.5	1	0	0	0	0	
 49388	5	1	40369	1	1	0	0	0	0	0	
 49388	6	1	40368	1	2	0	0	0	0	0	
@@ -5710,36 +5805,36 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49388	26	1	42057	1	2	1	0	0	0	0	
 49388	27	1	42059	1	2	0	0	0	0	0	
 49388	28	1	41539	2	2	0	0	0	0	0	
-49388	29	1	41540	1	1.39999998	0	0	0	0	0	
-49388	30	1	41541	1	0.200000003	1	0	0	0	0	
-49388	31	1	40372	1	0.100000001	1	0	0	0	0	
+49388	29	1	41540	1	1.4	0	0	0	0	0	
+49388	30	1	41541	1	0.2	1	0	0	0	0	
+49388	31	1	40372	1	0.1	1	0	0	0	0	
 49388	31	1	40184	2	5	0	0	0	0	0	
 49388	32	1	41300	1	2	0	0	0	0	0	
 49388	33	1	40380	1	6	0	0	0	0	0	
-49388	34	1	40362	6	19.1200008	0	0	0	0	0	
-49389	1	1	41196	1	0.600000024	0	0	0	0	0	
+49388	34	1	40362	6	19.12	0	0	0	0	0	
+49389	1	1	41196	1	0.6	0	0	0	0	0	
 49389	2	1	41197	1	0.5	0	0	0	0	0	
-49389	3	1	41305	1	0.400000006	0	0	0	0	0	
+49389	3	1	41305	1	0.4	0	0	0	0	0	
 49389	4	1	41192	1	2	0	0	0	0	0	
 49389	5	1	41193	1	1	0	0	0	0	0	
 49389	6	1	41304	1	0.5	0	0	0	0	0	
 49389	7	1	41188	1	2	0	0	0	0	0	
 49389	8	1	41189	1	1.5	0	0	0	0	0	
 49389	9	1	41303	1	1	0	0	0	0	0	
-49389	10	1	42125	1	0.349999994	1	0	0	0	0	
-49389	11	1	42126	1	0.649999976	0	0	0	0	0	
+49389	10	1	42125	1	0.35	1	0	0	0	0	
+49389	11	1	42126	1	0.65	0	0	0	0	0	
 49389	12	1	41856	1	1	1	0	0	0	0	
 49389	13	1	41857	1	1	0	0	0	0	0	
-49389	14	1	41860	1	0.800000012	1	0	0	0	0	
-49389	15	1	41861	1	1.20000005	0	0	0	0	0	
+49389	14	1	41860	1	0.8	1	0	0	0	0	
+49389	15	1	41861	1	1.2	0	0	0	0	0	
 49389	16	1	42117	1	1	1	0	0	0	0	
 49389	17	1	42118	1	1	0	0	0	0	0	
-49389	18	1	42121	1	0.800000012	1	0	0	0	0	
-49389	19	1	42122	1	1.20000005	0	0	0	0	0	
-49389	20	1	42133	1	0.899999976	1	0	0	0	0	
-49389	21	1	42134	1	1.10000002	0	0	0	0	0	
-49389	22	1	42137	1	0.899999976	1	0	0	0	0	
-49389	23	1	42138	1	1.10000002	0	0	0	0	0	
+49389	18	1	42121	1	0.8	1	0	0	0	0	
+49389	19	1	42122	1	1.2	0	0	0	0	0	
+49389	20	1	42133	1	0.9	1	0	0	0	0	
+49389	21	1	42134	1	1.1	0	0	0	0	0	
+49389	22	1	42137	1	0.9	1	0	0	0	0	
+49389	23	1	42138	1	1.1	0	0	0	0	0	
 49389	24	1	41300	1	1	0	0	0	0	0	
 49389	25	1	40022	2	2	0	0	0	0	0	
 49389	26	1	40021	3	3	0	0	0	0	0	
@@ -5756,9 +5851,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49389	37	1	40202	7	4	0	0	0	0	0	
 49389	38	1	40190	5	4	0	0	0	0	0	
 49389	39	1	41093	3	4	0	0	0	0	0	
-49390	1	1	41196	1	0.600000024	0	0	0	0	0	
+49390	1	1	41196	1	0.6	0	0	0	0	0	
 49390	2	1	41197	1	0.5	0	0	0	0	0	
-49390	3	1	41305	1	0.400000006	0	0	0	0	0	
+49390	3	1	41305	1	0.4	0	0	0	0	0	
 49390	4	1	41192	1	2	0	0	0	0	0	
 49390	5	1	41193	1	1	0	0	0	0	0	
 49390	6	1	41304	1	0.5	0	0	0	0	0	
@@ -5771,10 +5866,10 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49390	13	1	42146	1	1.5	0	0	0	0	0	
 49390	14	1	42141	1	1	1	0	0	0	0	
 49390	15	1	42142	1	2	0	0	0	0	0	
-49390	16	1	40831	1	0.349999994	1	0	0	0	0	
-49390	17	1	40670	1	1.64999998	0	0	0	0	0	
-49390	18	1	37084	1	0.649999976	1	0	0	0	0	
-49390	19	1	37085	1	0.349999994	0	0	0	0	0	
+49390	16	1	40831	1	0.35	1	0	0	0	0	
+49390	17	1	40670	1	1.65	0	0	0	0	0	
+49390	18	1	37084	1	0.65	1	0	0	0	0	
+49390	19	1	37085	1	0.35	0	0	0	0	0	
 49390	20	1	41300	1	1	0	0	0	0	0	
 49390	21	1	40022	2	2	0	0	0	0	0	
 49390	22	1	40021	3	3	0	0	0	0	0	
@@ -5791,21 +5886,21 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49390	33	1	40202	7	4	0	0	0	0	0	
 49390	34	1	40190	5	4	0	0	0	0	0	
 49390	35	1	41093	3	4	0	0	0	0	0	
-49391	1	1	41221	1	0.100000001	1	0	0	0	0	
-49391	2	1	41265	1	0.300000012	1	0	0	0	0	
-49391	3	1	41348	1	0.400000006	1	0	0	0	0	
-49391	4	1	40512	1	0.200000003	1	0	0	0	0	
-49391	5	1	40511	1	0.600000024	1	0	0	0	0	
-49391	6	1	40760	1	0.600000024	1	0	0	0	0	
-49391	7	1	40605	1	0.300000012	1	0	0	0	0	
-49391	8	1	40604	1	0.699999988	1	0	0	0	0	
+49391	1	1	41221	1	0.1	1	0	0	0	0	
+49391	2	1	41265	1	0.3	1	0	0	0	0	
+49391	3	1	41348	1	0.4	1	0	0	0	0	
+49391	4	1	40512	1	0.2	1	0	0	0	0	
+49391	5	1	40511	1	0.6	1	0	0	0	0	
+49391	6	1	40760	1	0.6	1	0	0	0	0	
+49391	7	1	40605	1	0.3	1	0	0	0	0	
+49391	8	1	40604	1	0.7	1	0	0	0	0	
 49391	9	1	41222	1	1	0	0	0	0	0	
 49391	10	1	41266	1	1.5	0	0	0	0	0	
 49391	11	1	41349	1	1.5	0	0	0	0	0	
-49391	12	1	40761	1	1.79999995	0	0	0	0	0	
-49391	13	1	40607	1	1.79999995	0	0	0	0	0	
-49391	14	1	40606	1	1.79999995	0	0	0	0	0	
-49391	16	1	40362	3	46.4000015	0	0	0	0	0	
+49391	12	1	40761	1	1.8	0	0	0	0	0	
+49391	13	1	40607	1	1.8	0	0	0	0	0	
+49391	14	1	40606	1	1.8	0	0	0	0	0	
+49391	16	1	40362	3	46.4	0	0	0	0	0	
 49391	17	1	40033	160	3	0	0	0	0	0	
 49391	18	1	40034	120	3.5	0	0	0	0	0	
 49391	19	1	40035	95	4	0	0	0	0	0	
@@ -5816,23 +5911,23 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49391	24	1	40104	95	4	0	0	0	0	0	
 49391	25	1	40105	80	4.5	0	0	0	0	0	
 49391	26	1	40106	70	5.5	0	0	0	0	0	
-49392	1	1	41196	1	0.600000024	0	0	0	0	0	
+49392	1	1	41196	1	0.6	0	0	0	0	0	
 49392	2	1	41197	1	0.5	0	0	0	0	0	
-49392	3	1	41305	1	0.400000006	0	0	0	0	0	
+49392	3	1	41305	1	0.4	0	0	0	0	0	
 49392	4	1	41192	1	2	0	0	0	0	0	
 49392	5	1	41193	1	1	0	0	0	0	0	
 49392	6	1	41304	1	0.5	0	0	0	0	0	
 49392	7	1	41188	1	2	0	0	0	0	0	
 49392	8	1	41189	1	1.5	0	0	0	0	0	
 49392	9	1	41303	1	1	0	0	0	0	0	
-49392	10	1	42225	1	0.800000012	1	0	0	0	0	
-49392	11	1	42226	1	1.20000005	0	0	0	0	0	
-49392	12	1	42221	1	0.800000012	1	0	0	0	0	
-49392	13	1	42222	1	1.20000005	0	0	0	0	0	
-49392	14	1	42217	1	0.800000012	1	0	0	0	0	
-49392	15	1	42218	1	1.20000005	0	0	0	0	0	
-49392	16	1	42229	1	0.800000012	1	0	0	0	0	
-49392	17	1	42230	1	1.20000005	0	0	0	0	0	
+49392	10	1	42225	1	0.8	1	0	0	0	0	
+49392	11	1	42226	1	1.2	0	0	0	0	0	
+49392	12	1	42221	1	0.8	1	0	0	0	0	
+49392	13	1	42222	1	1.2	0	0	0	0	0	
+49392	14	1	42217	1	0.8	1	0	0	0	0	
+49392	15	1	42218	1	1.2	0	0	0	0	0	
+49392	16	1	42229	1	0.8	1	0	0	0	0	
+49392	17	1	42230	1	1.2	0	0	0	0	0	
 49392	18	1	41300	1	1	0	0	0	0	0	
 49392	19	1	40022	2	2	0	0	0	0	0	
 49392	20	1	40021	3	3	0	0	0	0	0	
@@ -5858,8 +5953,8 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49395	5	5	28721	3	100	0	0	0	0	0	
 49395	6	6	28723	1	100	0	0	0	0	0	
 49395	7	7	28724	1	100	0	0	0	0	0	
-49396	1	1	41301	1	0.0799999982	1	0	0	0	0	
-49396	2	1	40687	1	0.100000001	1	0	0	0	0	
+49396	1	1	41301	1	0.08	1	0	0	0	0	
+49396	2	1	40687	1	0.1	1	0	0	0	0	
 49396	3	1	40370	1	0.5	1	0	0	0	0	
 49396	4	1	40369	1	1	0	0	0	0	0	
 49396	5	1	40368	1	2	0	0	0	0	0	
@@ -5868,40 +5963,40 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49396	8	1	40545	1	1.5	0	0	0	0	0	
 49396	9	1	40544	1	2	0	0	0	0	0	
 49396	10	1	40543	1	3	0	0	0	0	0	
-49396	11	1	42157	1	0.899999976	1	0	0	0	0	
+49396	11	1	42157	1	0.9	1	0	0	0	0	
 49396	12	1	40069	1	1.5	1	0	0	0	0	
 49396	13	1	41793	1	2	1	0	0	0	0	
 49396	14	1	41910	1	1.5	1	0	0	0	0	
 49396	15	1	41914	1	1.5	1	0	0	0	0	
 49396	16	1	49200	1	10	0	0	0	0	0	
 49396	17	1	40182	2	6	0	0	0	0	0	
-49396	18	1	40022	4	4.51999998	0	0	0	0	0	
+49396	18	1	40022	4	4.52	0	0	0	0	0	
 49396	19	1	41304	1	3	0	0	0	0	0	
 49396	20	1	41193	1	4	0	0	0	0	0	
 49396	21	1	41303	1	6	0	0	0	0	0	
 49396	22	1	41189	2	8	0	0	0	0	0	
 49396	23	1	41539	2	1	0	0	0	0	0	
-49396	24	1	41540	1	1.20000005	0	0	0	0	0	
-49396	25	1	41541	1	0.200000003	1	0	0	0	0	
+49396	24	1	41540	1	1.2	0	0	0	0	0	
+49396	25	1	41541	1	0.2	1	0	0	0	0	
 49396	26	1	41542	6	8	0	0	0	0	0	
 49396	27	1	41091	1	5	0	0	0	0	0	
 49396	28	1	41092	1	4	0	0	0	0	0	
 49396	29	1	48902	1	5	0	0	0	0	0	
 49396	30	1	48903	1	8	0	0	0	0	0	
 49396	31	1	49262	2	6	0	0	0	0	0	
-49396	1	2	40362	6	96.5899963	0	0	0	0	0	
+49396	1	2	40362	6	96.59	0	0	0	0	0	
 49396	2	2	40362	25	2.5	0	0	0	0	0	
-49396	3	2	40362	75	0.699999988	0	0	0	0	0	
-49396	4	2	49213	2	0.150000006	1	0	0	0	0	
-49396	5	2	49213	3	0.0500000007	1	0	0	0	0	
-49396	6	2	49213	5	0.00999999978	1	0	0	0	0	
-49397	1	1	41532	1	1.20000005	1	0	0	0	0	
+49396	3	2	40362	75	0.7	0	0	0	0	0	
+49396	4	2	49213	2	0.15	1	0	0	0	0	
+49396	5	2	49213	3	0.05	1	0	0	0	0	
+49396	6	2	49213	5	0.01	1	0	0	0	0	
+49397	1	1	41532	1	1.2	1	0	0	0	0	
 49397	2	1	41528	1	1.5	1	0	0	0	0	
 49397	3	1	41534	1	2	0	0	0	0	0	
 49397	4	1	41530	1	2	0	0	0	0	0	
 49397	5	1	48979	1	1	1	0	0	0	0	
 49397	6	1	48980	1	1.5	1	0	0	0	0	
-49397	7	1	48981	1	1.20000005	1	0	0	0	0	
+49397	7	1	48981	1	1.2	1	0	0	0	0	
 49397	8	1	40342	1	4	0	0	0	0	0	
 49397	9	1	40343	1	4	0	0	0	0	0	
 49397	10	1	40380	1	4	0	0	0	0	0	
@@ -5910,7 +6005,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49397	13	1	41493	2	5	0	0	0	0	0	
 49397	14	1	40201	2	4	0	0	0	0	0	
 49397	15	1	40021	5	5	0	0	0	0	0	
-49397	16	1	40020	6	8.10000038	0	0	0	0	0	
+49397	16	1	40020	6	8.1	0	0	0	0	0	
 49397	17	1	49256	8	8	0	0	0	0	0	
 49397	18	1	41085	4	9	0	0	0	0	0	
 49397	19	1	41087	5	9	0	0	0	0	0	
@@ -5959,9 +6054,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49408	1	7	41301	1	100	0	0	0	0	0	
 49410	1	1	41265	1	0.25	1	0	0	0	0	
 49410	2	1	41266	1	1.5	0	0	0	0	0	
-49410	3	1	42247	1	0.699999988	1	0	0	0	0	
+49410	3	1	42247	1	0.7	1	0	0	0	0	
 49410	4	1	42248	1	2	0	0	0	0	0	
-49410	5	1	42251	1	0.699999988	1	0	0	0	0	
+49410	5	1	42251	1	0.7	1	0	0	0	0	
 49410	6	1	42252	1	2	0	0	0	0	0	
 49410	7	1	41300	1	1	0	0	0	0	0	
 49410	8	1	40184	1	2	0	0	0	0	0	
@@ -5971,7 +6066,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49410	12	1	41089	1	3	0	0	0	0	0	
 49410	13	1	40183	22	7	0	0	0	0	0	
 49410	14	1	40572	1	12	0	0	0	0	0	
-49410	15	1	40509	3	13.8500004	0	0	0	0	0	
+49410	15	1	40509	3	13.85	0	0	0	0	0	
 49410	16	1	40040	12	8	0	0	0	0	0	
 49410	17	1	40042	5	8	0	0	0	0	0	
 49410	18	1	40202	7	5	0	0	0	0	0	
@@ -5982,9 +6077,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49410	23	1	40193	11	4	0	0	0	0	0	
 49411	1	1	42263	1	0.25	1	0	0	0	0	
 49411	2	1	42264	1	1.5	0	0	0	0	0	
-49411	3	1	41360	1	0.699999988	1	0	0	0	0	
+49411	3	1	41360	1	0.7	1	0	0	0	0	
 49411	4	1	41361	1	2	0	0	0	0	0	
-49411	5	1	41364	1	0.600000024	1	0	0	0	0	
+49411	5	1	41364	1	0.6	1	0	0	0	0	
 49411	6	1	41365	1	2	0	0	0	0	0	
 49411	7	1	41092	1	2.5	0	0	0	0	0	
 49411	8	1	41091	1	2.5	0	0	0	0	0	
@@ -5994,7 +6089,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49411	12	1	41493	1	2	0	0	0	0	0	
 49411	13	1	40183	22	7	0	0	0	0	0	
 49411	14	1	40572	1	13	0	0	0	0	0	
-49411	15	1	40509	3	14.9499998	0	0	0	0	0	
+49411	15	1	40509	3	14.95	0	0	0	0	0	
 49411	16	1	40040	12	8	0	0	0	0	0	
 49411	17	1	40042	5	8	0	0	0	0	0	
 49411	18	1	41082	1	3	0	0	0	0	0	
@@ -6008,11 +6103,11 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49413	1	1	42289	1	100	0	0	0	0	0	
 49413	2	2	42290	1	100	0	0	0	0	0	
 49413	3	3	40299	2	100	0	0	0	0	0	
-49414	1	1	42271	1	0.200000003	1	0	0	0	0	
+49414	1	1	42271	1	0.2	1	0	0	0	0	
 49414	2	1	42272	1	1	0	0	0	0	0	
-49414	3	1	41965	1	0.600000024	1	0	0	0	0	
+49414	3	1	41965	1	0.6	1	0	0	0	0	
 49414	4	1	41966	1	2	0	0	0	0	0	
-49414	5	1	41922	1	0.400000006	1	0	0	0	0	
+49414	5	1	41922	1	0.4	1	0	0	0	0	
 49414	6	1	41923	1	2	0	0	0	0	0	
 49414	7	1	40022	4	5	0	0	0	0	0	
 49414	8	1	41189	1	6	0	0	0	0	0	
@@ -6020,14 +6115,14 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49414	10	1	41193	1	3	0	0	0	0	0	
 49414	11	1	41304	1	2	0	0	0	0	0	
 49414	12	1	41197	1	0.5	0	0	0	0	0	
-49414	13	1	41305	1	0.400000006	0	0	0	0	0	
+49414	13	1	41305	1	0.4	0	0	0	0	0	
 49414	14	1	40184	2	5	0	0	0	0	0	
 49414	15	1	41300	1	4	0	0	0	0	0	
 49414	16	1	40368	1	2	0	0	0	0	0	
 49414	17	1	40369	1	1	0	0	0	0	0	
 49414	18	1	40370	1	0.5	0	0	0	0	0	
-49414	19	1	40687	1	0.100000001	1	0	0	0	0	
-49414	20	1	41301	1	0.0500000007	1	0	0	0	0	
+49414	19	1	40687	1	0.1	1	0	0	0	0	
+49414	20	1	41301	1	0.05	1	0	0	0	0	
 49414	21	1	40543	1	3	0	0	0	0	0	
 49414	22	1	40544	1	2	0	0	0	0	0	
 49414	23	1	40545	1	1.5	0	0	0	0	0	
@@ -6037,11 +6132,11 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49414	27	1	40200	10	10	0	0	0	0	0	
 49414	28	1	40201	2	10	0	0	0	0	0	
 49414	29	1	40362	6	19.25	0	0	0	0	0	
-49415	1	1	42295	1	0.400000006	1	0	0	0	0	
+49415	1	1	42295	1	0.4	1	0	0	0	0	
 49415	2	1	42296	1	1.5	0	0	0	0	0	
 49415	3	1	42303	1	0.5	1	0	0	0	0	
 49415	4	1	42304	1	2	0	0	0	0	0	
-49415	5	1	42311	1	0.600000024	1	0	0	0	0	
+49415	5	1	42311	1	0.6	1	0	0	0	0	
 49415	6	1	42312	1	2	0	0	0	0	0	
 49415	7	1	41300	1	1	0	0	0	0	0	
 49415	8	1	40022	2	2	0	0	0	0	0	
@@ -6059,11 +6154,11 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49415	20	1	40202	7	4	0	0	0	0	0	
 49415	21	1	40190	5	4	0	0	0	0	0	
 49415	22	1	41093	3	4	0	0	0	0	0	
-49416	1	1	42291	1	0.400000006	1	0	0	0	0	
+49416	1	1	42291	1	0.4	1	0	0	0	0	
 49416	2	1	42292	1	1.5	0	0	0	0	0	
 49416	3	1	42299	1	0.5	1	0	0	0	0	
 49416	4	1	42300	1	2	0	0	0	0	0	
-49416	5	1	42307	1	0.600000024	1	0	0	0	0	
+49416	5	1	42307	1	0.6	1	0	0	0	0	
 49416	6	1	42308	1	2	0	0	0	0	0	
 49416	7	1	40184	2	5	0	0	0	0	0	
 49416	8	1	41300	1	1	0	0	0	0	0	
@@ -6071,11 +6166,11 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49416	10	1	40021	3	3	0	0	0	0	0	
 49416	11	1	40183	22	12	0	0	0	0	0	
 49416	12	1	41090	45	12	0	0	0	0	0	
-49416	13	1	40572	1	17.1000004	0	0	0	0	0	
+49416	13	1	40572	1	17.1	0	0	0	0	0	
 49416	14	1	41089	1	4	0	0	0	0	0	
 49416	15	1	41542	1	4	0	0	0	0	0	
 49416	16	1	41197	1	0.5	0	0	0	0	0	
-49416	17	1	41305	1	0.400000006	0	0	0	0	0	
+49416	17	1	41305	1	0.4	0	0	0	0	0	
 49416	18	1	41193	1	1	0	0	0	0	0	
 49416	19	1	41304	1	0.5	0	0	0	0	0	
 49416	20	1	41189	1	1.5	0	0	0	0	0	
@@ -6086,11 +6181,11 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49416	25	1	40104	95	4	0	0	0	0	0	
 49416	26	1	40105	80	4.5	0	0	0	0	0	
 49416	27	1	40106	70	5.5	0	0	0	0	0	
-49417	1	1	42276	1	0.400000006	1	0	0	0	0	
+49417	1	1	42276	1	0.4	1	0	0	0	0	
 49417	2	1	42277	1	2	0	0	0	0	0	
 49417	3	1	42280	1	0.5	1	0	0	0	0	
 49417	4	1	42281	1	2	0	0	0	0	0	
-49417	5	1	40131	1	0.400000006	1	0	0	0	0	
+49417	5	1	40131	1	0.4	1	0	0	0	0	
 49417	6	1	40279	1	2	0	0	0	0	0	
 49417	7	1	40145	1	0.5	1	0	0	0	0	
 49417	8	1	40285	1	2	0	0	0	0	0	
@@ -6101,7 +6196,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49417	13	1	40183	22	12	0	0	0	0	0	
 49417	14	1	41493	1	2	0	0	0	0	0	
 49417	15	1	49290	1	4	0	0	0	0	0	
-49417	16	1	40509	3	15.1999998	0	0	0	0	0	
+49417	16	1	40509	3	15.2	0	0	0	0	0	
 49417	17	1	40040	12	9	0	0	0	0	0	
 49417	18	1	40042	5	9	0	0	0	0	0	
 49417	19	1	41082	1	4	0	0	0	0	0	
@@ -6157,11 +6252,11 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49477	7	1	30012	5	5	0	0	0	0	0	
 49477	8	1	31303	10	7	0	0	0	0	0	
 49477	9	1	31304	10	7	0	0	0	0	0	
-49477	10	1	31777	15	11.8000002	0	0	0	0	0	
-49477	11	1	31778	15	9.80000019	0	0	0	0	0	
+49477	10	1	31777	15	11.8	0	0	0	0	0	
+49477	11	1	31778	15	9.8	0	0	0	0	0	
 49477	12	1	31300	5	10	0	0	0	0	0	
 49477	13	1	31301	5	10	0	0	0	0	0	
-49477	14	1	29815	10	1.39999998	0	0	0	0	0	
+49477	14	1	29815	10	1.4	0	0	0	0	0	
 49477	15	1	29815	3	3	0	0	0	0	0	
 49477	1	2	28955	1	100	0	0	0	0	0	
 49478	1	1	28958	1	2.5	1	0	0	0	0	
@@ -6173,14 +6268,14 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49478	7	1	30012	5	5	0	0	0	0	0	
 49478	8	1	31303	10	7	0	0	0	0	0	
 49478	9	1	31304	10	7	0	0	0	0	0	
-49478	10	1	31777	15	13.1000004	0	0	0	0	0	
+49478	10	1	31777	15	13.1	0	0	0	0	0	
 49478	11	1	31778	15	12	0	0	0	0	0	
 49478	12	1	31300	5	9	0	0	0	0	0	
 49478	13	1	31301	5	10	0	0	0	0	0	
-49478	14	1	29815	10	1.39999998	0	0	0	0	0	
+49478	14	1	29815	10	1.4	0	0	0	0	0	
 49478	15	1	29815	3	3	0	0	0	0	0	
 49478	1	2	28956	1	100	0	0	0	0	0	
-49479	1	1	28962	1	1.79999995	1	0	0	0	0	
+49479	1	1	28962	1	1.8	1	0	0	0	0	
 49479	2	1	28963	1	4	0	0	0	0	0	
 49479	3	1	48907	5	10	0	0	0	0	0	
 49479	4	1	36362	5	5	0	0	0	0	0	
@@ -6193,7 +6288,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49479	11	1	31778	15	13	0	0	0	0	0	
 49479	12	1	31300	5	9	0	0	0	0	0	
 49479	13	1	31301	5	11	0	0	0	0	0	
-49479	14	1	29815	10	1.20000005	0	0	0	0	0	
+49479	14	1	29815	10	1.2	0	0	0	0	0	
 49479	15	1	29815	3	3	0	0	0	0	0	
 49479	1	2	28957	1	100	0	0	0	0	0	
 49511	1	1	25015	1	100	0	0	0	0	0	
@@ -6236,21 +6331,21 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49518	3	3	25052	1	100	0	0	0	0	0	
 49518	4	4	25053	1	100	0	0	0	0	0	
 49518	5	5	25054	1	100	0	0	0	0	0	
-49519	1	1	42952	1	0.0199999996	1	0	0	0	0	
-49519	2	1	42953	1	0.200000003	0	0	0	0	0	
-49519	3	1	42928	1	0.0700000003	1	0	0	0	0	
+49519	1	1	42952	1	0.02	1	0	0	0	0	
+49519	2	1	42953	1	0.2	0	0	0	0	0	
+49519	3	1	42928	1	0.07	1	0	0	0	0	
 49519	4	1	42929	1	0.5	0	0	0	0	0	
 49519	5	1	41300	1	1	0	0	0	0	0	
 49519	6	1	40184	2	6	0	0	0	0	0	
 49519	7	1	40021	3	4	0	0	0	0	0	
 49519	8	1	41297	60	21	0	0	0	0	0	
-49519	9	1	41298	60	20.6100006	0	0	0	0	0	
+49519	9	1	41298	60	20.61	0	0	0	0	0	
 49519	10	1	40200	4	5	0	0	0	0	0	
 49519	11	1	40201	1	4	0	0	0	0	0	
 49519	12	1	40156	4	23	0	0	0	0	0	
 49519	13	1	40181	3	5	0	0	0	0	0	
 49519	14	1	40122	10	5	0	0	0	0	0	
-49519	15	1	40380	1	2.5999999	0	0	0	0	0	
+49519	15	1	40380	1	2.6	0	0	0	0	0	
 49519	16	1	40115	1	2	0	0	0	0	0	
 49520	1	1	42974	1	5	0	0	0	0	0	
 49520	2	1	42975	1	5	0	0	0	0	0	
@@ -6305,7 +6400,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49522	13	3	41090	5	100	0	0	0	0	0	
 49522	14	4	40040	10	100	0	0	0	0	0	
 49522	15	5	40042	10	100	0	0	0	0	0	
-49523	1	1	42920	1	0.800000012	1	0	0	0	0	
+49523	1	1	42920	1	0.8	1	0	0	0	0	
 49523	2	1	42921	1	1.5	0	0	0	0	0	
 49523	3	1	42924	1	0.5	1	0	0	0	0	
 49523	4	1	42925	1	1	0	0	0	0	0	
@@ -6316,17 +6411,17 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49523	9	1	40021	3	3	0	0	0	0	0	
 49523	10	1	40122	10	5	0	0	0	0	0	
 49523	11	1	40183	22	12	0	0	0	0	0	
-49523	12	1	41297	60	27.3999996	0	0	0	0	0	
+49523	12	1	41297	60	27.4	0	0	0	0	0	
 49523	13	1	41298	60	27.5	0	0	0	0	0	
-49523	14	1	40572	1	17.2999992	0	0	0	0	0	
+49523	14	1	40572	1	17.3	0	0	0	0	0	
 49549	1	1	40297	5	100	0	0	0	0	0	
 49549	1	2	40298	5	100	0	0	0	0	0	
 49549	1	3	25428	1	100	0	0	0	0	0	
 49537	1	1	48989	50	100	0	0	0	0	0	
 49538	1	1	48992	50	100	0	0	0	0	0	
-49539	1	1	43115	1	0.800000012	1	0	0	0	0	
-49539	2	1	43116	1	1.20000005	0	0	0	0	0	
-49539	3	1	43119	1	0.699999988	1	0	0	0	0	
+49539	1	1	43115	1	0.8	1	0	0	0	0	
+49539	2	1	43116	1	1.2	0	0	0	0	0	
+49539	3	1	43119	1	0.7	1	0	0	0	0	
 49539	4	1	43120	1	1	0	0	0	0	0	
 49539	5	1	41193	1	1	0	0	0	0	0	
 49539	6	1	41304	1	0.5	0	0	0	0	0	
@@ -6335,16 +6430,16 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49539	9	1	40021	3	3	0	0	0	0	0	
 49539	10	1	40122	10	5	0	0	0	0	0	
 49539	11	1	40183	22	12	0	0	0	0	0	
-49539	12	1	41297	60	26.6000004	0	0	0	0	0	
-49539	13	1	41298	60	28.3999996	0	0	0	0	0	
-49539	14	1	40572	1	17.2999992	0	0	0	0	0	
-49540	1	1	43049	1	0.899999976	1	0	0	0	0	
-49540	2	1	43050	1	1.60000002	0	0	0	0	0	
-49540	3	1	43053	1	0.899999976	1	0	0	0	0	
-49540	4	1	43054	1	1.60000002	0	0	0	0	0	
-49540	5	1	43057	1	0.699999988	1	0	0	0	0	
+49539	12	1	41297	60	26.6	0	0	0	0	0	
+49539	13	1	41298	60	28.4	0	0	0	0	0	
+49539	14	1	40572	1	17.3	0	0	0	0	0	
+49540	1	1	43049	1	0.9	1	0	0	0	0	
+49540	2	1	43050	1	1.6	0	0	0	0	0	
+49540	3	1	43053	1	0.9	1	0	0	0	0	
+49540	4	1	43054	1	1.6	0	0	0	0	0	
+49540	5	1	43057	1	0.7	1	0	0	0	0	
 49540	6	1	43058	1	1.5	0	0	0	0	0	
-49540	7	1	43061	1	0.699999988	1	0	0	0	0	
+49540	7	1	43061	1	0.7	1	0	0	0	0	
 49540	8	1	43062	1	1.5	0	0	0	0	0	
 49540	9	1	41300	1	1	0	0	0	0	0	
 49540	10	1	40184	2	6	0	0	0	0	0	
@@ -6356,10 +6451,10 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49540	16	1	40156	4	21	0	0	0	0	0	
 49540	17	1	40181	3	5	0	0	0	0	0	
 49540	18	1	40122	10	4.5	0	0	0	0	0	
-49540	19	1	40380	1	2.0999999	0	0	0	0	0	
+49540	19	1	40380	1	2.1	0	0	0	0	0	
 49540	20	1	40115	1	2	0	0	0	0	0	
-49544	1	1	43131	1	0.800000012	1	0	0	0	0	
-49544	2	1	43132	1	1.39999998	0	0	0	0	0	
+49544	1	1	43131	1	0.8	1	0	0	0	0	
+49544	2	1	43132	1	1.4	0	0	0	0	0	
 49544	3	1	43127	1	0.5	1	0	0	0	0	
 49544	4	1	43128	1	1	0	0	0	0	0	
 49544	5	1	41193	1	1	0	0	0	0	0	
@@ -6369,15 +6464,15 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49544	9	1	40021	3	3	0	0	0	0	0	
 49544	10	1	40122	10	5	0	0	0	0	0	
 49544	11	1	40183	22	12	0	0	0	0	0	
-49544	12	1	41297	60	26.6000004	0	0	0	0	0	
-49544	13	1	41298	60	28.3999996	0	0	0	0	0	
-49544	14	1	40572	1	17.2999992	0	0	0	0	0	
+49544	12	1	41297	60	26.6	0	0	0	0	0	
+49544	13	1	41298	60	28.4	0	0	0	0	0	
+49544	14	1	40572	1	17.3	0	0	0	0	0	
 49545	1	1	43211	1	0.5	1	0	0	0	0	
 49545	2	1	43212	1	1	0	0	0	0	0	
-49545	3	1	42263	1	0.800000012	1	0	0	0	0	
+49545	3	1	42263	1	0.8	1	0	0	0	0	
 49545	4	1	42264	1	1.5	0	0	0	0	0	
 49545	5	1	41300	1	1	0	0	0	0	0	
-49545	6	1	40184	2	6.19999981	0	0	0	0	0	
+49545	6	1	40184	2	6.2	0	0	0	0	0	
 49545	7	1	40021	3	4	0	0	0	0	0	
 49545	8	1	41297	60	19	0	0	0	0	0	
 49545	9	1	41298	60	19	0	0	0	0	0	
@@ -6390,16 +6485,16 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49545	16	1	40115	1	2	0	0	0	0	0	
 49547	1	1	43069	1	0.5	1	0	0	0	0	
 49547	2	1	43070	1	1.5	0	0	0	0	0	
-49547	3	1	43185	1	0.300000012	1	0	0	0	0	
-49547	4	1	43186	1	0.899999976	0	0	0	0	0	
+49547	3	1	43185	1	0.3	1	0	0	0	0	
+49547	4	1	43186	1	0.9	0	0	0	0	0	
 49547	5	1	40317	1	2	0	0	0	0	0	
 49547	6	1	40367	1	2	0	0	0	0	0	
 49547	7	1	40022	2	2	0	0	0	0	0	
 49547	8	1	40200	4	5	0	0	0	0	0	
 49547	9	1	40201	1	5	0	0	0	0	0	
 49547	10	1	41089	1	5	0	0	0	0	0	
-49547	11	1	40040	12	21.3999996	0	0	0	0	0	
-49547	12	1	40042	5	21.3999996	0	0	0	0	0	
+49547	11	1	40040	12	21.4	0	0	0	0	0	
+49547	12	1	40042	5	21.4	0	0	0	0	0	
 49547	13	1	41090	45	15	0	0	0	0	0	
 49547	14	1	40509	3	18	0	0	0	0	0	
 49546	1	1	42899	1	10	0	0	0	0	0	
@@ -6426,14 +6521,14 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49549	1	1	40297	5	100	0	0	0	0	0	
 49549	1	2	40298	5	100	0	0	0	0	0	
 49549	1	3	25428	1	100	0	0	0	0	0	
-49550	1	1	43173	1	0.400000006	1	0	0	0	0	
-49550	2	1	43174	1	1.29999995	0	0	0	0	0	
-49550	3	1	43177	1	0.400000006	1	0	0	0	0	
-49550	4	1	43178	1	1.29999995	0	0	0	0	0	
+49550	1	1	43173	1	0.4	1	0	0	0	0	
+49550	2	1	43174	1	1.3	0	0	0	0	0	
+49550	3	1	43177	1	0.4	1	0	0	0	0	
+49550	4	1	43178	1	1.3	0	0	0	0	0	
 49550	5	1	41926	1	0.5	1	0	0	0	0	
-49550	6	1	41927	1	1.29999995	0	0	0	0	0	
-49550	7	1	42391	1	0.300000012	1	0	0	0	0	
-49550	8	1	42392	1	1.20000005	0	0	0	0	0	
+49550	6	1	41927	1	1.3	0	0	0	0	0	
+49550	7	1	42391	1	0.3	1	0	0	0	0	
+49550	8	1	42392	1	1.2	0	0	0	0	0	
 49550	9	1	41193	1	1	0	0	0	0	0	
 49550	10	1	41304	1	0.5	0	0	0	0	0	
 49550	11	1	41189	1	1.5	0	0	0	0	0	
@@ -6441,23 +6536,23 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49550	13	1	40021	3	3	0	0	0	0	0	
 49550	14	1	40122	10	5	0	0	0	0	0	
 49550	15	1	40183	22	12	0	0	0	0	0	
-49550	16	1	41297	60	25.2999992	0	0	0	0	0	
+49550	16	1	41297	60	25.3	0	0	0	0	0	
 49550	17	1	41298	60	27	0	0	0	0	0	
 49550	18	1	40572	1	17	0	0	0	0	0	
 49551	1	1	43193	1	0.5	1	0	0	0	0	
 49551	2	1	43194	1	1	0	0	0	0	0	
-49551	3	1	42928	1	0.0199999996	1	0	0	0	0	
-49551	4	1	42929	1	0.300000012	0	0	0	0	0	
-49551	5	1	40440	1	0.400000006	1	0	0	0	0	
+49551	3	1	42928	1	0.02	1	0	0	0	0	
+49551	4	1	42929	1	0.3	0	0	0	0	0	
+49551	5	1	40440	1	0.4	1	0	0	0	0	
 49551	6	1	40442	1	1	0	0	0	0	0	
-49551	7	1	41583	1	0.400000006	1	0	0	0	0	
+49551	7	1	41583	1	0.4	1	0	0	0	0	
 49551	8	1	41584	1	1	0	0	0	0	0	
-49551	9	1	42007	1	0.400000006	1	0	0	0	0	
+49551	9	1	42007	1	0.4	1	0	0	0	0	
 49551	10	1	42008	1	1	0	0	0	0	0	
 49551	11	1	41300	1	1	0	0	0	0	0	
-49551	12	1	40184	2	6.19999981	0	0	0	0	0	
+49551	12	1	40184	2	6.2	0	0	0	0	0	
 49551	13	1	40021	3	4	0	0	0	0	0	
-49551	14	1	41297	60	18.2800007	0	0	0	0	0	
+49551	14	1	41297	60	18.28	0	0	0	0	0	
 49551	15	1	41298	60	18.5	0	0	0	0	0	
 49551	16	1	40200	4	5	0	0	0	0	0	
 49551	17	1	40201	1	4	0	0	0	0	0	
@@ -6504,9 +6599,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49745	36	1	40105	40	1	0	0	0	0	0	
 49745	37	1	40106	30	1	0	0	0	0	0	
 49628	1	1	40122	3	20	0	0	0	0	0	
-49628	2	1	40183	1	4.9000001	0	0	0	0	0	
+49628	2	1	40183	1	4.9	0	0	0	0	0	
 49628	3	1	40200	1	5	0	0	0	0	0	
-49628	4	1	40362	1	0.100000001	0	0	0	0	0	
+49628	4	1	40362	1	0.1	0	0	0	0	0	
 49628	5	1	40040	3	20	0	0	0	0	0	
 49628	6	1	40042	2	10	0	0	0	0	0	
 49628	7	1	41090	3	20	0	0	0	0	0	
@@ -6562,24 +6657,24 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49458	12	1	40572	1	18.5	0	0	0	0	0	
 49474	1	1	40991	1	1	1	0	0	0	0	
 49474	2	1	40993	1	0.5	0	0	0	0	0	
-49474	3	1	40994	1	0.800000012	1	0	0	0	0	
-49474	4	1	40996	1	0.400000006	0	0	0	0	0	
-49474	5	1	41555	1	0.600000024	1	0	0	0	0	
-49474	6	1	41556	1	0.300000012	0	0	0	0	0	
-49474	7	1	41559	1	0.600000024	1	0	0	0	0	
-49474	8	1	41560	1	0.300000012	0	0	0	0	0	
+49474	3	1	40994	1	0.8	1	0	0	0	0	
+49474	4	1	40996	1	0.4	0	0	0	0	0	
+49474	5	1	41555	1	0.6	1	0	0	0	0	
+49474	6	1	41556	1	0.3	0	0	0	0	0	
+49474	7	1	41559	1	0.6	1	0	0	0	0	
+49474	8	1	41560	1	0.3	0	0	0	0	0	
 49474	9	1	41918	1	1	1	0	0	0	0	
 49474	10	1	41919	1	0.5	0	0	0	0	0	
 49474	11	1	41922	1	1	1	0	0	0	0	
 49474	12	1	41923	1	0.5	0	0	0	0	0	
-49474	13	1	42057	1	0.800000012	1	0	0	0	0	
-49474	14	1	42058	1	0.400000006	0	0	0	0	0	
-49474	15	1	42049	1	0.800000012	1	0	0	0	0	
-49474	16	1	42050	1	0.400000006	0	0	0	0	0	
-49474	17	1	41785	1	0.800000012	1	0	0	0	0	
-49474	18	1	41786	1	0.400000006	0	0	0	0	0	
-49474	19	1	41789	1	0.699999988	1	0	0	0	0	
-49474	20	1	41790	1	0.349999994	0	0	0	0	0	
+49474	13	1	42057	1	0.8	1	0	0	0	0	
+49474	14	1	42058	1	0.4	0	0	0	0	0	
+49474	15	1	42049	1	0.8	1	0	0	0	0	
+49474	16	1	42050	1	0.4	0	0	0	0	0	
+49474	17	1	41785	1	0.8	1	0	0	0	0	
+49474	18	1	41786	1	0.4	0	0	0	0	0	
+49474	19	1	41789	1	0.7	1	0	0	0	0	
+49474	20	1	41790	1	0.35	0	0	0	0	0	
 49474	21	1	41197	1	1	0	0	0	0	0	
 49474	22	1	41305	1	5.5	0	0	0	0	0	
 49474	23	1	40022	2	3.5	0	0	0	0	0	
@@ -6588,7 +6683,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49474	26	1	49290	1	13.25	0	0	0	0	0	
 49474	27	1	40157	2	5	0	0	0	0	0	
 49474	28	1	40182	2	5	0	0	0	0	0	
-49474	29	1	40040	12	2.5999999	0	0	0	0	0	
+49474	29	1	40040	12	2.6	0	0	0	0	0	
 49474	30	1	40042	5	2	0	0	0	0	0	
 49721	1	1	36308	1	100	0	0	0	0	0	
 49721	1	2	26458	1	100	0	0	0	0	0	
@@ -6903,222 +6998,222 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49980	1	2	29815	1	100	0	0	0	0	0	
 49980	1	3	27691	1	100	0	0	0	0	0	
 49980	1	4	49981	1	100	0	0	0	0	0	
-49981	1	1	20384	1	2.70000005	0	0	0	0	0	
-49981	2	1	20490	1	2.70000005	0	0	0	0	0	
-49981	3	1	21042	1	2.70000005	0	0	0	0	0	
-49981	4	1	21460	1	2.70000005	0	0	0	0	0	
-49981	5	1	23696	1	2.79999995	0	0	0	0	0	
-49981	6	1	26454	1	2.79999995	0	0	0	0	0	
-49981	7	1	26773	1	2.70000005	0	0	0	0	0	
-49981	8	1	23699	1	2.79999995	0	0	0	0	0	
-49981	9	1	27110	1	2.70000005	0	0	0	0	0	
-49981	10	1	27114	1	2.70000005	0	0	0	0	0	
-49981	11	1	23700	1	2.79999995	0	0	0	0	0	
-49981	12	1	27706	1	2.70000005	0	0	0	0	0	
-49981	13	1	28945	1	2.79999995	0	0	0	0	0	
-49981	14	1	28996	1	2.79999995	0	0	0	0	0	
-49981	15	1	29230	1	2.79999995	0	0	0	0	0	
-49981	16	1	34120	1	2.79999995	0	0	0	0	0	
-49981	17	1	34784	1	2.79999995	0	0	0	0	0	
-49981	18	1	34926	1	2.79999995	0	0	0	0	0	
-49981	19	1	38391	1	2.79999995	0	0	0	0	0	
-49981	20	1	39142	1	2.79999995	0	0	0	0	0	
-49981	21	1	39160	1	2.79999995	0	0	0	0	0	
-49981	22	1	39321	1	2.79999995	0	0	0	0	0	
-49981	23	1	40750	1	2.79999995	0	0	0	0	0	
-49981	24	1	40752	1	2.79999995	0	0	0	0	0	
-49981	25	1	40771	1	2.79999995	0	0	0	0	0	
-49981	26	1	40813	1	2.79999995	0	0	0	0	0	
-49981	27	1	41205	1	2.79999995	0	0	0	0	0	
-49981	28	1	41990	1	2.79999995	0	0	0	0	0	
-49981	29	1	42066	1	2.79999995	0	0	0	0	0	
-49981	30	1	42086	1	2.79999995	0	0	0	0	0	
-49981	31	1	43198	1	2.79999995	0	0	0	0	0	
-49981	32	1	43324	1	2.79999995	0	0	0	0	0	
-49981	33	1	40974	1	2.79999995	0	0	0	0	0	
-49981	34	1	40975	1	2.79999995	0	0	0	0	0	
-49981	35	1	40977	1	2.79999995	0	0	0	0	0	
-49981	36	1	48674	1	2.79999995	0	0	0	0	0	
-49982	1	1	20383	1	0.400000006	0	0	0	0	0	
-49982	2	1	20384	1	0.879999995	0	0	0	0	0	
-49982	3	1	20490	1	0.879999995	0	0	0	0	0	
-49982	4	1	20494	1	0.400000006	0	0	0	0	0	
-49982	5	1	20596	1	0.600000024	0	0	0	0	0	
-49982	6	1	20597	1	0.300000012	0	0	0	0	0	
-49982	7	1	20791	1	0.600000024	0	0	0	0	0	
-49982	8	1	20792	1	0.300000012	0	0	0	0	0	
-49982	9	1	21042	1	0.879999995	0	0	0	0	0	
-49982	10	1	21043	1	0.400000006	0	0	0	0	0	
-49982	11	1	21460	1	0.879999995	0	0	0	0	0	
-49982	12	1	21461	1	0.400000006	0	0	0	0	0	
-49982	13	1	21476	1	0.400000006	0	0	0	0	0	
-49982	14	1	21477	1	0.899999976	0	0	0	0	0	
-49982	15	1	25244	1	0.300000012	0	0	0	0	0	
-49982	16	1	23694	1	0.600000024	0	0	0	0	0	
-49982	17	1	25453	1	0.300000012	0	0	0	0	0	
-49982	18	1	23695	1	0.600000024	0	0	0	0	0	
-49982	19	1	25615	1	0.400000006	0	0	0	0	0	
-49982	20	1	23696	1	0.879999995	0	0	0	0	0	
-49982	21	1	25733	1	0.300000012	0	0	0	0	0	
-49982	22	1	25734	1	0.600000024	0	0	0	0	0	
-49982	23	1	25988	1	0.300000012	0	0	0	0	0	
-49982	24	1	23697	1	0.600000024	0	0	0	0	0	
-49982	25	1	26232	1	0.600000024	0	0	0	0	0	
-49982	26	1	26233	1	0.300000012	0	0	0	0	0	
-49982	27	1	26256	1	0.300000012	0	0	0	0	0	
-49982	28	1	26257	1	0.600000024	0	0	0	0	0	
-49982	29	1	26454	1	0.879999995	0	0	0	0	0	
-49982	30	1	26455	1	0.400000006	0	0	0	0	0	
-49982	31	1	26473	1	0.300000012	0	0	0	0	0	
-49982	32	1	26474	1	0.600000024	0	0	0	0	0	
-49982	33	1	26486	1	0.300000012	0	0	0	0	0	
-49982	34	1	23698	1	0.600000024	0	0	0	0	0	
-49982	35	1	26773	1	0.879999995	0	0	0	0	0	
-49982	36	1	26774	1	0.400000006	0	0	0	0	0	
-49982	37	1	27073	1	0.400000006	0	0	0	0	0	
-49982	38	1	23699	1	0.879999995	0	0	0	0	0	
-49982	39	1	27109	1	0.400000006	0	0	0	0	0	
-49982	40	1	27110	1	0.879999995	0	0	0	0	0	
-49982	41	1	27113	1	0.400000006	0	0	0	0	0	
-49982	42	1	27114	1	0.879999995	0	0	0	0	0	
-49982	43	1	27197	1	0.400000006	0	0	0	0	0	
-49982	44	1	23699	1	0.879999995	0	0	0	0	0	
-49982	45	1	27208	1	0.400000006	0	0	0	0	0	
-49982	46	1	27209	1	0.899999976	0	0	0	0	0	
-49982	47	1	27690	1	0.400000006	0	0	0	0	0	
-49982	48	1	27706	1	0.879999995	0	0	0	0	0	
-49982	49	1	28716	1	0.300000012	0	0	0	0	0	
-49982	50	1	23701	1	0.600000024	0	0	0	0	0	
-49982	51	1	28745	1	0.600000024	0	0	0	0	0	
-49982	52	1	28746	1	0.300000012	0	0	0	0	0	
-49982	53	1	28929	1	0.600000024	0	0	0	0	0	
-49982	54	1	28930	1	0.300000012	0	0	0	0	0	
-49982	55	1	28931	1	0.899999976	0	0	0	0	0	
-49982	56	1	28932	1	0.400000006	0	0	0	0	0	
-49982	57	1	28942	1	0.600000024	0	0	0	0	0	
-49982	58	1	28944	1	0.300000012	0	0	0	0	0	
-49982	59	1	28945	1	0.879999995	0	0	0	0	0	
-49982	60	1	28946	1	0.400000006	0	0	0	0	0	
-49982	61	1	28962	1	0.300000012	0	0	0	0	0	
-49982	62	1	28963	1	0.600000024	0	0	0	0	0	
-49982	63	1	28973	1	0.600000024	0	0	0	0	0	
-49982	64	1	28974	1	0.300000012	0	0	0	0	0	
-49982	65	1	28977	1	0.300000012	0	0	0	0	0	
-49982	66	1	28978	1	0.600000024	0	0	0	0	0	
-49982	67	1	28996	1	0.879999995	0	0	0	0	0	
-49982	68	1	28997	1	0.400000006	0	0	0	0	0	
-49982	69	1	28998	1	0.899999976	0	0	0	0	0	
-49982	70	1	28999	1	0.400000006	0	0	0	0	0	
-49982	71	1	29210	1	0.300000012	0	0	0	0	0	
-49982	72	1	29211	1	0.639999986	0	0	0	0	0	
-49982	73	1	29225	1	0.300000012	0	0	0	0	0	
-49982	74	1	29226	1	0.600000024	0	0	0	0	0	
-49982	75	1	29229	1	0.400000006	0	0	0	0	0	
-49982	76	1	29230	1	0.879999995	0	0	0	0	0	
-49982	77	1	29907	1	0.879999995	0	0	0	0	0	
-49982	78	1	29908	1	0.400000006	0	0	0	0	0	
-49982	79	1	34120	1	0.879999995	0	0	0	0	0	
-49982	80	1	34122	1	0.400000006	0	0	0	0	0	
-49982	81	1	34784	1	0.879999995	0	0	0	0	0	
-49982	82	1	34785	1	0.400000006	0	0	0	0	0	
-49982	83	1	34926	1	0.879999995	0	0	0	0	0	
-49982	84	1	34927	1	0.400000006	0	0	0	0	0	
-49982	85	1	38391	1	0.879999995	0	0	0	0	0	
-49982	86	1	38392	1	0.400000006	0	0	0	0	0	
-49982	87	1	39142	1	0.879999995	0	0	0	0	0	
-49982	88	1	39143	1	0.400000006	0	0	0	0	0	
-49982	89	1	39159	1	0.400000006	0	0	0	0	0	
-49982	90	1	39160	1	0.879999995	0	0	0	0	0	
-49982	91	1	39321	1	0.879999995	0	0	0	0	0	
-49982	92	1	39322	1	0.400000006	0	0	0	0	0	
-49982	93	1	39542	1	0.300000012	0	0	0	0	0	
-49982	94	1	39543	1	0.600000024	0	0	0	0	0	
-49982	95	1	23574	1	0.899999976	0	0	0	0	0	
-49982	96	1	23575	1	0.400000006	0	0	0	0	0	
-49982	97	1	23580	1	0.300000012	0	0	0	0	0	
-49982	98	1	23581	1	0.600000024	0	0	0	0	0	
-49982	99	1	39075	1	0.180000007	0	0	0	0	0	
-49982	100	1	39076	1	0.879999995	0	0	0	0	0	
-49982	101	1	39077	1	0.180000007	0	0	0	0	0	
-49982	102	1	39078	1	0.879999995	0	0	0	0	0	
-49982	103	1	40749	1	0.400000006	0	0	0	0	0	
-49982	104	1	40750	1	0.879999995	0	0	0	0	0	
-49982	105	1	40751	1	0.400000006	0	0	0	0	0	
-49982	106	1	40752	1	0.879999995	0	0	0	0	0	
-49982	107	1	40770	1	0.400000006	0	0	0	0	0	
-49982	108	1	40771	1	0.879999995	0	0	0	0	0	
-49982	109	1	40812	1	0.400000006	0	0	0	0	0	
-49982	110	1	40813	1	0.879999995	0	0	0	0	0	
-49982	111	1	41204	1	0.400000006	0	0	0	0	0	
-49982	112	1	41205	1	0.879999995	0	0	0	0	0	
-49982	113	1	41989	1	0.400000006	0	0	0	0	0	
-49982	114	1	41990	1	0.879999995	0	0	0	0	0	
-49982	115	1	42065	1	0.400000006	0	0	0	0	0	
-49982	116	1	42066	1	0.879999995	0	0	0	0	0	
-49982	117	1	42085	1	0.400000006	0	0	0	0	0	
-49982	118	1	42086	1	0.879999995	0	0	0	0	0	
-49982	119	1	43197	1	0.400000006	0	0	0	0	0	
-49982	120	1	43198	1	0.879999995	0	0	0	0	0	
-49982	121	1	43323	1	0.400000006	0	0	0	0	0	
-49982	122	1	43324	1	0.879999995	0	0	0	0	0	
-49982	123	1	43325	1	0.400000006	0	0	0	0	0	
-49982	124	1	43326	1	0.400000006	0	0	0	0	0	
-49982	125	1	43327	1	0.400000006	0	0	0	0	0	
-49982	126	1	40974	1	0.879999995	0	0	0	0	0	
-49982	127	1	40975	1	0.879999995	0	0	0	0	0	
-49982	128	1	40977	1	0.879999995	0	0	0	0	0	
-49982	129	1	43329	1	0.400000006	0	0	0	0	0	
-49982	130	1	48674	1	0.879999995	0	0	0	0	0	
-49982	131	1	41632	1	0.400000006	0	0	0	0	0	
-49982	132	1	41633	1	0.899999976	0	0	0	0	0	
-49982	133	1	41993	1	0.400000006	0	0	0	0	0	
-49982	134	1	41994	1	0.899999976	0	0	0	0	0	
-49982	135	1	42069	1	0.400000006	0	0	0	0	0	
-49982	136	1	42070	1	0.899999976	0	0	0	0	0	
-49982	137	1	43013	1	0.400000006	0	0	0	0	0	
-49982	138	1	43014	1	0.899999976	0	0	0	0	0	
-49982	139	1	43207	1	0.400000006	0	0	0	0	0	
-49982	140	1	43208	1	0.899999976	0	0	0	0	0	
-49982	141	1	40743	1	0.180000007	0	0	0	0	0	
-49982	142	1	40744	1	0.850000024	0	0	0	0	0	
-49982	143	1	40745	1	0.180000007	0	0	0	0	0	
-49982	144	1	40746	1	0.850000024	0	0	0	0	0	
-49982	145	1	40814	1	0.180000007	0	0	0	0	0	
-49982	146	1	40815	1	0.800000012	0	0	0	0	0	
-49982	147	1	40816	1	0.180000007	0	0	0	0	0	
-49982	148	1	40817	1	0.800000012	0	0	0	0	0	
-49982	149	1	41620	1	0.180000007	0	0	0	0	0	
-49982	150	1	41621	1	0.800000012	0	0	0	0	0	
-49982	151	1	41624	1	0.180000007	0	0	0	0	0	
-49982	152	1	41625	1	0.800000012	0	0	0	0	0	
-49982	153	1	40656	1	0.300000012	0	0	0	0	0	
-49982	154	1	40679	1	0.600000024	0	0	0	0	0	
-49982	155	1	40657	1	0.300000012	0	0	0	0	0	
-49982	156	1	40680	1	0.600000024	0	0	0	0	0	
-49982	157	1	40774	1	0.300000012	0	0	0	0	0	
-49982	158	1	40775	1	0.600000024	0	0	0	0	0	
-49982	159	1	40822	1	0.300000012	0	0	0	0	0	
-49982	160	1	40823	1	0.600000024	0	0	0	0	0	
-49982	161	1	40824	1	0.300000012	0	0	0	0	0	
-49982	162	1	40825	1	0.600000024	0	0	0	0	0	
-49982	163	1	42840	1	0.300000012	0	0	0	0	0	
-49982	164	1	42841	1	0.600000024	0	0	0	0	0	
-49982	165	1	23726	1	0.800000012	0	0	0	0	0	
-49982	166	1	33670	1	0.100000001	0	0	0	0	0	
-49982	167	1	34932	1	0.100000001	0	0	0	0	0	
-49982	168	1	23702	1	0.800000012	0	0	0	0	0	
-49982	169	1	34933	1	0.100000001	0	0	0	0	0	
-49982	170	1	23703	1	0.800000012	0	0	0	0	0	
-49982	171	1	38909	1	0.100000001	0	0	0	0	0	
-49982	172	1	23704	1	0.800000012	0	0	0	0	0	
-49982	173	1	38911	1	0.100000001	0	0	0	0	0	
-49982	174	1	23705	1	0.800000012	0	0	0	0	0	
-49982	175	1	44136	1	0.100000001	0	0	0	0	0	
-49982	176	1	44137	1	0.800000012	0	0	0	0	0	
-49982	177	1	43796	1	0.100000001	0	0	0	0	0	
-49982	178	1	43797	1	0.800000012	0	0	0	0	0	
-49982	186	1	40753	1	0.100000001	0	0	0	0	0	
-49982	187	1	48675	1	0.800000012	0	0	0	0	0	
+49981	1	1	20384	1	2.7	0	0	0	0	0	
+49981	2	1	20490	1	2.7	0	0	0	0	0	
+49981	3	1	21042	1	2.7	0	0	0	0	0	
+49981	4	1	21460	1	2.7	0	0	0	0	0	
+49981	5	1	23696	1	2.8	0	0	0	0	0	
+49981	6	1	26454	1	2.8	0	0	0	0	0	
+49981	7	1	26773	1	2.7	0	0	0	0	0	
+49981	8	1	23699	1	2.8	0	0	0	0	0	
+49981	9	1	27110	1	2.7	0	0	0	0	0	
+49981	10	1	27114	1	2.7	0	0	0	0	0	
+49981	11	1	23700	1	2.8	0	0	0	0	0	
+49981	12	1	27706	1	2.7	0	0	0	0	0	
+49981	13	1	28945	1	2.8	0	0	0	0	0	
+49981	14	1	28996	1	2.8	0	0	0	0	0	
+49981	15	1	29230	1	2.8	0	0	0	0	0	
+49981	16	1	34120	1	2.8	0	0	0	0	0	
+49981	17	1	34784	1	2.8	0	0	0	0	0	
+49981	18	1	34926	1	2.8	0	0	0	0	0	
+49981	19	1	38391	1	2.8	0	0	0	0	0	
+49981	20	1	39142	1	2.8	0	0	0	0	0	
+49981	21	1	39160	1	2.8	0	0	0	0	0	
+49981	22	1	39321	1	2.8	0	0	0	0	0	
+49981	23	1	40750	1	2.8	0	0	0	0	0	
+49981	24	1	40752	1	2.8	0	0	0	0	0	
+49981	25	1	40771	1	2.8	0	0	0	0	0	
+49981	26	1	40813	1	2.8	0	0	0	0	0	
+49981	27	1	41205	1	2.8	0	0	0	0	0	
+49981	28	1	41990	1	2.8	0	0	0	0	0	
+49981	29	1	42066	1	2.8	0	0	0	0	0	
+49981	30	1	42086	1	2.8	0	0	0	0	0	
+49981	31	1	43198	1	2.8	0	0	0	0	0	
+49981	32	1	43324	1	2.8	0	0	0	0	0	
+49981	33	1	40974	1	2.8	0	0	0	0	0	
+49981	34	1	40975	1	2.8	0	0	0	0	0	
+49981	35	1	40977	1	2.8	0	0	0	0	0	
+49981	36	1	48674	1	2.8	0	0	0	0	0	
+49982	1	1	20383	1	0.4	0	0	0	0	0	
+49982	2	1	20384	1	0.88	0	0	0	0	0	
+49982	3	1	20490	1	0.88	0	0	0	0	0	
+49982	4	1	20494	1	0.4	0	0	0	0	0	
+49982	5	1	20596	1	0.6	0	0	0	0	0	
+49982	6	1	20597	1	0.3	0	0	0	0	0	
+49982	7	1	20791	1	0.6	0	0	0	0	0	
+49982	8	1	20792	1	0.3	0	0	0	0	0	
+49982	9	1	21042	1	0.88	0	0	0	0	0	
+49982	10	1	21043	1	0.4	0	0	0	0	0	
+49982	11	1	21460	1	0.88	0	0	0	0	0	
+49982	12	1	21461	1	0.4	0	0	0	0	0	
+49982	13	1	21476	1	0.4	0	0	0	0	0	
+49982	14	1	21477	1	0.9	0	0	0	0	0	
+49982	15	1	25244	1	0.3	0	0	0	0	0	
+49982	16	1	23694	1	0.6	0	0	0	0	0	
+49982	17	1	25453	1	0.3	0	0	0	0	0	
+49982	18	1	23695	1	0.6	0	0	0	0	0	
+49982	19	1	25615	1	0.4	0	0	0	0	0	
+49982	20	1	23696	1	0.88	0	0	0	0	0	
+49982	21	1	25733	1	0.3	0	0	0	0	0	
+49982	22	1	25734	1	0.6	0	0	0	0	0	
+49982	23	1	25988	1	0.3	0	0	0	0	0	
+49982	24	1	23697	1	0.6	0	0	0	0	0	
+49982	25	1	26232	1	0.6	0	0	0	0	0	
+49982	26	1	26233	1	0.3	0	0	0	0	0	
+49982	27	1	26256	1	0.3	0	0	0	0	0	
+49982	28	1	26257	1	0.6	0	0	0	0	0	
+49982	29	1	26454	1	0.88	0	0	0	0	0	
+49982	30	1	26455	1	0.4	0	0	0	0	0	
+49982	31	1	26473	1	0.3	0	0	0	0	0	
+49982	32	1	26474	1	0.6	0	0	0	0	0	
+49982	33	1	26486	1	0.3	0	0	0	0	0	
+49982	34	1	23698	1	0.6	0	0	0	0	0	
+49982	35	1	26773	1	0.88	0	0	0	0	0	
+49982	36	1	26774	1	0.4	0	0	0	0	0	
+49982	37	1	27073	1	0.4	0	0	0	0	0	
+49982	38	1	23699	1	0.88	0	0	0	0	0	
+49982	39	1	27109	1	0.4	0	0	0	0	0	
+49982	40	1	27110	1	0.88	0	0	0	0	0	
+49982	41	1	27113	1	0.4	0	0	0	0	0	
+49982	42	1	27114	1	0.88	0	0	0	0	0	
+49982	43	1	27197	1	0.4	0	0	0	0	0	
+49982	44	1	23699	1	0.88	0	0	0	0	0	
+49982	45	1	27208	1	0.4	0	0	0	0	0	
+49982	46	1	27209	1	0.9	0	0	0	0	0	
+49982	47	1	27690	1	0.4	0	0	0	0	0	
+49982	48	1	27706	1	0.88	0	0	0	0	0	
+49982	49	1	28716	1	0.3	0	0	0	0	0	
+49982	50	1	23701	1	0.6	0	0	0	0	0	
+49982	51	1	28745	1	0.6	0	0	0	0	0	
+49982	52	1	28746	1	0.3	0	0	0	0	0	
+49982	53	1	28929	1	0.6	0	0	0	0	0	
+49982	54	1	28930	1	0.3	0	0	0	0	0	
+49982	55	1	28931	1	0.9	0	0	0	0	0	
+49982	56	1	28932	1	0.4	0	0	0	0	0	
+49982	57	1	28942	1	0.6	0	0	0	0	0	
+49982	58	1	28944	1	0.3	0	0	0	0	0	
+49982	59	1	28945	1	0.88	0	0	0	0	0	
+49982	60	1	28946	1	0.4	0	0	0	0	0	
+49982	61	1	28962	1	0.3	0	0	0	0	0	
+49982	62	1	28963	1	0.6	0	0	0	0	0	
+49982	63	1	28973	1	0.6	0	0	0	0	0	
+49982	64	1	28974	1	0.3	0	0	0	0	0	
+49982	65	1	28977	1	0.3	0	0	0	0	0	
+49982	66	1	28978	1	0.6	0	0	0	0	0	
+49982	67	1	28996	1	0.88	0	0	0	0	0	
+49982	68	1	28997	1	0.4	0	0	0	0	0	
+49982	69	1	28998	1	0.9	0	0	0	0	0	
+49982	70	1	28999	1	0.4	0	0	0	0	0	
+49982	71	1	29210	1	0.3	0	0	0	0	0	
+49982	72	1	29211	1	0.64	0	0	0	0	0	
+49982	73	1	29225	1	0.3	0	0	0	0	0	
+49982	74	1	29226	1	0.6	0	0	0	0	0	
+49982	75	1	29229	1	0.4	0	0	0	0	0	
+49982	76	1	29230	1	0.88	0	0	0	0	0	
+49982	77	1	29907	1	0.88	0	0	0	0	0	
+49982	78	1	29908	1	0.4	0	0	0	0	0	
+49982	79	1	34120	1	0.88	0	0	0	0	0	
+49982	80	1	34122	1	0.4	0	0	0	0	0	
+49982	81	1	34784	1	0.88	0	0	0	0	0	
+49982	82	1	34785	1	0.4	0	0	0	0	0	
+49982	83	1	34926	1	0.88	0	0	0	0	0	
+49982	84	1	34927	1	0.4	0	0	0	0	0	
+49982	85	1	38391	1	0.88	0	0	0	0	0	
+49982	86	1	38392	1	0.4	0	0	0	0	0	
+49982	87	1	39142	1	0.88	0	0	0	0	0	
+49982	88	1	39143	1	0.4	0	0	0	0	0	
+49982	89	1	39159	1	0.4	0	0	0	0	0	
+49982	90	1	39160	1	0.88	0	0	0	0	0	
+49982	91	1	39321	1	0.88	0	0	0	0	0	
+49982	92	1	39322	1	0.4	0	0	0	0	0	
+49982	93	1	39542	1	0.3	0	0	0	0	0	
+49982	94	1	39543	1	0.6	0	0	0	0	0	
+49982	95	1	23574	1	0.9	0	0	0	0	0	
+49982	96	1	23575	1	0.4	0	0	0	0	0	
+49982	97	1	23580	1	0.3	0	0	0	0	0	
+49982	98	1	23581	1	0.6	0	0	0	0	0	
+49982	99	1	39075	1	0.18	0	0	0	0	0	
+49982	100	1	39076	1	0.88	0	0	0	0	0	
+49982	101	1	39077	1	0.18	0	0	0	0	0	
+49982	102	1	39078	1	0.88	0	0	0	0	0	
+49982	103	1	40749	1	0.4	0	0	0	0	0	
+49982	104	1	40750	1	0.88	0	0	0	0	0	
+49982	105	1	40751	1	0.4	0	0	0	0	0	
+49982	106	1	40752	1	0.88	0	0	0	0	0	
+49982	107	1	40770	1	0.4	0	0	0	0	0	
+49982	108	1	40771	1	0.88	0	0	0	0	0	
+49982	109	1	40812	1	0.4	0	0	0	0	0	
+49982	110	1	40813	1	0.88	0	0	0	0	0	
+49982	111	1	41204	1	0.4	0	0	0	0	0	
+49982	112	1	41205	1	0.88	0	0	0	0	0	
+49982	113	1	41989	1	0.4	0	0	0	0	0	
+49982	114	1	41990	1	0.88	0	0	0	0	0	
+49982	115	1	42065	1	0.4	0	0	0	0	0	
+49982	116	1	42066	1	0.88	0	0	0	0	0	
+49982	117	1	42085	1	0.4	0	0	0	0	0	
+49982	118	1	42086	1	0.88	0	0	0	0	0	
+49982	119	1	43197	1	0.4	0	0	0	0	0	
+49982	120	1	43198	1	0.88	0	0	0	0	0	
+49982	121	1	43323	1	0.4	0	0	0	0	0	
+49982	122	1	43324	1	0.88	0	0	0	0	0	
+49982	123	1	43325	1	0.4	0	0	0	0	0	
+49982	124	1	43326	1	0.4	0	0	0	0	0	
+49982	125	1	43327	1	0.4	0	0	0	0	0	
+49982	126	1	40974	1	0.88	0	0	0	0	0	
+49982	127	1	40975	1	0.88	0	0	0	0	0	
+49982	128	1	40977	1	0.88	0	0	0	0	0	
+49982	129	1	43329	1	0.4	0	0	0	0	0	
+49982	130	1	48674	1	0.88	0	0	0	0	0	
+49982	131	1	41632	1	0.4	0	0	0	0	0	
+49982	132	1	41633	1	0.9	0	0	0	0	0	
+49982	133	1	41993	1	0.4	0	0	0	0	0	
+49982	134	1	41994	1	0.9	0	0	0	0	0	
+49982	135	1	42069	1	0.4	0	0	0	0	0	
+49982	136	1	42070	1	0.9	0	0	0	0	0	
+49982	137	1	43013	1	0.4	0	0	0	0	0	
+49982	138	1	43014	1	0.9	0	0	0	0	0	
+49982	139	1	43207	1	0.4	0	0	0	0	0	
+49982	140	1	43208	1	0.9	0	0	0	0	0	
+49982	141	1	40743	1	0.18	0	0	0	0	0	
+49982	142	1	40744	1	0.85	0	0	0	0	0	
+49982	143	1	40745	1	0.18	0	0	0	0	0	
+49982	144	1	40746	1	0.85	0	0	0	0	0	
+49982	145	1	40814	1	0.18	0	0	0	0	0	
+49982	146	1	40815	1	0.8	0	0	0	0	0	
+49982	147	1	40816	1	0.18	0	0	0	0	0	
+49982	148	1	40817	1	0.8	0	0	0	0	0	
+49982	149	1	41620	1	0.18	0	0	0	0	0	
+49982	150	1	41621	1	0.8	0	0	0	0	0	
+49982	151	1	41624	1	0.18	0	0	0	0	0	
+49982	152	1	41625	1	0.8	0	0	0	0	0	
+49982	153	1	40656	1	0.3	0	0	0	0	0	
+49982	154	1	40679	1	0.6	0	0	0	0	0	
+49982	155	1	40657	1	0.3	0	0	0	0	0	
+49982	156	1	40680	1	0.6	0	0	0	0	0	
+49982	157	1	40774	1	0.3	0	0	0	0	0	
+49982	158	1	40775	1	0.6	0	0	0	0	0	
+49982	159	1	40822	1	0.3	0	0	0	0	0	
+49982	160	1	40823	1	0.6	0	0	0	0	0	
+49982	161	1	40824	1	0.3	0	0	0	0	0	
+49982	162	1	40825	1	0.6	0	0	0	0	0	
+49982	163	1	42840	1	0.3	0	0	0	0	0	
+49982	164	1	42841	1	0.6	0	0	0	0	0	
+49982	165	1	23726	1	0.8	0	0	0	0	0	
+49982	166	1	33670	1	0.1	0	0	0	0	0	
+49982	167	1	34932	1	0.1	0	0	0	0	0	
+49982	168	1	23702	1	0.8	0	0	0	0	0	
+49982	169	1	34933	1	0.1	0	0	0	0	0	
+49982	170	1	23703	1	0.8	0	0	0	0	0	
+49982	171	1	38909	1	0.1	0	0	0	0	0	
+49982	172	1	23704	1	0.8	0	0	0	0	0	
+49982	173	1	38911	1	0.1	0	0	0	0	0	
+49982	174	1	23705	1	0.8	0	0	0	0	0	
+49982	175	1	44136	1	0.1	0	0	0	0	0	
+49982	176	1	44137	1	0.8	0	0	0	0	0	
+49982	177	1	43796	1	0.1	0	0	0	0	0	
+49982	178	1	43797	1	0.8	0	0	0	0	0	
+49982	186	1	40753	1	0.1	0	0	0	0	0	
+49982	187	1	48675	1	0.8	0	0	0	0	0	
 49989	1	1	41613	1	100	0	0	0	0	0	
 49989	1	2	40456	1	100	0	0	0	0	0	
 49989	1	3	40299	1	100	0	0	0	0	0	
@@ -7147,12 +7242,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49987	1	3	22376	1	100	0	0	0	0	0	
 49987	1	4	22377	1	100	0	0	0	0	0	
 49987	1	5	22378	1	100	0	0	0	0	0	
-48668	1	1	26001	1	0.100000001	0	0	0	0	0	
-48668	2	1	26002	1	0.100000001	0	0	0	0	0	
-48668	3	1	26003	1	0.100000001	0	0	0	0	0	
-48668	4	1	26004	1	0.100000001	0	0	0	0	0	
-48668	5	1	26005	1	0.100000001	0	0	0	0	0	
-48668	6	1	26006	1	0.100000001	0	0	0	0	0	
+48668	1	1	26001	1	0.1	0	0	0	0	0	
+48668	2	1	26002	1	0.1	0	0	0	0	0	
+48668	3	1	26003	1	0.1	0	0	0	0	0	
+48668	4	1	26004	1	0.1	0	0	0	0	0	
+48668	5	1	26005	1	0.1	0	0	0	0	0	
+48668	6	1	26006	1	0.1	0	0	0	0	0	
 48668	7	1	25269	3	10	0	0	0	0	0	
 48668	8	1	25270	1	3	0	0	0	0	0	
 48668	9	1	25271	1	1	0	0	0	0	0	
@@ -7163,7 +7258,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48668	14	1	39528	1	12	0	0	0	0	0	
 48668	15	1	28984	3	12	0	0	0	0	0	
 48668	16	1	28985	1	1	0	0	0	0	0	
-48668	17	1	42903	1	0.400000006	0	0	0	0	0	
+48668	17	1	42903	1	0.4	0	0	0	0	0	
 48668	18	1	25317	2	10	0	0	0	0	0	
 48668	19	1	25318	1	3	0	0	0	0	0	
 48668	20	1	25319	1	1	0	0	0	0	0	
@@ -7176,12 +7271,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48668	27	1	25305	1	3	0	0	0	0	0	
 48668	28	1	20960	1	2	0	0	0	0	0	
 48668	29	1	26098	1	2	0	0	0	0	0	
-48669	1	1	26081	1	4.80000019	0	0	0	0	0	
-48669	2	1	25872	1	4.80000019	0	0	0	0	0	
-48669	3	1	25795	1	4.80000019	0	0	0	0	0	
-48669	4	1	25796	1	4.80000019	0	0	0	0	0	
-48669	5	1	25797	1	4.80000019	0	0	0	0	0	
-48669	6	1	25798	1	4.80000019	0	0	0	0	0	
+48669	1	1	26081	1	4.8	0	0	0	0	0	
+48669	2	1	25872	1	4.8	0	0	0	0	0	
+48669	3	1	25795	1	4.8	0	0	0	0	0	
+48669	4	1	25796	1	4.8	0	0	0	0	0	
+48669	5	1	25797	1	4.8	0	0	0	0	0	
+48669	6	1	25798	1	4.8	0	0	0	0	0	
 48669	7	1	25306	1	5	0	0	0	0	0	
 48669	8	1	25892	1	1	0	0	0	0	0	
 48669	9	1	25851	1	1	0	0	0	0	0	
@@ -7198,12 +7293,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48669	20	1	25319	1	3	0	0	0	0	0	
 48669	21	1	25313	1	2	0	0	0	0	0	
 48669	22	1	26098	1	2	0	0	0	0	0	
-48669	23	1	26001	1	0.200000003	0	0	0	0	0	
-48669	24	1	26002	1	0.200000003	0	0	0	0	0	
-48669	25	1	26003	1	0.200000003	0	0	0	0	0	
-48669	26	1	26004	1	0.200000003	0	0	0	0	0	
-48669	27	1	26005	1	0.200000003	0	0	0	0	0	
-48669	28	1	26006	1	0.200000003	0	0	0	0	0	
+48669	23	1	26001	1	0.2	0	0	0	0	0	
+48669	24	1	26002	1	0.2	0	0	0	0	0	
+48669	25	1	26003	1	0.2	0	0	0	0	0	
+48669	26	1	26004	1	0.2	0	0	0	0	0	
+48669	27	1	26005	1	0.2	0	0	0	0	0	
+48669	28	1	26006	1	0.2	0	0	0	0	0	
 48669	29	1	25269	1	10	0	0	0	0	0	
 48669	30	1	25270	1	4	0	0	0	0	0	
 48669	31	1	25271	1	4	0	0	0	0	0	
@@ -7213,7 +7308,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48670	4	1	25800	1	5	0	0	0	0	0	
 48670	5	1	25801	1	5	0	0	0	0	0	
 48670	6	1	25802	1	5	0	0	0	0	0	
-48670	7	1	25307	1	5.19999981	0	0	0	0	0	
+48670	7	1	25307	1	5.2	0	0	0	0	0	
 48670	8	1	25893	1	2	0	0	0	0	0	
 48670	9	1	25853	1	2	0	0	0	0	0	
 48670	10	1	25854	1	2	0	0	0	0	0	
@@ -7228,12 +7323,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48670	19	1	25319	1	5	0	0	0	0	0	
 48670	20	1	25314	1	5	0	0	0	0	0	
 48670	21	1	26098	1	5	0	0	0	0	0	
-48670	22	1	26001	1	0.300000012	0	0	0	0	0	
-48670	23	1	26002	1	0.300000012	0	0	0	0	0	
-48670	24	1	26003	1	0.300000012	0	0	0	0	0	
-48670	25	1	26004	1	0.300000012	0	0	0	0	0	
-48670	26	1	26005	1	0.300000012	0	0	0	0	0	
-48670	27	1	26006	1	0.300000012	0	0	0	0	0	
+48670	22	1	26001	1	0.3	0	0	0	0	0	
+48670	23	1	26002	1	0.3	0	0	0	0	0	
+48670	24	1	26003	1	0.3	0	0	0	0	0	
+48670	25	1	26004	1	0.3	0	0	0	0	0	
+48670	26	1	26005	1	0.3	0	0	0	0	0	
+48670	27	1	26006	1	0.3	0	0	0	0	0	
 48670	28	1	25270	1	4	0	0	0	0	0	
 48670	29	1	25271	1	3	0	0	0	0	0	
 48671	1	1	26083	1	5	0	0	0	0	0	
@@ -7246,9 +7341,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48671	8	1	25806	1	5	0	0	0	0	0	
 48671	9	1	25308	1	5	0	0	0	0	0	
 48671	10	1	25894	1	1.5	0	0	0	0	0	
-48671	11	1	25855	1	1.39999998	0	0	0	0	0	
-48671	12	1	25856	1	1.39999998	0	0	0	0	0	
-48671	13	1	25857	1	1.39999998	0	0	0	0	0	
+48671	11	1	25855	1	1.4	0	0	0	0	0	
+48671	12	1	25856	1	1.4	0	0	0	0	0	
+48671	13	1	25857	1	1.4	0	0	0	0	0	
 48671	14	1	26093	1	1.5	0	0	0	0	0	
 48671	15	1	26094	1	1.5	0	0	0	0	0	
 48671	16	1	26095	1	1.5	0	0	0	0	0	
@@ -7260,12 +7355,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48671	22	1	25319	1	4	0	0	0	0	0	
 48671	23	1	25315	1	5	0	0	0	0	0	
 48671	24	1	26098	1	5	0	0	0	0	0	
-48671	25	1	26001	1	0.300000012	0	0	0	0	0	
-48671	26	1	26002	1	0.300000012	0	0	0	0	0	
-48671	27	1	26003	1	0.300000012	0	0	0	0	0	
-48671	28	1	26004	1	0.300000012	0	0	0	0	0	
-48671	29	1	26005	1	0.300000012	0	0	0	0	0	
-48671	30	1	26006	1	0.300000012	0	0	0	0	0	
+48671	25	1	26001	1	0.3	0	0	0	0	0	
+48671	26	1	26002	1	0.3	0	0	0	0	0	
+48671	27	1	26003	1	0.3	0	0	0	0	0	
+48671	28	1	26004	1	0.3	0	0	0	0	0	
+48671	29	1	26005	1	0.3	0	0	0	0	0	
+48671	30	1	26006	1	0.3	0	0	0	0	0	
 48671	31	1	25270	1	5	0	0	0	0	0	
 48671	32	1	25271	1	3	0	0	0	0	0	
 49094	1	1	40236	1	0.5	1	0	0	0	0	
@@ -7274,8 +7369,8 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49094	4	1	40169	1	1	1	0	0	0	0	
 49094	5	1	40399	1	0.5	1	0	0	0	0	
 49094	6	1	40440	1	0.5	1	0	0	0	0	
-49094	7	1	34992	1	0.100000001	1	0	0	0	0	
-49094	8	1	35015	1	0.899999976	0	0	0	0	0	
+49094	7	1	34992	1	0.1	1	0	0	0	0	
+49094	8	1	35015	1	0.9	0	0	0	0	0	
 49094	9	1	40180	1	4.5	0	0	0	0	0	
 49094	10	1	40261	1	4	0	0	0	0	0	
 49094	11	1	40262	1	4	0	0	0	0	0	
@@ -7353,10 +7448,10 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48665	1	3	48663	1	100	0	0	0	0	0	
 48666	1	1	48656	1	100	0	0	0	0	0	
 49136	1	1	40107	10	100	0	0	0	0	0	
-49136	1	2	40604	1	0.300000012	0	0	0	0	0	
-49136	2	2	40605	1	0.100000001	0	0	0	0	0	
-49136	3	2	40606	1	2.29999995	0	0	0	0	0	
-49136	4	2	40607	1	2.29999995	0	0	0	0	0	
+49136	1	2	40604	1	0.3	0	0	0	0	0	
+49136	2	2	40605	1	0.1	0	0	0	0	0	
+49136	3	2	40606	1	2.3	0	0	0	0	0	
+49136	4	2	40607	1	2.3	0	0	0	0	0	
 49136	5	2	40160	1	0.5	0	0	0	0	0	
 49136	6	2	40161	1	0.5	0	0	0	0	0	
 49136	7	2	40162	1	0.5	0	0	0	0	0	
@@ -7384,12 +7479,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48139	3	1	40154	5	4.25	0	0	0	0	0	
 48139	4	1	40155	5	1.12	0	0	0	0	0	
 48139	5	1	40200	4	7.5	0	0	0	0	0	
-48139	6	1	40201	1	3.75999999	0	0	0	0	0	
-48139	7	1	40186	1	12.3999996	0	0	0	0	0	
-48139	8	1	40187	1	10.1700001	0	0	0	0	0	
-48139	9	1	40188	1	8.17000008	0	0	0	0	0	
+48139	6	1	40201	1	3.76	0	0	0	0	0	
+48139	7	1	40186	1	12.4	0	0	0	0	0	
+48139	8	1	40187	1	10.17	0	0	0	0	0	
+48139	9	1	40188	1	8.17	0	0	0	0	0	
 48139	10	1	40317	1	1.88	0	0	0	0	0	
-48139	11	1	40189	1	0.379999995	0	0	0	0	0	
+48139	11	1	40189	1	0.38	0	0	0	0	0	
 48139	12	1	40183	22	18	0	0	0	0	0	
 48139	13	1	40184	1	1	0	0	0	0	0	
 48139	14	1	40185	3	5	0	0	0	0	0	
@@ -7431,8 +7526,8 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48140	25	1	40113	1	4	0	0	0	0	0	
 48140	26	1	40222	1	1	0	0	0	0	0	
 48140	27	1	40273	1	0.5	0	0	0	0	0	
-48140	28	1	40274	1	0.200000003	0	0	0	0	0	
-48140	29	1	40350	1	0.300000012	0	0	0	0	0	
+48140	28	1	40274	1	0.2	0	0	0	0	0	
+48140	29	1	40350	1	0.3	0	0	0	0	0	
 48140	30	1	40156	4	13	0	0	0	0	0	
 48140	31	1	40157	2	12	0	0	0	0	0	
 48140	32	1	40158	1	5	0	0	0	0	0	
@@ -7450,22 +7545,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48140	44	1	40104	95	0.5	0	0	0	0	0	
 48140	45	1	40105	80	0.5	0	0	0	0	0	
 48140	46	1	40106	70	0.5	0	0	0	0	0	
-48141	1	1	40331	1	0.0900000036	1	0	0	0	0	
-48141	2	1	40332	1	0.0199999996	1	0	0	0	0	
-48141	3	1	40265	1	0.0900000036	1	0	0	0	0	
-48141	4	1	40266	1	0.0199999996	1	0	0	0	0	
-48141	5	1	40267	1	0.0900000036	1	0	0	0	0	
-48141	6	1	40268	1	0.0199999996	1	0	0	0	0	
-48141	7	1	40335	1	0.0900000036	1	0	0	0	0	
-48141	8	1	40336	1	0.0199999996	1	0	0	0	0	
-48141	9	1	40333	1	2.58999991	0	0	0	0	0	
-48141	10	1	40334	1	1.29999995	0	0	0	0	0	
-48141	11	1	40269	1	2.58999991	0	0	0	0	0	
-48141	12	1	40270	1	1.29999995	0	0	0	0	0	
-48141	13	1	40271	1	2.58999991	0	0	0	0	0	
-48141	14	1	40272	1	1.29999995	0	0	0	0	0	
-48141	15	1	40337	1	2.58999991	0	0	0	0	0	
-48141	16	1	40338	1	1.29999995	0	0	0	0	0	
+48141	1	1	40331	1	0.09	1	0	0	0	0	
+48141	2	1	40332	1	0.02	1	0	0	0	0	
+48141	3	1	40265	1	0.09	1	0	0	0	0	
+48141	4	1	40266	1	0.02	1	0	0	0	0	
+48141	5	1	40267	1	0.09	1	0	0	0	0	
+48141	6	1	40268	1	0.02	1	0	0	0	0	
+48141	7	1	40335	1	0.09	1	0	0	0	0	
+48141	8	1	40336	1	0.02	1	0	0	0	0	
+48141	9	1	40333	1	2.59	0	0	0	0	0	
+48141	10	1	40334	1	1.3	0	0	0	0	0	
+48141	11	1	40269	1	2.59	0	0	0	0	0	
+48141	12	1	40270	1	1.3	0	0	0	0	0	
+48141	13	1	40271	1	2.59	0	0	0	0	0	
+48141	14	1	40272	1	1.3	0	0	0	0	0	
+48141	15	1	40337	1	2.59	0	0	0	0	0	
+48141	16	1	40338	1	1.3	0	0	0	0	0	
 48141	17	1	40033	160	8	0	0	0	0	0	
 48141	18	1	40034	160	8	0	0	0	0	0	
 48141	19	1	40035	95	8	0	0	0	0	0	
@@ -7484,10 +7579,10 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48142	6	1	34942	1	3	0	0	0	0	0	
 48142	7	1	48697	1	2	0	0	0	0	0	
 48142	8	1	48698	1	1	0	0	0	0	0	
-48142	9	1	48699	1	0.0500000007	0	0	0	0	0	
+48142	9	1	48699	1	0.05	0	0	0	0	0	
 48142	10	1	34426	1	12	0	0	0	0	0	
-48142	11	1	33515	1	0.100000001	0	0	0	0	0	
-48142	12	1	33518	1	0.100000001	0	0	0	0	0	
+48142	11	1	33515	1	0.1	0	0	0	0	0	
+48142	12	1	33518	1	0.1	0	0	0	0	0	
 48142	13	1	34396	1	1	0	0	0	0	0	
 48142	14	1	34397	1	1	0	0	0	0	0	
 48142	15	1	34398	1	1	0	0	0	0	0	
@@ -7495,12 +7590,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48142	17	1	34400	1	1	0	0	0	0	0	
 48142	18	1	34401	1	1	0	0	0	0	0	
 48142	19	1	34402	1	1	0	0	0	0	0	
-48142	20	1	34427	1	0.100000001	0	0	0	0	0	
-48142	21	1	34428	1	0.100000001	0	0	0	0	0	
-48142	22	1	34429	1	0.100000001	0	0	0	0	0	
-48142	23	1	31510	30	0.100000001	0	0	0	0	0	
-48142	24	1	31511	30	0.100000001	0	0	0	0	0	
-48142	25	1	31512	30	0.100000001	0	0	0	0	0	
+48142	20	1	34427	1	0.1	0	0	0	0	0	
+48142	21	1	34428	1	0.1	0	0	0	0	0	
+48142	22	1	34429	1	0.1	0	0	0	0	0	
+48142	23	1	31510	30	0.1	0	0	0	0	0	
+48142	24	1	31511	30	0.1	0	0	0	0	0	
+48142	25	1	31512	30	0.1	0	0	0	0	0	
 48142	26	1	31601	30	0.5	0	0	0	0	0	
 48142	27	1	31602	30	0.5	0	0	0	0	0	
 48142	28	1	31603	30	1	0	0	0	0	0	
@@ -7525,9 +7620,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48142	47	1	40213	2	1	0	0	0	0	0	
 48142	48	1	40214	1	1	0	0	0	0	0	
 48142	49	1	40215	2	1	0	0	0	0	0	
-48142	50	1	40216	1	1.04999995	0	0	0	0	0	
-48142	51	1	40217	2	1.29999995	0	0	0	0	0	
-48142	52	1	40218	1	1.29999995	0	0	0	0	0	
+48142	50	1	40216	1	1.05	0	0	0	0	0	
+48142	51	1	40217	2	1.3	0	0	0	0	0	
+48142	52	1	40218	1	1.3	0	0	0	0	0	
 48142	54	1	40033	160	2	0	0	0	0	0	
 48142	55	1	40034	160	2	0	0	0	0	0	
 48142	56	1	40035	95	2	0	0	0	0	0	
@@ -7546,22 +7641,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48143	6	1	34942	1	3	0	0	0	0	0	
 48143	7	1	48697	1	2	0	0	0	0	0	
 48143	8	1	48698	1	1	0	0	0	0	0	
-48143	9	1	48699	1	0.0500000007	0	0	0	0	0	
+48143	9	1	48699	1	0.05	0	0	0	0	0	
 48143	10	1	34426	1	12	0	0	0	0	0	
-48143	11	1	33516	1	0.100000001	0	0	0	0	0	
-48143	12	1	33519	1	0.100000001	0	0	0	0	0	
-48143	13	1	34403	1	1.20000005	0	0	0	0	0	
-48143	14	1	34404	1	1.20000005	0	0	0	0	0	
-48143	15	1	34405	1	1.20000005	0	0	0	0	0	
-48143	16	1	34406	1	1.20000005	0	0	0	0	0	
-48143	17	1	34407	1	1.20000005	0	0	0	0	0	
-48143	18	1	34408	1	1.20000005	0	0	0	0	0	
-48143	19	1	34427	1	0.100000001	0	0	0	0	0	
-48143	20	1	34428	1	0.100000001	0	0	0	0	0	
-48143	21	1	34429	1	0.100000001	0	0	0	0	0	
-48143	22	1	31510	30	0.100000001	0	0	0	0	0	
-48143	23	1	31511	30	0.100000001	0	0	0	0	0	
-48143	24	1	31512	30	0.100000001	0	0	0	0	0	
+48143	11	1	33516	1	0.1	0	0	0	0	0	
+48143	12	1	33519	1	0.1	0	0	0	0	0	
+48143	13	1	34403	1	1.2	0	0	0	0	0	
+48143	14	1	34404	1	1.2	0	0	0	0	0	
+48143	15	1	34405	1	1.2	0	0	0	0	0	
+48143	16	1	34406	1	1.2	0	0	0	0	0	
+48143	17	1	34407	1	1.2	0	0	0	0	0	
+48143	18	1	34408	1	1.2	0	0	0	0	0	
+48143	19	1	34427	1	0.1	0	0	0	0	0	
+48143	20	1	34428	1	0.1	0	0	0	0	0	
+48143	21	1	34429	1	0.1	0	0	0	0	0	
+48143	22	1	31510	30	0.1	0	0	0	0	0	
+48143	23	1	31511	30	0.1	0	0	0	0	0	
+48143	24	1	31512	30	0.1	0	0	0	0	0	
 48143	25	1	31601	30	0.5	0	0	0	0	0	
 48143	26	1	31602	30	0.5	0	0	0	0	0	
 48143	27	1	31603	30	1	0	0	0	0	0	
@@ -7597,8 +7692,8 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48143	58	1	40038	160	2	0	0	0	0	0	
 48143	59	1	40039	120	2	0	0	0	0	0	
 48143	60	1	40104	95	2	0	0	0	0	0	
-48143	61	1	40105	80	2.4000001	0	0	0	0	0	
-48143	62	1	40106	70	2.04999995	0	0	0	0	0	
+48143	61	1	40105	80	2.4	0	0	0	0	0	
+48143	62	1	40106	70	2.05	0	0	0	0	0	
 48144	1	1	34937	1	7	0	0	0	0	0	
 48144	2	1	34938	1	5	0	0	0	0	0	
 48144	3	1	34939	1	3	0	0	0	0	0	
@@ -7607,22 +7702,22 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48144	6	1	34942	1	3	0	0	0	0	0	
 48144	7	1	48697	1	2	0	0	0	0	0	
 48144	8	1	48698	1	1	0	0	0	0	0	
-48144	9	1	48699	1	0.0500000007	0	0	0	0	0	
+48144	9	1	48699	1	0.05	0	0	0	0	0	
 48144	10	1	34426	1	12	0	0	0	0	0	
-48144	11	1	33517	1	0.100000001	0	0	0	0	0	
-48144	12	1	33520	1	0.100000001	0	0	0	0	0	
-48144	13	1	34410	1	1.20000005	0	0	0	0	0	
-48144	14	1	34411	1	1.20000005	0	0	0	0	0	
-48144	15	1	34413	1	1.20000005	0	0	0	0	0	
-48144	16	1	34414	1	1.20000005	0	0	0	0	0	
-48144	17	1	34412	1	1.20000005	0	0	0	0	0	
-48144	18	1	34415	1	1.20000005	0	0	0	0	0	
-48144	19	1	34427	1	0.100000001	0	0	0	0	0	
-48144	20	1	34428	1	0.100000001	0	0	0	0	0	
-48144	21	1	34429	1	0.100000001	0	0	0	0	0	
-48144	22	1	31510	30	0.100000001	0	0	0	0	0	
-48144	23	1	31511	30	0.100000001	0	0	0	0	0	
-48144	24	1	31512	30	0.100000001	0	0	0	0	0	
+48144	11	1	33517	1	0.1	0	0	0	0	0	
+48144	12	1	33520	1	0.1	0	0	0	0	0	
+48144	13	1	34410	1	1.2	0	0	0	0	0	
+48144	14	1	34411	1	1.2	0	0	0	0	0	
+48144	15	1	34413	1	1.2	0	0	0	0	0	
+48144	16	1	34414	1	1.2	0	0	0	0	0	
+48144	17	1	34412	1	1.2	0	0	0	0	0	
+48144	18	1	34415	1	1.2	0	0	0	0	0	
+48144	19	1	34427	1	0.1	0	0	0	0	0	
+48144	20	1	34428	1	0.1	0	0	0	0	0	
+48144	21	1	34429	1	0.1	0	0	0	0	0	
+48144	22	1	31510	30	0.1	0	0	0	0	0	
+48144	23	1	31511	30	0.1	0	0	0	0	0	
+48144	24	1	31512	30	0.1	0	0	0	0	0	
 48144	25	1	31601	30	0.5	0	0	0	0	0	
 48144	26	1	31602	30	0.5	0	0	0	0	0	
 48144	27	1	31603	30	1	0	0	0	0	0	
@@ -7658,8 +7753,8 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48144	57	1	40038	160	2	0	0	0	0	0	
 48144	58	1	40039	120	2	0	0	0	0	0	
 48144	59	1	40104	95	2	0	0	0	0	0	
-48144	60	1	40105	80	2.4000001	0	0	0	0	0	
-48144	61	1	40106	70	2.04999995	0	0	0	0	0	
+48144	60	1	40105	80	2.4	0	0	0	0	0	
+48144	61	1	40106	70	2.05	0	0	0	0	0	
 48145	1	1	28960	1	3	1	0	0	0	0	
 48145	2	1	28961	1	7	0	0	0	0	0	
 48145	3	1	48907	5	10	0	0	0	0	0	
@@ -7669,10 +7764,10 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48145	7	1	30012	5	5	0	0	0	0	0	
 48145	8	1	31303	10	7	0	0	0	0	0	
 48145	9	1	31304	10	7	0	0	0	0	0	
-48145	10	1	31777	15	11.6999998	0	0	0	0	0	
-48145	11	1	31778	15	9.89999962	0	0	0	0	0	
+48145	10	1	31777	15	11.7	0	0	0	0	0	
+48145	11	1	31778	15	9.9	0	0	0	0	0	
 48145	12	1	31300	5	12	0	0	0	0	0	
-48145	13	1	31301	5	12.3999996	0	0	0	0	0	
+48145	13	1	31301	5	12.4	0	0	0	0	0	
 48145	1	2	28955	1	100	0	0	0	0	0	
 48146	1	1	28958	1	2.5	1	0	0	0	0	
 48146	2	1	28959	1	5	0	0	0	0	0	
@@ -7683,12 +7778,12 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48146	7	1	30012	5	5	0	0	0	0	0	
 48146	8	1	31303	10	7	0	0	0	0	0	
 48146	9	1	31304	10	7	0	0	0	0	0	
-48146	10	1	31777	15	13.1000004	0	0	0	0	0	
+48146	10	1	31777	15	13.1	0	0	0	0	0	
 48146	11	1	31778	15	12	0	0	0	0	0	
 48146	12	1	31300	5	11	0	0	0	0	0	
-48146	13	1	31301	5	12.3999996	0	0	0	0	0	
+48146	13	1	31301	5	12.4	0	0	0	0	0	
 48146	1	2	28956	1	100	0	0	0	0	0	
-48147	1	1	28962	1	1.79999995	1	0	0	0	0	
+48147	1	1	28962	1	1.8	1	0	0	0	0	
 48147	2	1	28963	1	4	0	0	0	0	0	
 48147	3	1	48907	5	10	0	0	0	0	0	
 48147	4	1	36362	5	5	0	0	0	0	0	
@@ -7700,7 +7795,7 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48147	10	1	31777	15	13	0	0	0	0	0	
 48147	11	1	31778	15	13	0	0	0	0	0	
 48147	12	1	31300	5	12	0	0	0	0	0	
-48147	13	1	31301	5	12.1999998	0	0	0	0	0	
+48147	13	1	31301	5	12.2	0	0	0	0	0	
 48147	1	2	28957	1	100	0	0	0	0	0	
 48404	1	1	15241	1	100	0	0	0	0	0	
 48404	1	2	15242	1	100	0	0	0	0	0	
@@ -7774,8 +7869,8 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48413	1	7	15696	1	100	0	0	0	0	0	
 48413	1	8	15697	1	100	0	0	0	0	0	
 48100	1	1	37978	1	100	1	0	0	0	0	
-48100	2	2	48699	1	0.100000001	1	0	0	0	0	
-48100	3	2	40022	10	8.89999962	0	0	0	0	0	
+48100	2	2	48699	1	0.1	1	0	0	0	0	
+48100	3	2	40022	10	8.9	0	0	0	0	0	
 48100	4	2	48101	1	4	1	0	0	0	0	
 48100	5	2	40274	1	5	1	0	0	0	0	
 48100	6	2	40037	20	32	0	0	0	0	0	
@@ -7862,10 +7957,10 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49441	3	1	40994	1	1	1	0	0	0	0	
 49441	4	1	40996	1	0.5	0	0	0	0	0	
 49441	5	1	41197	1	0.5	0	0	0	0	0	
-49441	6	1	41305	1	0.400000006	0	0	0	0	0	
+49441	6	1	41305	1	0.4	0	0	0	0	0	
 49441	7	1	40022	2	2	0	0	0	0	0	
 49441	8	1	41493	1	2	0	0	0	0	0	
-49441	9	1	41542	1	10.3500004	0	0	0	0	0	
+49441	9	1	41542	1	10.35	0	0	0	0	0	
 49441	10	1	49290	1	16	0	0	0	0	0	
 49441	11	1	40157	2	10	0	0	0	0	0	
 49441	12	1	40182	2	5	0	0	0	0	0	
@@ -7929,10 +8024,10 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49446	3	1	41340	1	1	1	0	0	0	0	
 49446	4	1	41341	1	0.5	0	0	0	0	0	
 49446	5	1	41197	1	0.5	0	0	0	0	0	
-49446	6	1	41305	1	0.400000006	0	0	0	0	0	
+49446	6	1	41305	1	0.4	0	0	0	0	0	
 49446	7	1	40022	2	2	0	0	0	0	0	
 49446	8	1	41493	1	2	0	0	0	0	0	
-49446	9	1	41542	1	10.3500004	0	0	0	0	0	
+49446	9	1	41542	1	10.35	0	0	0	0	0	
 49446	10	1	49290	1	16	0	0	0	0	0	
 49446	11	1	40157	2	10	0	0	0	0	0	
 49446	12	1	40182	2	5	0	0	0	0	0	
@@ -7943,10 +8038,10 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49447	3	1	41523	1	1	1	0	0	0	0	
 49447	4	1	41524	1	0.5	0	0	0	0	0	
 49447	5	1	41197	1	0.5	0	0	0	0	0	
-49447	6	1	41305	1	0.400000006	0	0	0	0	0	
+49447	6	1	41305	1	0.4	0	0	0	0	0	
 49447	7	1	40022	2	2	0	0	0	0	0	
 49447	8	1	41493	1	2	0	0	0	0	0	
-49447	9	1	41542	1	9.60000038	0	0	0	0	0	
+49447	9	1	41542	1	9.6	0	0	0	0	0	
 49447	10	1	49290	1	16	0	0	0	0	0	
 49447	11	1	40157	2	10	0	0	0	0	0	
 49447	12	1	40182	2	5	0	0	0	0	0	
@@ -7959,15 +8054,15 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49448	5	1	48899	1	10	0	0	0	0	0	
 49448	6	1	48900	1	10	0	0	0	0	0	
 49448	7	1	48904	1	4	0	0	0	0	0	
-49448	8	1	40300	1	8.39999962	0	0	0	0	0	
+49448	8	1	40300	1	8.4	0	0	0	0	0	
 49448	9	1	40452	1	6	0	0	0	0	0	
 49448	10	1	40450	1	5	0	0	0	0	0	
 49448	11	1	40299	1	10	0	0	0	0	0	
 49448	12	1	48969	10	15	0	0	0	0	0	
 49448	13	1	40449	2	10	0	0	0	0	0	
-49448	14	1	48953	1	0.0997999981	0	0	0	0	0	
-49448	15	1	48945	1	9.99999975e-05	0	0	0	0	0	
-49448	16	1	41352	1	9.99999975e-05	0	0	0	0	0	
+49448	14	1	48953	1	0.0998	0	0	0	0	0	
+49448	15	1	48945	1	0.0001	0	0	0	0	0	
+49448	16	1	41352	1	0.0001	0	0	0	0	0	
 49448	1	2	41106	7	100	0	0	0	0	0	
 49448	1	3	41107	4	100	0	0	0	0	0	
 49592	1	1	44186	1	100	0	0	0	0	0	
@@ -7982,18 +8077,18 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49464	5	1	40455	3	16	0	0	0	0	0	
 49464	6	1	40456	2	12	0	0	0	0	0	
 49464	7	1	40457	1	6	0	0	0	0	0	
-49464	8	1	40458	1	3.4000001	0	0	0	0	0	
-49464	9	1	48953	1	0.0997999981	0	0	0	0	0	
-49464	10	1	48945	1	9.99999975e-05	0	0	0	0	0	
-49464	11	1	48915	1	9.99999975e-05	0	0	0	0	0	
+49464	8	1	40458	1	3.4	0	0	0	0	0	
+49464	9	1	48953	1	0.0998	0	0	0	0	0	
+49464	10	1	48945	1	0.0001	0	0	0	0	0	
+49464	11	1	48915	1	0.0001	0	0	0	0	0	
 49464	1	2	48956	1	100	0	0	0	0	0	
 49489	1	1	49281	1	8	0	0	0	0	0	
 49489	2	1	49165	1	8	0	0	0	0	0	
 49489	3	1	49289	1	8	0	0	0	0	0	
 49489	4	1	49330	1	8	0	0	0	0	0	
-49489	5	1	49332	1	7.80000019	0	0	0	0	0	
+49489	5	1	49332	1	7.8	0	0	0	0	0	
 49489	6	1	49174	1	8	0	0	0	0	0	
-49489	7	1	49269	1	0.200000003	1	0	0	0	0	
+49489	7	1	49269	1	0.2	1	0	0	0	0	
 49489	8	1	49255	1	6	0	0	0	0	0	
 49489	9	1	49257	1	5	0	0	0	0	0	
 49489	10	1	49317	1	5	0	0	0	0	0	
@@ -8362,9 +8457,9 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48154	1	5	15695	1	100	0	0	0	0	0	
 48154	1	6	15696	1	100	0	0	0	0	0	
 48154	1	7	15697	1	100	0	0	0	0	0	
-47882	1	1	47156	1	33.2999992	0	0	0	0	0	
-47882	2	1	47157	1	33.4000015	0	0	0	0	0	
-47882	3	1	47158	1	33.2999992	0	0	0	0	0	
+47882	1	1	47156	1	33.3	0	0	0	0	0	
+47882	2	1	47157	1	33.4	0	0	0	0	0	
+47882	3	1	47158	1	33.3	0	0	0	0	0	
 48149	1	1	13922	1	100	0	0	0	0	0	
 48149	2	2	13923	1	100	0	0	0	0	0	
 48149	3	3	13924	1	100	0	0	0	0	0	
@@ -8396,17 +8491,17 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 48218	1	2	26460	1	100	0	0	0	0	0	
 48219	1	1	14652	1	100	0	0	0	0	0	
 48219	1	2	26460	1	100	0	0	0	0	0	
-49496	1	1	42812	1	1.20000005	1	0	0	0	0	
-49496	2	1	42813	1	2.4000001	0	0	0	0	0	
+49496	1	1	42812	1	1.2	1	0	0	0	0	
+49496	2	1	42813	1	2.4	0	0	0	0	0	
 49496	3	1	41197	1	0.5	0	0	0	0	0	
-49496	4	1	41305	1	0.400000006	0	0	0	0	0	
+49496	4	1	41305	1	0.4	0	0	0	0	0	
 49496	5	1	40022	2	2	0	0	0	0	0	
 49496	6	1	41493	1	2	0	0	0	0	0	
 49496	7	1	41542	1	10	0	0	0	0	0	
-49496	8	1	49290	1	16.2999992	0	0	0	0	0	
+49496	8	1	49290	1	16.3	0	0	0	0	0	
 49496	9	1	40157	2	10	0	0	0	0	0	
 49496	10	1	40182	2	5	0	0	0	0	0	
-49496	11	1	40040	12	25.2999992	0	0	0	0	0	
+49496	11	1	40040	12	25.3	0	0	0	0	0	
 49496	12	1	40042	5	26	0	0	0	0	0	
 49806	1	1	40118	1	1	1	0	0	0	0	
 49806	2	1	40121	1	1	1	0	0	0	0	
@@ -8499,16 +8594,16 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49806	89	1	40573	1	1	1	0	0	0	0	
 49806	90	1	40574	1	1	1	0	0	0	0	
 49806	91	1	41269	1	1	1	0	0	0	0	
-49806	92	1	41273	1	0.899999976	1	0	0	0	0	
-49806	93	1	41780	1	0.899999976	1	0	0	0	0	
-49806	94	1	42133	1	0.899999976	1	0	0	0	0	
-49806	95	1	42137	1	0.899999976	1	0	0	0	0	
-49806	96	1	42418	1	0.899999976	1	0	0	0	0	
-49806	97	1	42422	1	0.899999976	1	0	0	0	0	
-49806	98	1	42648	1	0.899999976	1	0	0	0	0	
-49806	99	1	42680	1	0.899999976	1	0	0	0	0	
-49806	100	1	42866	1	0.899999976	1	0	0	0	0	
-49806	101	1	42870	1	0.899999976	1	0	0	0	0	
+49806	92	1	41273	1	0.9	1	0	0	0	0	
+49806	93	1	41780	1	0.9	1	0	0	0	0	
+49806	94	1	42133	1	0.9	1	0	0	0	0	
+49806	95	1	42137	1	0.9	1	0	0	0	0	
+49806	96	1	42418	1	0.9	1	0	0	0	0	
+49806	97	1	42422	1	0.9	1	0	0	0	0	
+49806	98	1	42648	1	0.9	1	0	0	0	0	
+49806	99	1	42680	1	0.9	1	0	0	0	0	
+49806	100	1	42866	1	0.9	1	0	0	0	0	
+49806	101	1	42870	1	0.9	1	0	0	0	0	
 52574	1	1	10314	1	100	0	0	0	0	0	
 52574	1	2	10315	1	100	0	0	0	0	0	
 52574	1	3	10316	1	100	0	0	0	0	0	
@@ -8519,16 +8614,16 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 52575	1	4	10321	1	100	0	0	0	0	0	
 49633	1	1	40368	1	2	0	0	0	0	0	
 49633	2	1	40369	1	1	0	0	0	0	0	
-49633	3	1	40370	1	0.100000001	0	0	0	0	0	
-49633	4	1	40687	1	0.0399999991	1	0	0	0	0	
-49633	5	1	41301	1	0.0199999996	1	0	0	0	0	
-49633	6	1	42963	1	0.00999999978	1	0	0	0	0	
+49633	3	1	40370	1	0.1	0	0	0	0	0	
+49633	4	1	40687	1	0.04	1	0	0	0	0	
+49633	5	1	41301	1	0.02	1	0	0	0	0	
+49633	6	1	42963	1	0.01	1	0	0	0	0	
 49633	7	1	40543	1	4	0	0	0	0	0	
 49633	8	1	40544	1	3	0	0	0	0	0	
 49633	9	1	40545	1	2	0	0	0	0	0	
-49633	10	1	40546	1	0.600000024	0	0	0	0	0	
-49633	11	1	41302	1	0.400000006	0	0	0	0	0	
-49633	12	1	42965	1	0.200000003	0	0	0	0	0	
+49633	10	1	40546	1	0.6	0	0	0	0	0	
+49633	11	1	41302	1	0.4	0	0	0	0	0	
+49633	12	1	42965	1	0.2	0	0	0	0	0	
 49633	13	1	41194	1	7	0	0	0	0	0	
 49633	14	1	41195	1	5	0	0	0	0	0	
 49633	15	1	41196	1	4	0	0	0	0	0	
@@ -8541,122 +8636,391 @@ COPY fortune_bag (id, sequence, set, item_id, item_num, probability, bulletin, w
 49633	22	1	41189	1	4	0	0	0	0	0	
 49633	23	1	41303	1	3	0	0	0	0	0	
 49633	24	1	42967	1	2	0	0	0	0	0	
-49633	25	1	41539	1	1.20000005	0	0	0	0	0	
-49633	26	1	41540	1	0.699999988	0	0	0	0	0	
-49633	27	1	41541	1	0.100000001	1	0	0	0	0	
-49633	28	1	40372	1	0.0500000007	1	0	0	0	0	
-49633	29	1	40371	1	0.200000003	1	0	0	0	0	
+49633	25	1	41539	1	1.2	0	0	0	0	0	
+49633	26	1	41540	1	0.7	0	0	0	0	0	
+49633	27	1	41541	1	0.1	1	0	0	0	0	
+49633	28	1	40372	1	0.05	1	0	0	0	0	
+49633	29	1	40371	1	0.2	1	0	0	0	0	
 49633	30	1	40184	1	3	0	0	0	0	0	
 49633	31	1	41300	1	2	0	0	0	0	0	
 49633	32	1	40380	1	6	0	0	0	0	0	
-49633	33	1	41542	1	13.8800001	0	0	0	0	0	
+49633	33	1	41542	1	13.88	0	0	0	0	0	
 49633	34	1	40201	1	7	0	0	0	0	0	
 49633	35	1	40363	1	3	0	0	0	0	0	
 49810	1	1	44050	100	100	0	0	0	0	0	
 48031	1	1	40362	1	95	0	0	0	0	0	
 48031	2	1	40362	2	3.5	1	0	0	0	0	
-48031	3	1	40362	3	1.20000005	1	0	0	0	0	
-48031	4	1	40362	4	0.0900000036	1	0	0	0	0	
-48031	5	1	40362	5	0.0599999987	1	0	0	0	0	
-48031	6	1	40362	6	0.0500000007	1	0	0	0	0	
-48031	7	1	40362	7	0.0399999991	1	0	0	0	0	
-48031	8	1	40362	8	0.0299999993	1	0	0	0	0	
-48031	9	1	40362	9	0.0199999996	1	0	0	0	0	
-48031	10	1	40362	10	0.00999999978	1	0	0	0	0	
-48031	1	99	18453	1	0.100000001	1	0	0	0	0	
+48031	3	1	40362	3	1.2	1	0	0	0	0	
+48031	4	1	40362	4	0.09	1	0	0	0	0	
+48031	5	1	40362	5	0.06	1	0	0	0	0	
+48031	6	1	40362	6	0.05	1	0	0	0	0	
+48031	7	1	40362	7	0.04	1	0	0	0	0	
+48031	8	1	40362	8	0.03	1	0	0	0	0	
+48031	9	1	40362	9	0.02	1	0	0	0	0	
+48031	10	1	40362	10	0.01	1	0	0	0	0	
+48031	1	99	18453	1	0.1	1	0	0	0	0	
 48032	1	1	40362	78	95	0	0	0	0	0	
-48032	2	1	40362	88	3.4000001	1	0	0	0	0	
+48032	2	1	40362	88	3.4	1	0	0	0	0	
 48032	3	1	40362	98	1.5	1	0	0	0	0	
-48032	4	1	40362	128	0.0500000007	1	0	0	0	0	
-48032	5	1	40362	188	0.0179999992	1	0	0	0	0	
-48032	6	1	40362	288	0.00999999978	1	0	0	0	0	
-48032	7	1	40362	388	0.00700000022	1	0	0	0	0	
-48032	8	1	40362	488	0.00499999989	1	0	0	0	0	
-48032	9	1	40362	588	0.00400000019	1	0	0	0	0	
-48032	10	1	40362	688	0.00300000003	1	0	0	0	0	
-48032	11	1	40362	788	0.00200000009	1	0	0	0	0	
-48032	12	1	40362	888	0.00100000005	1	0	0	0	0	
+48032	4	1	40362	128	0.05	1	0	0	0	0	
+48032	5	1	40362	188	0.018	1	0	0	0	0	
+48032	6	1	40362	288	0.01	1	0	0	0	0	
+48032	7	1	40362	388	0.007	1	0	0	0	0	
+48032	8	1	40362	488	0.005	1	0	0	0	0	
+48032	9	1	40362	588	0.004	1	0	0	0	0	
+48032	10	1	40362	688	0.003	1	0	0	0	0	
+48032	11	1	40362	788	0.002	1	0	0	0	0	
+48032	12	1	40362	888	0.001	1	0	0	0	0	
 49507	1	1	42792	1	1	1	0	0	0	0	
-49507	2	1	42793	1	0.600000024	0	0	0	0	0	
+49507	2	1	42793	1	0.6	0	0	0	0	0	
 49507	3	1	42796	1	1	1	0	0	0	0	
-49507	4	1	42797	1	0.600000024	0	0	0	0	0	
+49507	4	1	42797	1	0.6	0	0	0	0	0	
 49507	5	1	40317	1	2	0	0	0	0	0	
 49507	6	1	40367	1	2	0	0	0	0	0	
 49507	7	1	40022	2	2	0	0	0	0	0	
 49507	8	1	40200	4	5	0	0	0	0	0	
 49507	9	1	40201	1	4	0	0	0	0	0	
 49507	10	1	41089	1	4	0	0	0	0	0	
-49507	11	1	40040	12	21.9500008	0	0	0	0	0	
-49507	12	1	40042	5	21.5499992	0	0	0	0	0	
-49507	13	1	41090	45	17.5499992	0	0	0	0	0	
+49507	11	1	40040	12	21.95	0	0	0	0	0	
+49507	12	1	40042	5	21.55	0	0	0	0	0	
+49507	13	1	41090	45	17.55	0	0	0	0	0	
 49507	14	1	40509	3	16.75	0	0	0	0	0	
 \.
 
 
 --
+-- TOC entry 3115 (class 0 OID 42650)
+-- Dependencies: 212
 -- Data for Name: gm_tool_accounts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY gm_tool_accounts (id, account_name, password, privilege) FROM stdin;
+COPY public.gm_tool_accounts (id, account_name, password, privilege) FROM stdin;
 \.
 
 
 --
+-- TOC entry 3107 (class 0 OID 42607)
+-- Dependencies: 204
+-- Data for Name: high_lottery; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.high_lottery (lottery_id, item_index, week, round, item_id, item_amount, probability, num_replay, bulletin, probability_plus1, probability_plus2, probability_plus3) FROM stdin;
+40362	1	0	1	40021	1	1	-1	1	15	3	1
+40362	2	0	1	40022	1	1	-1	0	10	17	29
+40362	3	0	1	43538	2	1	-1	0	15	20	10
+40362	4	0	1	49628	1	1	-1	0	1	1	1
+40362	1	1	1	40019	5	17	-1	0	5	5	5
+40362	2	1	1	40122	30	19	-1	0	4	4	4
+40362	3	1	1	40200	1	17	-1	0	5	5	5
+40362	4	1	1	40181	2	17	-1	0	4	4	4
+40362	5	1	1	40156	2	15.8	-1	0	2	2	2
+40362	6	1	1	40030	2	14	-1	1	0.8	0.8	0.8
+40362	7	1	1	40370	1	1.1	-1	0	5	5	5
+40362	8	1	1	49146	1	1.1	-1	0	0.3	0.3	0.3
+40362	1	1	2	40509	1	1	-1	0	4	4	4
+40362	2	1	2	40509	1	1	-1	0	4	4	4
+40362	3	1	2	40066	1	13.5	-1	0	4	4	4
+40362	4	1	2	40368	1	7.5	-1	0	3	3	3
+40362	5	1	2	40227	1	31	-1	0	0.8	0.8	0.8
+40362	6	1	2	40229	1	5	-1	1	0.1	0.1	0.1
+40362	7	1	2	49153	1	2.5	-1	0	0.4	0.4	0.4
+40362	8	1	2	40366	1	1.5	-1	1	0.016	0.016	0.016
+40362	1	1	3	40509	1	1	-1	0	5	5	5
+40362	2	1	3	40509	1	1	-1	0	3	3	3
+40362	3	1	3	40509	1	1	-1	1	0.35	0.35	0.35
+40362	4	1	3	40509	1	1	-1	0	1	1	1
+40362	5	1	3	40791	1	11	-1	0	0.8	0.8	0.8
+40362	6	1	3	40490	1	5	-1	1	0.35	0.35	0.35
+40362	7	1	3	40225	1	43	-1	0	0.3	0.3	0.3
+40362	8	1	3	40378	1	1	-1	1	0.005	0.005	0.005
+40362	1	1	4	40509	1	1	-1	0	3	3	3
+40362	2	1	4	40509	1	1	-1	1	0.06	0.06	0.06
+40362	3	1	4	40509	1	1	-1	1	0.06	0.06	0.06
+40362	4	1	4	40509	1	1	-1	0	0.8	0.8	0.8
+40362	5	1	4	40509	1	1	-1	0	1	1	1
+40362	6	1	4	40509	1	1	-1	1	0.16	0.16	0.16
+40362	7	1	4	40369	1	29	-1	1	0.003	0.003	0.003
+40362	8	1	4	49143	1	1	-1	1	0.003	0.003	0.003
+40362	1	1	5	40509	1	1	-1	0	0.8	0.8	0.8
+40362	2	1	5	40509	1	1	-1	0	0.822	0.822	0.822
+40362	3	1	5	40509	1	1	-1	1	0.002	0.002	0.002
+40362	4	1	5	40509	1	1	-1	1	0.002	0.002	0.002
+40362	5	1	5	40509	1	1	-1	1	0.001	0.001	0.001
+40362	6	1	5	40509	1	1	-1	1	0.06	0.06	0.06
+40362	7	1	5	40509	1	1	-1	1	0.003	0.003	0.003
+40362	8	1	5	40370	2	1	-1	1	0.003	0.003	0.003
+40362	1	2	1	40203	5	21	-1	0	5	5	5
+40362	2	2	1	40205	5	21	-1	0	4	4	4
+40362	3	2	1	40207	5	21	-1	0	5	5	5
+40362	4	2	1	40269	1	11	-1	0	4	4	4
+40362	5	2	1	40271	1	11	-1	0	2	2	2
+40362	6	2	1	40333	1	11	-1	1	0.8	0.8	0.8
+40362	7	2	1	40337	1	9.9	-1	0	5	5	5
+40362	8	2	1	40370	1	1.1	-1	0	0.3	0.3	0.3
+40362	1	2	2	40385	1	12	-1	0	4	4	4
+40362	2	2	2	40386	1	1	-1	0	4	4	4
+40362	3	2	2	40387	1	12	-1	0	4	4	4
+40362	4	2	2	40388	1	1	-1	0	3	3	3
+40362	5	2	2	40389	1	12	-1	0	0.8	0.8	0.8
+40362	6	2	2	40390	1	1	-1	1	0.1	0.1	0.1
+40362	7	2	2	40391	1	12	-1	0	0.4	0.4	0.4
+40362	8	2	2	40392	1	1	-1	1	0.016	0.016	0.016
+40362	1	2	3	40001	1	3	-1	0	5	5	5
+40362	2	2	3	40004	1	3	-1	0	3	3	3
+40362	3	2	3	40007	1	3	-1	1	0.35	0.35	0.35
+40362	4	2	3	40010	1	3	-1	0	1	1	1
+40362	5	2	3	40013	1	3	-1	0	0.8	0.8	0.8
+40362	6	2	3	40016	1	3	-1	1	0.35	0.35	0.35
+40362	7	2	3	40010	1	3	-1	0	0.3	0.3	0.3
+40362	8	2	3	40004	1	3	-1	1	0.005	0.005	0.005
+40362	1	2	4	40265	1	3	-1	0	3	3	3
+40362	2	2	4	40266	1	1	-1	1	0.06	0.06	0.06
+40362	3	2	4	40267	1	3	-1	1	0.06	0.06	0.06
+40362	4	2	4	40268	1	1	-1	0	0.8	0.8	0.8
+40362	5	2	4	40331	1	3	-1	0	1	1	1
+40362	6	2	4	40332	1	1	-1	1	0.16	0.16	0.16
+40362	7	2	4	40335	1	3	-1	1	0.003	0.003	0.003
+40362	8	2	4	40336	1	1	-1	1	0.003	0.003	0.003
+40362	1	2	5	40459	1	1.5	-1	0	0.8	0.8	0.8
+40362	2	2	5	40460	1	1	-1	0	0.822	0.822	0.822
+40362	3	2	5	40461	1	1.5	-1	1	0.002	0.002	0.002
+40362	4	2	5	40462	1	1	-1	1	0.002	0.002	0.002
+40362	5	2	5	40463	1	1.5	-1	1	0.001	0.001	0.001
+40362	6	2	5	40464	1	1	-1	1	0.06	0.06	0.06
+40362	7	2	5	40511	1	1.5	-1	1	0.003	0.003	0.003
+40362	8	2	5	40512	1	1	-1	1	0.003	0.003	0.003
+40362	1	3	1	40019	5	17	-1	0	5	5	5
+40362	2	3	1	40122	30	19	-1	0	4	4	4
+40362	3	3	1	40200	1	17	-1	0	5	5	5
+40362	4	3	1	40181	2	17	-1	0	4	4	4
+40362	5	3	1	40156	2	15.8	-1	0	2	2	2
+40362	6	3	1	40030	2	14	-1	1	0.8	0.8	0.8
+40362	7	3	1	40370	1	1.1	-1	0	5	5	5
+40362	8	3	1	49149	1	1.1	-1	0	0.3	0.3	0.3
+40362	1	3	2	40509	1	1	-1	0	4	4	4
+40362	2	3	2	40509	1	1	-1	0	4	4	4
+40362	3	3	2	40067	1	13.5	-1	0	4	4	4
+40362	4	3	2	40368	1	7.5	-1	0	3	3	3
+40362	5	3	2	40227	1	31	-1	0	0.8	0.8	0.8
+40362	6	3	2	40226	1	5	-1	1	0.1	0.1	0.1
+40362	7	3	2	49150	1	1.5	-1	0	0.4	0.4	0.4
+40362	8	3	2	40366	1	1.5	-1	1	0.016	0.016	0.016
+40362	1	3	3	40509	1	1	-1	0	5	5	5
+40362	2	3	3	40509	1	1	-1	0	3	3	3
+40362	3	3	3	40509	1	1	-1	1	0.35	0.35	0.35
+40362	4	3	3	40509	1	1	-1	0	1	1	1
+40362	5	3	3	40692	1	11	-1	0	0.8	0.8	0.8
+40362	6	3	3	40368	1	6	-1	1	0.35	0.35	0.35
+40362	7	3	3	40224	1	43	-1	0	0.3	0.3	0.3
+40362	8	3	3	40605	1	1	-1	1	0.005	0.005	0.005
+40362	1	3	4	40509	1	1	-1	0	3	3	3
+40362	2	3	4	40509	1	1	-1	1	0.06	0.06	0.06
+40362	3	3	4	40509	1	1	-1	1	0.06	0.06	0.06
+40362	4	3	4	40509	1	1	-1	0	0.8	0.8	0.8
+40362	5	3	4	40509	1	1	-1	0	1	1	1
+40362	6	3	4	40509	1	1	-1	1	0.16	0.16	0.16
+40362	7	3	4	40372	1	9	-1	1	0.003	0.003	0.003
+40362	8	3	4	40372	20	1	-1	1	0.003	0.003	0.003
+40362	1	3	5	40509	1	1	-1	0	0.8	0.8	0.8
+40362	2	3	5	40509	1	1	-1	0	0.822	0.822	0.822
+40362	3	3	5	40509	1	1	-1	1	0.002	0.002	0.002
+40362	4	3	5	40509	1	1	-1	1	0.002	0.002	0.002
+40362	5	3	5	40509	1	1	-1	1	0.001	0.001	0.001
+40362	6	3	5	40509	1	1	-1	1	0.06	0.06	0.06
+40362	7	3	5	40509	1	1	-1	1	0.003	0.003	0.003
+40362	8	3	5	40370	2	1	-1	1	0.003	0.003	0.003
+40362	1	4	1	40616	1	15	-1	0	5	5	5
+40362	2	4	1	40617	1	14	-1	0	4	4	4
+40362	3	4	1	40618	1	14	-1	0	5	5	5
+40362	4	4	1	40619	1	14	-1	0	4	4	4
+40362	5	4	1	40620	1	14	-1	0	2	2	2
+40362	6	4	1	40621	1	14	-1	1	0.8	0.8	0.8
+40362	7	4	1	40622	1	14	-1	0	5	5	5
+40362	8	4	1	40608	1	1	-1	0	0.3	0.3	0.3
+40362	1	4	2	40182	1	18.5	-1	0	4	4	4
+40362	2	4	2	40231	1	18.5	-1	0	4	4	4
+40362	3	4	2	40157	5	19	-1	0	4	4	4
+40362	4	4	2	40368	1	7.5	-1	0	3	3	3
+40362	5	4	2	40066	1	13.5	-1	0	0.8	0.8	0.8
+40362	6	4	2	40226	1	5	-1	1	0.1	0.1	0.1
+40362	7	4	2	49143	1	1.5	-1	0	0.4	0.4	0.4
+40362	8	4	2	40366	1	1	-1	1	0.016	0.016	0.016
+40362	1	4	3	41054	1	11	-1	0	5	5	5
+40362	2	4	3	41053	1	11	-1	0	3	3	3
+40362	3	4	3	40112	1	11	-1	1	0.35	0.35	0.35
+40362	4	4	3	49029	1	11	-1	0	1	1	1
+40362	5	4	3	40465	1	8	-1	0	0.8	0.8	0.8
+40362	6	4	3	40368	1	5	-1	1	0.35	0.35	0.35
+40362	7	4	3	40507	1	5	-1	0	0.3	0.3	0.3
+40362	8	4	3	40379	1	1	-1	1	0.005	0.005	0.005
+40362	1	4	4	40241	1	8	-1	0	3	3	3
+40362	2	4	4	40182	3	7.5	-1	1	0.06	0.06	0.06
+40362	3	4	4	41091	1	11	-1	1	0.06	0.06	0.06
+40362	4	4	4	40022	10	8	-1	0	0.8	0.8	0.8
+40362	5	4	4	40512	1	1.5	-1	0	1	1	1
+40362	6	4	4	40354	1	5	-1	1	0.16	0.16	0.16
+40362	7	4	4	40466	1	1.5	-1	1	0.003	0.003	0.003
+40362	8	4	4	40692	1	1.5	-1	1	0.003	0.003	0.003
+40362	1	4	5	40373	1	1.5	-1	0	0.8	0.8	0.8
+40362	2	4	5	40374	1	1.1	-1	0	0.822	0.822	0.822
+40362	3	4	5	40459	1	1.5	-1	1	0.002	0.002	0.002
+40362	4	4	5	40460	1	1.1	-1	1	0.002	0.002	0.002
+40362	5	4	5	40461	1	1.5	-1	1	0.001	0.001	0.001
+40362	6	4	5	40462	1	1.1	-1	1	0.06	0.06	0.06
+40362	7	4	5	40463	1	1.5	-1	1	0.003	0.003	0.003
+40362	8	4	5	40464	1	1.1	-1	1	0.003	0.003	0.003
+40362	1	5	1	40019	5	17	-1	0	5	5	5
+40362	2	5	1	40122	30	19	-1	0	4	4	4
+40362	3	5	1	40200	1	17	-1	0	5	5	5
+40362	4	5	1	40181	2	17	-1	0	4	4	4
+40362	5	5	1	40156	2	15.8	-1	0	2	2	2
+40362	6	5	1	40030	2	14	-1	1	0.8	0.8	0.8
+40362	7	5	1	40370	1	1.1	-1	0	5	5	5
+40362	8	5	1	49149	1	1.1	-1	0	0.3	0.3	0.3
+40362	1	5	2	40509	1	1	-1	0	4	4	4
+40362	2	5	2	40509	1	1	-1	0	4	4	4
+40362	3	5	2	40157	5	34.5	-1	0	4	4	4
+40362	4	5	2	40368	1	7.5	-1	0	3	3	3
+40362	5	5	2	40227	1	31	-1	0	0.8	0.8	0.8
+40362	6	5	2	40223	1	5	-1	1	0.1	0.1	0.1
+40362	7	5	2	49153	1	2.5	-1	0	0.4	0.4	0.4
+40362	8	5	2	40366	1	1.5	-1	1	0.016	0.016	0.016
+40362	1	5	3	40509	1	1	-1	0	5	5	5
+40362	2	5	3	40509	1	1	-1	0	3	3	3
+40362	3	5	3	40509	1	1	-1	1	0.35	0.35	0.35
+40362	4	5	3	40509	1	1	-1	0	1	1	1
+40362	5	5	3	40791	1	11	-1	0	0.8	0.8	0.8
+40362	6	5	3	40368	1	5	-1	1	0.35	0.35	0.35
+40362	7	5	3	40225	1	43	-1	0	0.3	0.3	0.3
+40362	8	5	3	40335	1	2	-1	1	0.005	0.005	0.005
+40362	1	5	4	40509	1	1	-1	0	3	3	3
+40362	2	5	4	40509	1	1	-1	1	0.06	0.06	0.06
+40362	3	5	4	40509	1	1	-1	1	0.06	0.06	0.06
+40362	4	5	4	40509	1	1	-1	0	0.8	0.8	0.8
+40362	5	5	4	40509	1	1	-1	0	1	1	1
+40362	6	5	4	40509	1	1	-1	1	0.16	0.16	0.16
+40362	7	5	4	40369	1	19	-1	1	0.003	0.003	0.003
+40362	8	5	4	49144	1	1	-1	1	0.003	0.003	0.003
+40362	1	5	5	40509	1	1	-1	0	0.8	0.8	0.8
+40362	2	5	5	40509	1	1	-1	0	0.822	0.822	0.822
+40362	3	5	5	40509	1	1	-1	1	0.002	0.002	0.002
+40362	4	5	5	40509	1	1	-1	1	0.002	0.002	0.002
+40362	5	5	5	40509	1	1	-1	1	0.001	0.001	0.001
+40362	6	5	5	40509	1	1	-1	1	0.06	0.06	0.06
+40362	7	5	5	40509	1	1	-1	1	0.003	0.003	0.003
+40362	8	5	5	40370	2	1	-1	1	0.003	0.003	0.003
+40362	1	6	1	40886	1	14	-1	0	5	5	5
+40362	2	6	1	40889	1	12	-1	0	4	4	4
+40362	3	6	1	40892	1	12	-1	0	5	5	5
+40362	4	6	1	40895	1	12	-1	0	4	4	4
+40362	5	6	1	40898	1	12	-1	0	2	2	2
+40362	6	6	1	40901	1	23	-1	1	0.8	0.8	0.8
+40362	7	6	1	40886	1	14	-1	0	5	5	5
+40362	8	6	1	49151	1	1	-1	0	0.3	0.3	0.3
+40362	1	6	2	40182	1	18.5	-1	0	4	4	4
+40362	2	6	2	40231	1	18.5	-1	0	4	4	4
+40362	3	6	2	40157	5	19	-1	0	4	4	4
+40362	4	6	2	40368	1	7.5	-1	0	3	3	3
+40362	5	6	2	40157	5	13.5	-1	0	0.8	0.8	0.8
+40362	6	6	2	40226	1	5	-1	1	0.1	0.1	0.1
+40362	7	6	2	49152	1	2.5	-1	0	0.4	0.4	0.4
+40362	8	6	2	40366	1	1.5	-1	1	0.016	0.016	0.016
+40362	1	6	3	40352	1	7	-1	0	5	5	5
+40362	2	6	3	40353	1	7	-1	0	3	3	3
+40362	3	6	3	40354	1	7	-1	1	0.35	0.35	0.35
+40362	4	6	3	40355	1	7	-1	0	1	1	1
+40362	5	6	3	40356	1	7	-1	0	0.8	0.8	0.8
+40362	6	6	3	40357	1	7	-1	1	0.35	0.35	0.35
+40362	7	6	3	40358	1	7	-1	0	0.3	0.3	0.3
+40362	8	6	3	40379	1	1	-1	1	0.005	0.005	0.005
+40362	1	6	4	41091	1	5	-1	0	3	3	3
+40362	2	6	4	40022	10	8	-1	1	0.06	0.06	0.06
+40362	3	6	4	40182	4	9.5	-1	1	0.06	0.06	0.06
+40362	4	6	4	49145	1	1.5	-1	0	0.8	0.8	0.8
+40362	5	6	4	40371	1	8	-1	0	1	1	1
+40362	6	6	4	40372	1	8	-1	1	0.16	0.16	0.16
+40362	7	6	4	40466	1	1.5	-1	1	0.003	0.003	0.003
+40362	8	6	4	40463	1	1.5	-1	1	0.003	0.003	0.003
+40362	1	6	5	49143	1	1.5	-1	0	0.8	0.8	0.8
+40362	2	6	5	49144	1	1.5	-1	0	0.822	0.822	0.822
+40362	3	6	5	49145	1	1.5	-1	1	0.002	0.002	0.002
+40362	4	6	5	49146	1	1.5	-1	1	0.002	0.002	0.002
+40362	5	6	5	49147	1	1.5	-1	1	0.001	0.001	0.001
+40362	6	6	5	49148	1	1.5	-1	1	0.06	0.06	0.06
+40362	7	6	5	49149	1	1.5	-1	1	0.003	0.003	0.003
+40362	8	6	5	49150	1	1.5	-1	1	0.003	0.003	0.003
+40362	1	7	1	40616	1	15	-1	0	5	5	5
+40362	2	7	1	40617	1	14	-1	0	4	4	4
+40362	3	7	1	40618	1	14	-1	0	5	5	5
+40362	4	7	1	40619	1	14	-1	0	4	4	4
+40362	5	7	1	40620	1	14	-1	0	2	2	2
+40362	6	7	1	40621	1	14	-1	1	0.8	0.8	0.8
+40362	7	7	1	40622	1	14	-1	0	5	5	5
+40362	8	7	1	40608	1	1	-1	0	0.3	0.3	0.3
+40362	1	7	2	40182	1	18.5	-1	0	4	4	4
+40362	2	7	2	40231	1	18.5	-1	0	4	4	4
+40362	3	7	2	40157	5	19	-1	0	4	4	4
+40362	4	7	2	40368	1	7.5	-1	0	3	3	3
+40362	5	7	2	40067	1	13.5	-1	0	0.8	0.8	0.8
+40362	6	7	2	40226	1	5	-1	1	0.1	0.1	0.1
+40362	7	7	2	49154	1	2.5	-1	0	0.4	0.4	0.4
+40362	8	7	2	40366	1	1.5	-1	1	0.016	0.016	0.016
+40362	1	7	3	41053	1	11	-1	0	5	5	5
+40362	2	7	3	41054	1	11	-1	0	3	3	3
+40362	3	7	3	41053	1	11	-1	1	0.35	0.35	0.35
+40362	4	7	3	40112	1	11	-1	0	1	1	1
+40362	5	7	3	49147	1	1	-1	0	0.8	0.8	0.8
+40362	6	7	3	40368	1	5	-1	1	0.35	0.35	0.35
+40362	7	7	3	40507	1	5	-1	0	0.3	0.3	0.3
+40362	8	7	3	40379	1	1	-1	1	0.005	0.005	0.005
+40362	1	7	4	40472	1	6	-1	0	3	3	3
+40362	2	7	4	40473	1	6	-1	1	0.06	0.06	0.06
+40362	3	7	4	40474	1	6	-1	1	0.06	0.06	0.06
+40362	4	7	4	40475	1	6	-1	0	0.8	0.8	0.8
+40362	5	7	4	40476	1	1	-1	0	1	1	1
+40362	6	7	4	40477	1	5	-1	1	0.16	0.16	0.16
+40362	7	7	4	40478	1	5	-1	1	0.003	0.003	0.003
+40362	8	7	4	40479	1	5	-1	1	0.003	0.003	0.003
+40362	1	7	5	34279	50	1.8	-1	0	0.8	0.8	0.8
+40362	2	7	5	40437	1	1.7	-1	0	0.822	0.822	0.822
+40362	3	7	5	40350	1	6.9	-1	1	0.002	0.002	0.002
+40362	4	7	5	40511	1	1.1	-1	1	0.002	0.002	0.002
+40362	5	7	5	40400	1	5	-1	1	0.001	0.001	0.001
+40362	6	7	5	40265	1	3	-1	1	0.06	0.06	0.06
+40362	7	7	5	49148	1	1	-1	1	0.003	0.003	0.003
+40362	8	7	5	40463	1	1.5	-1	1	0.003	0.003	0.003
+\.
+
+
+--
+-- TOC entry 3116 (class 0 OID 42654)
+-- Dependencies: 213
 -- Data for Name: item_receipt; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY item_receipt (id, purchase_time, receieved_time, account_name, item_id, item_quantity, point, amount, world_id, player_name, unique_id, create_time, mail_name) FROM stdin;
+COPY public.item_receipt (id, purchase_time, receieved_time, account_name, item_id, item_quantity, point, amount, world_id, player_name, unique_id, create_time, mail_name) FROM stdin;
 \.
 
 
 --
+-- TOC entry 3117 (class 0 OID 42666)
+-- Dependencies: 214
 -- Data for Name: item_receivable; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY item_receivable (id, state, purchase_time, receivable_time, account_name, item_id, item_quantity, world_id, player_name, point, amount, mail_name, money_type) FROM stdin;
+COPY public.item_receivable (id, state, purchase_time, receivable_time, account_name, item_id, item_quantity, world_id, player_name, point, amount, mail_name, money_type) FROM stdin;
 \.
 
 
 --
--- Name: item_receivable_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('item_receivable_id_seq', 1, true);
-
-
---
+-- TOC entry 3119 (class 0 OID 42681)
+-- Dependencies: 216
 -- Data for Name: itemmall; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY itemmall (item_id, item_group, item_index, item_num, money_unit, point, special_price, sell, not_sell_date, fortune_bag, note) FROM stdin;
-40362	1	1	1	1	69	0	1	0		
-40362	1	2	5	1	299	0	1	0		
-40362	1	3	50	1	2499	0	1	0		
-40362	1	4	100	1	4799	0	1	0		
-40022	1	5	20	1	779	0	1	0		
-40158	1	6	3	1	449	0	1	0		
-40157	1	7	3	1	299	0	1	0		
-40112	1	8	1	1	49	0	1	0		
-40222	1	9	1	1	899	0	1	0		
-41090	1	10	50	1	249	0	1	0		
-40184	1	11	5	1	1699	0	1	0		
-40200	1	12	15	1	1449	0	1	0		
-40188	1	13	5	1	1199	0	1	0		
-49062	1	14	5	1	449	0	1	0		
-41081	1	15	1	1	9	0	1	0		
-40362	2	1	1	1	69	0	1	0		
-40362	2	2	5	1	299	0	1	0		
-40362	2	3	50	1	2499	0	1	0		
-40362	2	4	200	1	9499	0	1	0		
-41090	2	5	250	1	1149	0	1	0		
-41090	2	6	50	1	249	0	1	0		
-40043	2	7	15	1	89	0	1	0		
-40043	2	8	5	1	29	0	1	0		
-40040	2	9	1	1	29	0	1	0		
-40040	2	10	5	1	99	0	1	0		
-40241	2	11	1	1	99	0	1	0		
-40121	2	12	1	1	99	0	1	0		
-40125	2	13	1	1	99	0	1	0		
+COPY public.itemmall (item_id, item_group, item_index, item_num, money_unit, point, special_price, sell, not_sell_date, fortune_bag, note) FROM stdin;
+52239	7	11	1	1	5000	0	1	0		
+53071	7	12	1	1	5000	0	1	0		
 40096	2	14	1	1	49	0	1	0		
 40097	2	15	1	1	49	0	1	0		
 40069	2	16	1	1	49	0	1	0		
@@ -8704,254 +9068,1024 @@ COPY itemmall (item_id, item_group, item_index, item_num, money_unit, point, spe
 41086	2	58	1	1	9	0	1	0		
 41087	2	59	1	1	9	0	1	0		
 40115	2	60	1	1	149	0	1	0		
-40739	3	1	1	1	299	0	1	0		
-40741	3	2	1	1	299	0	1	0		
-40164	3	3	1	1	399	0	1	0		
-40165	3	4	1	1	399	0	1	0		
-40166	3	5	1	1	399	0	1	0		
-40167	3	6	1	1	399	0	1	0		
-40168	3	7	1	1	399	0	1	0		
-40169	3	8	1	1	499	0	1	0		
-40159	3	9	1	1	399	0	1	0		
-40170	3	10	1	1	19	0	1	0		
-40175	3	11	1	1	19	0	1	0		
-40176	3	12	1	1	19	0	1	0		
-40177	3	13	1	1	19	0	1	0		
-40178	3	14	1	1	19	0	1	0		
-40179	3	15	1	1	19	0	1	0		
-40180	3	16	1	1	19	0	1	0		
-40308	3	17	1	1	199	0	1	0		
-40307	3	18	1	1	199	0	1	0		
-40158	4	1	3	1	449	0	1	0		
-40157	4	2	3	1	299	0	1	0		
-40156	4	3	3	1	29	0	1	0		
-40182	4	4	3	1	299	0	1	0		
-40273	4	5	1	1	479	0	1	0		
-40022	4	6	20	1	779	0	1	0		
-40022	4	7	5	1	199	0	1	0		
-40021	4	8	5	1	49	0	1	0		
-40020	4	9	5	1	19	0	1	0		
-40019	4	10	5	1	9	0	1	0		
-40033	4	11	30	1	29	0	1	0		
-40034	4	12	30	1	39	0	1	0		
-40035	4	13	30	1	49	0	1	0		
-40036	4	14	30	1	69	0	1	0		
-40038	4	15	30	1	29	0	1	0		
-40039	4	16	30	1	39	0	1	0		
-40104	4	17	30	1	49	0	1	0		
-40105	4	18	30	1	69	0	1	0		
-40209	4	19	5	1	9	0	1	0		
-40211	4	20	5	1	9	0	1	0		
-40213	4	21	5	1	9	0	1	0		
-40215	4	22	5	1	9	0	1	0		
-40217	4	23	5	1	9	0	1	0		
-40023	4	24	5	1	29	0	1	0		
-40025	4	25	5	1	29	0	1	0		
-40027	4	26	5	1	29	0	1	0		
-40029	4	27	5	1	29	0	1	0		
-40031	4	28	5	1	29	0	1	0		
-40184	5	1	5	1	1699	0	1	0		
-40184	5	2	1	1	349	0	1	0		
-40185	5	3	1	1	199	0	1	0		
-40183	5	4	5	1	19	0	1	0		
-40201	5	5	15	1	999	0	1	0		
-40201	5	6	5	1	349	0	1	0		
-40200	5	7	15	1	1499	0	1	0		
-40200	5	8	5	1	499	0	1	0		
-40186	5	9	1	1	99	0	1	0		
-40187	5	10	1	1	179	0	1	0		
-40188	5	11	1	1	249	0	1	0		
-40203	6	1	1	1	9	0	1	0		
-40205	6	2	1	1	9	0	1	0		
-40207	6	3	1	1	9	0	1	0		
-40204	6	4	1	1	99	0	1	0		
-40206	6	5	1	1	99	0	1	0		
-40208	6	6	1	1	99	0	1	0		
-40337	6	7	1	1	149	0	1	0		
-40269	6	8	1	1	149	0	1	0		
-40388	6	9	1	1	1199	0	1	0		
-49035	7	1	1	1	99	0	1	0		
-49097	7	2	1	1	199	0	1	0		
-49033	7	3	1	1	29	0	1	0		
-49015	7	4	1	1	129	0	1	0		
-49062	7	5	1	1	99	0	1	0		
-49092	7	6	1	1	99	0	1	0		
-49003	7	7	1	1	99	0	1	0		
-49004	7	8	1	1	99	0	1	0		
-49051	7	9	1	1	49	0	1	0		
-49021	7	10	1	1	49	0	1	0		
-40222	8	1	1	1	899	0	1	0		
-40114	8	2	1	1	449	0	1	0		
-40112	8	3	1	1	49	0	1	0		
-41089	8	4	1	1	49	0	1	0		
-40190	8	5	5	1	9	0	1	0		
-40191	8	6	5	1	9	0	1	0		
-40192	8	7	5	1	9	0	1	0		
-40193	8	8	5	1	9	0	1	0		
-40202	8	9	5	1	9	0	1	0		
-41091	8	10	1	1	349	0	1	0		
-41092	8	11	1	1	179	0	1	0		
-41093	8	12	5	1	9	0	1	0		
-40122	8	13	5	1	9	0	1	0		
+39311	2	11	1	1	10000	0	1	0		
+39312	2	12	1	1	10000	0	1	0		
+31343	8	14	1000	1	1000	0	1	0		
+31344	8	15	1000	1	1000	0	1	0		
+31345	8	16	1000	1	1000	0	1	0		
+27655	8	17	1000	1	1000	0	1	0		
+39920	8	18	10000	1	1000	0	1	0		
+20780	4	13	1000	1	500	0	1	0		
+20782	4	14	1000	1	500	0	1	0		
+16225	5	15	1	1	1000	0	1	0		
+16269	5	16	1	1	1000	0	1	0		
+16221	5	17	1	1	1000	0	1	0		
+16265	5	18	1	1	1000	0	1	0		
+16224	5	19	1	1	1000	0	1	0		
+16268	5	20	1	1	1000	0	1	0		
+39314	2	13	1	1	99	0	1	0		
+19285	3	17	1	1	199	0	1	0		
+23875	2	6	250	1	1000	0	1	0		
+48896	1	13	250	1	1199	0	1	0		
+41091	1	2	1	1	299	0	1	0		
+31301	1	15	250	1	9	0	1	0		
+52421	1	9	250	1	899	0	1	0		
+40436	2	1	1	1	100	0	1	0		
+43599	1	10	50	1	249	0	1	0		
+40184	1	11	250	1	1699	0	1	0		
+48444	1	14	250	1	2000	0	1	0		
+48915	1	12	250	1	1449	0	1	0		
+41088	1	8	250	1	49	0	1	0		
+36347	1	1	250	1	69	0	1	0		
+23883	2	5	250	1	1000	0	1	0		
+42170	1	3	24464	1	2499	0	1	0		
+40040	2	9	250	1	29	0	1	0		
+40431	2	4	1	1	100	0	1	0		
+40434	2	3	1	1	100	0	1	0		
+23882	2	7	250	1	1000	0	1	0		
+23876	2	8	250	1	1000	999	1	0		
+40042	2	10	250	1	99	0	1	0		
+26738	3	1	1	1	299	0	1	0		
+26748	3	6	1	1	399	0	1	0		
+26739	3	2	1	1	299	0	1	0		
+26740	3	3	1	1	399	0	1	0		
+26741	3	4	1	1	399	0	1	0		
+26742	3	5	1	1	1000	0	1	0		
+26749	3	7	1	1	399	0	1	0		
+26750	3	8	1	1	499	0	1	0		
+26751	3	9	1	1	399	0	1	0		
+26743	3	11	1	1	599	0	1	0		
+26744	3	12	1	1	599	0	1	0		
+26747	3	15	1	1	599	0	1	0		
+24893	1	4	1	1	100	0	1	0		
+26746	3	14	1	1	599	0	1	0		
+24962	3	16	1	1	599	0	1	0		
+26752	3	10	1	1	599	0	1	0		
+19278	3	18	1	1	199	0	1	0		
+40368	4	1	250	1	500	0	1	0		
+40370	4	3	250	1	500	0	1	0		
+40369	4	2	250	1	500	0	1	0		
+41301	4	5	250	1	500	0	1	0		
+40687	4	4	250	1	500	0	1	0		
+42964	4	6	250	1	500	0	1	0		
+41368	4	7	250	1	500	0	1	0		
+24862	4	8	250	1	49	0	1	0		
+27647	4	9	250	1	49	0	1	0		
+24863	4	10	250	1	49	0	1	0		
+27648	4	11	250	1	49	0	1	0		
+45816	7	1	1	1	2000	0	1	0		
+53421	7	2	1	1	5000	0	1	0		
+54148	7	3	1	1	5000	0	1	0		
+54419	7	4	1	1	5000	0	1	0		
+53283	7	5	1	1	2000	0	1	0		
+51344	7	6	1	1	2000	0	1	0		
+34209	8	3	1000	1	1000	0	1	0		
+50588	7	7	1	1	5000	0	1	0		
+45828	7	8	1	1	5000	0	1	0		
+50954	7	9	1	1	2000	0	1	0		
+51163	7	10	1	1	5000	0	1	0		
+44340	1	26	1000	1	1000	0	1	0		
+53300	1	27	1000	1	1000	0	1	0		
+47242	1	28	1000	1	1000	0	1	0		
+52438	1	29	1000	1	1000	0	1	0		
+47276	1	30	1000	1	1000	0	1	0		
+17137	3	47	250	1	999	0	1	0		
+26236	3	49	250	1	999	0	1	0		
+27681	3	50	250	1	999	0	1	0		
+25419	3	51	250	1	999	0	1	0		
+25339	3	52	250	1	999	0	1	0		
+34211	8	1	1000	1	1000	0	1	0		
+34210	8	2	1000	1	1000	0	1	0		
+34212	8	4	1000	1	1000	0	1	0		
+16231	5	21	1	1	1000	0	1	0		
+31325	8	6	1000	1	1000	0	1	0		
+31336	8	7	1000	1	1000	0	1	0		
+31337	8	8	1000	1	1000	0	1	0		
+31338	8	9	1000	1	1000	0	1	0		
+31340	8	11	1000	1	1000	0	1	0		
+31339	8	10	1000	1	1000	0	1	0		
+31341	8	12	1000	1	1000	0	1	0		
+31342	8	13	1000	1	1000	0	1	0		
+53285	1	33	1	1	1000	0	1	0		
+28957	3	48	250	1	999	0	1	0		
+12315	1	74	1	1	1000	0	1	0		
+39557	1	37	250	1	1000	0	1	0		
+49153	50	2	1	1	1	0	1	0		
+49152	50	3	1	1	1	0	1	0		
+49151	50	4	1	1	1	0	1	0		
+49958	50	5	1	1	1	0	1	0		
+27662	50	8	1	1	1	0	1	0		
+27660	50	7	1	1	1	0	1	0		
+27658	50	6	1	1	1	0	1	0		
+12308	50	9	1	1	1	0	1	0		
+48158	50	1	1	1	1	0	1	0		
+48978	1	38	250	1	1000	0	1	0		
+41495	1	39	250	1	1000	0	1	0		
+27992	1	7	90000	1	1	0	1	0		
+52430	1	40	1	1	1000	0	1	0		
+31304	1	16	250	1	9	0	1	0		
+47107	1	17	250	1	9	0	1	0		
+47113	1	18	250	1	9	0	1	0		
+47114	1	19	250	1	9	0	1	0		
+43968	1	20	1	1	1000	0	1	0		
+52470	1	21	1	1	1000	0	1	0		
+40450	1	22	250	1	1000	0	1	0		
+40451	1	23	250	1	1000	0	1	0		
+48804	1	24	250	1	1000	0	1	0		
+52466	1	25	250	1	1000	0	1	0		
+51203	1	32	1	1	1000	0	1	0		
+15191	1	34	250	1	1000	0	1	0		
+15192	1	35	250	1	1000	0	1	0		
+39556	1	36	250	1	1000	0	1	0		
+43796	1	41	1	1	1000	0	1	0		
+40371	1	42	250	1	1000	0	1	0		
+46738	1	43	200	1	1000	0	1	0		
+46739	1	44	200	1	1000	0	1	0		
+48998	1	45	200	1	1000	0	1	0		
+49000	1	46	200	1	1000	0	1	0		
+43663	1	47	200	1	1000	0	1	0		
+43665	1	48	200	1	100	0	1	0		
+10822	1	49	200	1	1000	0	1	0		
+10823	1	50	200	1	1000	0	1	0		
+10824	1	51	200	1	1000	0	1	0		
+10825	1	52	200	1	1000	0	1	0		
+10826	1	53	200	1	1000	0	1	0		
+53335	1	54	200	1	1000	0	1	0		
+53336	1	55	200	1	1000	0	1	0		
+53337	1	56	200	1	1000	0	1	0		
+53338	1	57	200	1	1000	0	1	0		
+53339	1	58	200	1	1000	0	1	0		
+53345	1	64	200	1	2000	0	1	0		
+53340	1	59	200	1	2000	0	1	0		
+53341	1	60	200	1	2000	0	1	0		
+53342	1	61	200	1	2000	0	1	0		
+53343	1	62	200	1	2000	0	1	0		
+53344	1	63	200	1	2000	0	1	0		
+41131	1	65	250	1	100	0	1	0		
+41127	1	66	250	1	100	0	1	0		
+41123	1	67	250	1	100	0	1	0		
+41118	1	68	250	1	100	0	1	0		
+41122	1	69	250	1	100	0	1	0		
+41093	1	70	250	1	100	90	1	0		
+40413	2	2	5	1	100	0	1	0		
+40380	1	71	1	1	100	99	1	0		
+43101	1	72	1	1	100	0	1	0		
+43103	1	73	1	1	100	0	1	0		
+16910	5	6	1	1	5000	4999	1	0		
+16913	5	3	1	1	5000	4999	1	0		
+18975	5	1	1	1	10000	9999	1	0		
+16992	5	2	1	1	5000	4999	1	0		
+16988	5	4	1	1	20000	19999	1	0		
+10285	5	9	1	1	5000	0	1	0		
+14941	5	5	1	1	10000	9999	1	0		
+10283	5	10	1	1	5000	0	1	0		
+19711	5	8	1	1	5000	0	1	0		
+21372	5	11	1	1	5000	0	1	0		
+16989	5	7	1	1	5000	0	1	0		
+34999	6	3	1	1	5000	0	1	0		
+34997	6	1	1	1	5000	0	1	0		
+34998	6	2	1	1	5000	0	1	0		
+27069	3	53	250	1	999	0	1	0		
+42170	1	31	10000	1	1000	0	1	0		
+26745	3	13	1	1	599	0	1	0		
+19280	3	19	1	1	999	0	1	0		
+19284	3	20	1	1	999	0	1	0		
+44186	3	21	250	1	999	0	1	0		
+44187	3	22	250	1	999	0	1	0		
+23840	3	54	250	1	999	0	1	0		
+44188	3	23	250	1	999	0	1	0		
+44189	3	24	250	1	999	0	1	0		
+44190	3	25	250	1	999	0	1	0		
+25470	3	26	250	1	999	0	1	0		
+25469	3	27	250	1	999	0	1	0		
+25468	3	28	250	1	999	0	1	0		
+18627	3	29	250	1	999	0	1	0		
+18626	3	30	250	1	999	0	1	0		
+18631	3	31	250	1	999	0	1	0		
+18637	3	32	250	1	999	0	1	0		
+18621	3	33	250	1	999	0	1	0		
+24059	3	34	250	1	999	0	1	0		
+26770	3	35	250	1	999	0	1	0		
+28976	3	55	250	1	999	0	1	0		
+18635	3	36	250	1	999	0	1	0		
+18630	3	37	250	1	999	0	1	0		
+18625	3	38	250	1	999	0	1	0		
+18614	3	39	250	1	999	0	1	0		
+26482	3	40	250	1	999	0	1	0		
+23839	3	41	250	1	999	0	1	0		
+19072	3	42	250	1	999	0	1	0		
+19073	3	43	250	1	999	0	1	0		
+19074	3	44	250	1	999	0	1	0		
+26768	3	45	250	1	999	0	1	0		
+23717	3	56	250	1	999	0	1	0		
+26237	3	46	250	1	999	0	1	0		
+17205	3	57	1000	1	999	0	1	0		
+35875	4	12	250	1	49	0	1	0		
+21371	5	12	1	1	5000	0	1	0		
+21509	5	13	1	1	5000	0	1	0		
+21510	5	14	1	1	5000	0	1	0		
+17242	3	58	1000	1	999	0	1	0		
+36589	3	59	250	1	1000	0	1	0		
+36588	3	60	250	1	1000	0	1	0		
+16275	5	22	1	1	1000	0	1	0		
+34765	8	19	60	1	100	0	1	0		
+49679	1	6	1	1	1000	0	1	0		
+26152	8	20	1	1	1000	0	1	0		
+26155	8	21	1	1	1000	0	1	0		
+44207	8	23	1	1	1000	0	1	0		
+44205	8	22	1	1	1000	0	1	0		
+44210	8	24	1	1	1000	0	1	0		
+20045	8	25	1	1	1000	0	1	0		
+20046	8	26	1	1	1000	0	1	0		
+20047	8	27	1	1	1000	0	1	0		
+27189	9	1	500	1	99	0	1	0		
+20048	8	28	1	1	1000	0	1	0		
 \.
 
 
 --
+-- TOC entry 3123 (class 0 OID 42946)
+-- Dependencies: 220
+-- Data for Name: itemmall_limit_amount; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.itemmall_limit_amount (account_id, sell_amount, item_id, item_group, item_index, item_num, money_unit) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3120 (class 0 OID 42689)
+-- Dependencies: 217
 -- Data for Name: itemmall_old; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY itemmall_old (item_id, item_group, item_index, item_num, point, sell, note) FROM stdin;
+COPY public.itemmall_old (item_id, item_group, item_index, item_num, point, sell, note) FROM stdin;
 \.
 
 
 --
+-- TOC entry 3106 (class 0 OID 42603)
+-- Dependencies: 203
+-- Data for Name: lottery; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.lottery (lottery_id, item_index, week, round, item_id, item_amount, probability, num_replay, bulletin, probability_plus1, probability_plus2, probability_plus3) FROM stdin;
+40362	1	0	1	40021	1	1	-1	1	15	3	1
+40362	2	0	1	40022	1	1	-1	0	10	17	29
+40362	3	0	1	43538	2	1	-1	0	15	20	10
+40362	4	0	1	49628	1	1	-1	0	1	1	1
+40362	1	1	1	40019	5	17	-1	0	5	5	5
+40362	2	1	1	40122	30	19	-1	0	4	4	4
+40362	3	1	1	40200	1	17	-1	0	5	5	5
+40362	4	1	1	40181	2	17	-1	0	4	4	4
+40362	5	1	1	40156	2	15.8	-1	0	2	2	2
+40362	6	1	1	40030	2	14	-1	1	0.8	0.8	0.8
+40362	7	1	1	40370	1	1.1	-1	0	5	5	5
+40362	8	1	1	49146	1	1.1	-1	0	0.3	0.3	0.3
+40362	1	1	2	40509	1	1	-1	0	4	4	4
+40362	2	1	2	40509	1	1	-1	0	4	4	4
+40362	3	1	2	40066	1	13.5	-1	0	4	4	4
+40362	4	1	2	40368	1	7.5	-1	0	3	3	3
+40362	5	1	2	40227	1	31	-1	0	0.8	0.8	0.8
+40362	6	1	2	40229	1	5	-1	1	0.1	0.1	0.1
+40362	7	1	2	49153	1	2.5	-1	0	0.4	0.4	0.4
+40362	8	1	2	40366	1	1.5	-1	1	0.016	0.016	0.016
+40362	1	1	3	40509	1	1	-1	0	5	5	5
+40362	2	1	3	40509	1	1	-1	0	3	3	3
+40362	3	1	3	40509	1	1	-1	1	0.35	0.35	0.35
+40362	4	1	3	40509	1	1	-1	0	1	1	1
+40362	5	1	3	40791	1	11	-1	0	0.8	0.8	0.8
+40362	6	1	3	40490	1	5	-1	1	0.35	0.35	0.35
+40362	7	1	3	40225	1	43	-1	0	0.3	0.3	0.3
+40362	8	1	3	40378	1	1	-1	1	0.005	0.005	0.005
+40362	1	1	4	40509	1	1	-1	0	3	3	3
+40362	2	1	4	40509	1	1	-1	1	0.06	0.06	0.06
+40362	3	1	4	40509	1	1	-1	1	0.06	0.06	0.06
+40362	4	1	4	40509	1	1	-1	0	0.8	0.8	0.8
+40362	5	1	4	40509	1	1	-1	0	1	1	1
+40362	6	1	4	40509	1	1	-1	1	0.16	0.16	0.16
+40362	7	1	4	40369	1	29	-1	1	0.003	0.003	0.003
+40362	8	1	4	49143	1	1	-1	1	0.003	0.003	0.003
+40362	1	1	5	40509	1	1	-1	0	0.8	0.8	0.8
+40362	2	1	5	40509	1	1	-1	0	0.822	0.822	0.822
+40362	3	1	5	40509	1	1	-1	1	0.002	0.002	0.002
+40362	4	1	5	40509	1	1	-1	1	0.002	0.002	0.002
+40362	5	1	5	40509	1	1	-1	1	0.001	0.001	0.001
+40362	6	1	5	40509	1	1	-1	1	0.06	0.06	0.06
+40362	7	1	5	40509	1	1	-1	1	0.003	0.003	0.003
+40362	8	1	5	40370	2	1	-1	1	0.003	0.003	0.003
+40362	1	2	1	40203	5	21	-1	0	5	5	5
+40362	2	2	1	40205	5	21	-1	0	4	4	4
+40362	3	2	1	40207	5	21	-1	0	5	5	5
+40362	4	2	1	40269	1	11	-1	0	4	4	4
+40362	5	2	1	40271	1	11	-1	0	2	2	2
+40362	6	2	1	40333	1	11	-1	1	0.8	0.8	0.8
+40362	7	2	1	40337	1	9.9	-1	0	5	5	5
+40362	8	2	1	40370	1	1.1	-1	0	0.3	0.3	0.3
+40362	1	2	2	40385	1	12	-1	0	4	4	4
+40362	2	2	2	40386	1	1	-1	0	4	4	4
+40362	3	2	2	40387	1	12	-1	0	4	4	4
+40362	4	2	2	40388	1	1	-1	0	3	3	3
+40362	5	2	2	40389	1	12	-1	0	0.8	0.8	0.8
+40362	6	2	2	40390	1	1	-1	1	0.1	0.1	0.1
+40362	7	2	2	40391	1	12	-1	0	0.4	0.4	0.4
+40362	8	2	2	40392	1	1	-1	1	0.016	0.016	0.016
+40362	1	2	3	40001	1	3	-1	0	5	5	5
+40362	2	2	3	40004	1	3	-1	0	3	3	3
+40362	3	2	3	40007	1	3	-1	1	0.35	0.35	0.35
+40362	4	2	3	40010	1	3	-1	0	1	1	1
+40362	5	2	3	40013	1	3	-1	0	0.8	0.8	0.8
+40362	6	2	3	40016	1	3	-1	1	0.35	0.35	0.35
+40362	7	2	3	40010	1	3	-1	0	0.3	0.3	0.3
+40362	8	2	3	40004	1	3	-1	1	0.005	0.005	0.005
+40362	1	2	4	40265	1	3	-1	0	3	3	3
+40362	2	2	4	40266	1	1	-1	1	0.06	0.06	0.06
+40362	3	2	4	40267	1	3	-1	1	0.06	0.06	0.06
+40362	4	2	4	40268	1	1	-1	0	0.8	0.8	0.8
+40362	5	2	4	40331	1	3	-1	0	1	1	1
+40362	6	2	4	40332	1	1	-1	1	0.16	0.16	0.16
+40362	7	2	4	40335	1	3	-1	1	0.003	0.003	0.003
+40362	8	2	4	40336	1	1	-1	1	0.003	0.003	0.003
+40362	1	2	5	40459	1	1.5	-1	0	0.8	0.8	0.8
+40362	2	2	5	40460	1	1	-1	0	0.822	0.822	0.822
+40362	3	2	5	40461	1	1.5	-1	1	0.002	0.002	0.002
+40362	4	2	5	40462	1	1	-1	1	0.002	0.002	0.002
+40362	5	2	5	40463	1	1.5	-1	1	0.001	0.001	0.001
+40362	6	2	5	40464	1	1	-1	1	0.06	0.06	0.06
+40362	7	2	5	40511	1	1.5	-1	1	0.003	0.003	0.003
+40362	8	2	5	40512	1	1	-1	1	0.003	0.003	0.003
+40362	1	3	1	40019	5	17	-1	0	5	5	5
+40362	2	3	1	40122	30	19	-1	0	4	4	4
+40362	3	3	1	40200	1	17	-1	0	5	5	5
+40362	4	3	1	40181	2	17	-1	0	4	4	4
+40362	5	3	1	40156	2	15.8	-1	0	2	2	2
+40362	6	3	1	40030	2	14	-1	1	0.8	0.8	0.8
+40362	7	3	1	40370	1	1.1	-1	0	5	5	5
+40362	8	3	1	49149	1	1.1	-1	0	0.3	0.3	0.3
+40362	1	3	2	40509	1	1	-1	0	4	4	4
+40362	2	3	2	40509	1	1	-1	0	4	4	4
+40362	3	3	2	40067	1	13.5	-1	0	4	4	4
+40362	4	3	2	40368	1	7.5	-1	0	3	3	3
+40362	5	3	2	40227	1	31	-1	0	0.8	0.8	0.8
+40362	6	3	2	40226	1	5	-1	1	0.1	0.1	0.1
+40362	7	3	2	49150	1	1.5	-1	0	0.4	0.4	0.4
+40362	8	3	2	40366	1	1.5	-1	1	0.016	0.016	0.016
+40362	1	3	3	40509	1	1	-1	0	5	5	5
+40362	2	3	3	40509	1	1	-1	0	3	3	3
+40362	3	3	3	40509	1	1	-1	1	0.35	0.35	0.35
+40362	4	3	3	40509	1	1	-1	0	1	1	1
+40362	5	3	3	40692	1	11	-1	0	0.8	0.8	0.8
+40362	6	3	3	40368	1	6	-1	1	0.35	0.35	0.35
+40362	7	3	3	40224	1	43	-1	0	0.3	0.3	0.3
+40362	8	3	3	40605	1	1	-1	1	0.005	0.005	0.005
+40362	1	3	4	40509	1	1	-1	0	3	3	3
+40362	2	3	4	40509	1	1	-1	1	0.06	0.06	0.06
+40362	3	3	4	40509	1	1	-1	1	0.06	0.06	0.06
+40362	4	3	4	40509	1	1	-1	0	0.8	0.8	0.8
+40362	5	3	4	40509	1	1	-1	0	1	1	1
+40362	6	3	4	40509	1	1	-1	1	0.16	0.16	0.16
+40362	7	3	4	40372	1	9	-1	1	0.003	0.003	0.003
+40362	8	3	4	40372	20	1	-1	1	0.003	0.003	0.003
+40362	1	3	5	40509	1	1	-1	0	0.8	0.8	0.8
+40362	2	3	5	40509	1	1	-1	0	0.822	0.822	0.822
+40362	3	3	5	40509	1	1	-1	1	0.002	0.002	0.002
+40362	4	3	5	40509	1	1	-1	1	0.002	0.002	0.002
+40362	5	3	5	40509	1	1	-1	1	0.001	0.001	0.001
+40362	6	3	5	40509	1	1	-1	1	0.06	0.06	0.06
+40362	7	3	5	40509	1	1	-1	1	0.003	0.003	0.003
+40362	8	3	5	40370	2	1	-1	1	0.003	0.003	0.003
+40362	1	4	1	40616	1	15	-1	0	5	5	5
+40362	2	4	1	40617	1	14	-1	0	4	4	4
+40362	3	4	1	40618	1	14	-1	0	5	5	5
+40362	4	4	1	40619	1	14	-1	0	4	4	4
+40362	5	4	1	40620	1	14	-1	0	2	2	2
+40362	6	4	1	40621	1	14	-1	1	0.8	0.8	0.8
+40362	7	4	1	40622	1	14	-1	0	5	5	5
+40362	8	4	1	40608	1	1	-1	0	0.3	0.3	0.3
+40362	1	4	2	40182	1	18.5	-1	0	4	4	4
+40362	2	4	2	40231	1	18.5	-1	0	4	4	4
+40362	3	4	2	40157	5	19	-1	0	4	4	4
+40362	4	4	2	40368	1	7.5	-1	0	3	3	3
+40362	5	4	2	40066	1	13.5	-1	0	0.8	0.8	0.8
+40362	6	4	2	40226	1	5	-1	1	0.1	0.1	0.1
+40362	7	4	2	49143	1	1.5	-1	0	0.4	0.4	0.4
+40362	8	4	2	40366	1	1	-1	1	0.016	0.016	0.016
+40362	1	4	3	41054	1	11	-1	0	5	5	5
+40362	2	4	3	41053	1	11	-1	0	3	3	3
+40362	3	4	3	40112	1	11	-1	1	0.35	0.35	0.35
+40362	4	4	3	49029	1	11	-1	0	1	1	1
+40362	5	4	3	40465	1	8	-1	0	0.8	0.8	0.8
+40362	6	4	3	40368	1	5	-1	1	0.35	0.35	0.35
+40362	7	4	3	40507	1	5	-1	0	0.3	0.3	0.3
+40362	8	4	3	40379	1	1	-1	1	0.005	0.005	0.005
+40362	1	4	4	40241	1	8	-1	0	3	3	3
+40362	2	4	4	40182	3	7.5	-1	1	0.06	0.06	0.06
+40362	3	4	4	41091	1	11	-1	1	0.06	0.06	0.06
+40362	4	4	4	40022	10	8	-1	0	0.8	0.8	0.8
+40362	5	4	4	40512	1	1.5	-1	0	1	1	1
+40362	6	4	4	40354	1	5	-1	1	0.16	0.16	0.16
+40362	7	4	4	40466	1	1.5	-1	1	0.003	0.003	0.003
+40362	8	4	4	40692	1	1.5	-1	1	0.003	0.003	0.003
+40362	1	4	5	40373	1	1.5	-1	0	0.8	0.8	0.8
+40362	2	4	5	40374	1	1.1	-1	0	0.822	0.822	0.822
+40362	3	4	5	40459	1	1.5	-1	1	0.002	0.002	0.002
+40362	4	4	5	40460	1	1.1	-1	1	0.002	0.002	0.002
+40362	5	4	5	40461	1	1.5	-1	1	0.001	0.001	0.001
+40362	6	4	5	40462	1	1.1	-1	1	0.06	0.06	0.06
+40362	7	4	5	40463	1	1.5	-1	1	0.003	0.003	0.003
+40362	8	4	5	40464	1	1.1	-1	1	0.003	0.003	0.003
+40362	1	5	1	40019	5	17	-1	0	5	5	5
+40362	2	5	1	40122	30	19	-1	0	4	4	4
+40362	3	5	1	40200	1	17	-1	0	5	5	5
+40362	4	5	1	40181	2	17	-1	0	4	4	4
+40362	5	5	1	40156	2	15.8	-1	0	2	2	2
+40362	6	5	1	40030	2	14	-1	1	0.8	0.8	0.8
+40362	7	5	1	40370	1	1.1	-1	0	5	5	5
+40362	8	5	1	49149	1	1.1	-1	0	0.3	0.3	0.3
+40362	1	5	2	40509	1	1	-1	0	4	4	4
+40362	2	5	2	40509	1	1	-1	0	4	4	4
+40362	3	5	2	40157	5	34.5	-1	0	4	4	4
+40362	4	5	2	40368	1	7.5	-1	0	3	3	3
+40362	5	5	2	40227	1	31	-1	0	0.8	0.8	0.8
+40362	6	5	2	40223	1	5	-1	1	0.1	0.1	0.1
+40362	7	5	2	49153	1	2.5	-1	0	0.4	0.4	0.4
+40362	8	5	2	40366	1	1.5	-1	1	0.016	0.016	0.016
+40362	1	5	3	40509	1	1	-1	0	5	5	5
+40362	2	5	3	40509	1	1	-1	0	3	3	3
+40362	3	5	3	40509	1	1	-1	1	0.35	0.35	0.35
+40362	4	5	3	40509	1	1	-1	0	1	1	1
+40362	5	5	3	40791	1	11	-1	0	0.8	0.8	0.8
+40362	6	5	3	40368	1	5	-1	1	0.35	0.35	0.35
+40362	7	5	3	40225	1	43	-1	0	0.3	0.3	0.3
+40362	8	5	3	40335	1	2	-1	1	0.005	0.005	0.005
+40362	1	5	4	40509	1	1	-1	0	3	3	3
+40362	2	5	4	40509	1	1	-1	1	0.06	0.06	0.06
+40362	3	5	4	40509	1	1	-1	1	0.06	0.06	0.06
+40362	4	5	4	40509	1	1	-1	0	0.8	0.8	0.8
+40362	5	5	4	40509	1	1	-1	0	1	1	1
+40362	6	5	4	40509	1	1	-1	1	0.16	0.16	0.16
+40362	7	5	4	40369	1	19	-1	1	0.003	0.003	0.003
+40362	8	5	4	49144	1	1	-1	1	0.003	0.003	0.003
+40362	1	5	5	40509	1	1	-1	0	0.8	0.8	0.8
+40362	2	5	5	40509	1	1	-1	0	0.822	0.822	0.822
+40362	3	5	5	40509	1	1	-1	1	0.002	0.002	0.002
+40362	4	5	5	40509	1	1	-1	1	0.002	0.002	0.002
+40362	5	5	5	40509	1	1	-1	1	0.001	0.001	0.001
+40362	6	5	5	40509	1	1	-1	1	0.06	0.06	0.06
+40362	7	5	5	40509	1	1	-1	1	0.003	0.003	0.003
+40362	8	5	5	40370	2	1	-1	1	0.003	0.003	0.003
+40362	1	6	1	40886	1	14	-1	0	5	5	5
+40362	2	6	1	40889	1	12	-1	0	4	4	4
+40362	3	6	1	40892	1	12	-1	0	5	5	5
+40362	4	6	1	40895	1	12	-1	0	4	4	4
+40362	5	6	1	40898	1	12	-1	0	2	2	2
+40362	6	6	1	40901	1	23	-1	1	0.8	0.8	0.8
+40362	7	6	1	40886	1	14	-1	0	5	5	5
+40362	8	6	1	49151	1	1	-1	0	0.3	0.3	0.3
+40362	1	6	2	40182	1	18.5	-1	0	4	4	4
+40362	2	6	2	40231	1	18.5	-1	0	4	4	4
+40362	3	6	2	40157	5	19	-1	0	4	4	4
+40362	4	6	2	40368	1	7.5	-1	0	3	3	3
+40362	5	6	2	40157	5	13.5	-1	0	0.8	0.8	0.8
+40362	6	6	2	40226	1	5	-1	1	0.1	0.1	0.1
+40362	7	6	2	49152	1	2.5	-1	0	0.4	0.4	0.4
+40362	8	6	2	40366	1	1.5	-1	1	0.016	0.016	0.016
+40362	1	6	3	40352	1	7	-1	0	5	5	5
+40362	2	6	3	40353	1	7	-1	0	3	3	3
+40362	3	6	3	40354	1	7	-1	1	0.35	0.35	0.35
+40362	4	6	3	40355	1	7	-1	0	1	1	1
+40362	5	6	3	40356	1	7	-1	0	0.8	0.8	0.8
+40362	6	6	3	40357	1	7	-1	1	0.35	0.35	0.35
+40362	7	6	3	40358	1	7	-1	0	0.3	0.3	0.3
+40362	8	6	3	40379	1	1	-1	1	0.005	0.005	0.005
+40362	1	6	4	41091	1	5	-1	0	3	3	3
+40362	2	6	4	40022	10	8	-1	1	0.06	0.06	0.06
+40362	3	6	4	40182	4	9.5	-1	1	0.06	0.06	0.06
+40362	4	6	4	49145	1	1.5	-1	0	0.8	0.8	0.8
+40362	5	6	4	40371	1	8	-1	0	1	1	1
+40362	6	6	4	40372	1	8	-1	1	0.16	0.16	0.16
+40362	7	6	4	40466	1	1.5	-1	1	0.003	0.003	0.003
+40362	8	6	4	40463	1	1.5	-1	1	0.003	0.003	0.003
+40362	1	6	5	49143	1	1.5	-1	0	0.8	0.8	0.8
+40362	2	6	5	49144	1	1.5	-1	0	0.822	0.822	0.822
+40362	3	6	5	49145	1	1.5	-1	1	0.002	0.002	0.002
+40362	4	6	5	49146	1	1.5	-1	1	0.002	0.002	0.002
+40362	5	6	5	49147	1	1.5	-1	1	0.001	0.001	0.001
+40362	6	6	5	49148	1	1.5	-1	1	0.06	0.06	0.06
+40362	7	6	5	49149	1	1.5	-1	1	0.003	0.003	0.003
+40362	8	6	5	49150	1	1.5	-1	1	0.003	0.003	0.003
+40362	1	7	1	40616	1	15	-1	0	5	5	5
+40362	2	7	1	40617	1	14	-1	0	4	4	4
+40362	3	7	1	40618	1	14	-1	0	5	5	5
+40362	4	7	1	40619	1	14	-1	0	4	4	4
+40362	5	7	1	40620	1	14	-1	0	2	2	2
+40362	6	7	1	40621	1	14	-1	1	0.8	0.8	0.8
+40362	7	7	1	40622	1	14	-1	0	5	5	5
+40362	8	7	1	40608	1	1	-1	0	0.3	0.3	0.3
+40362	1	7	2	40182	1	18.5	-1	0	4	4	4
+40362	2	7	2	40231	1	18.5	-1	0	4	4	4
+40362	3	7	2	40157	5	19	-1	0	4	4	4
+40362	4	7	2	40368	1	7.5	-1	0	3	3	3
+40362	5	7	2	40067	1	13.5	-1	0	0.8	0.8	0.8
+40362	6	7	2	40226	1	5	-1	1	0.1	0.1	0.1
+40362	7	7	2	49154	1	2.5	-1	0	0.4	0.4	0.4
+40362	8	7	2	40366	1	1.5	-1	1	0.016	0.016	0.016
+40362	1	7	3	41053	1	11	-1	0	5	5	5
+40362	2	7	3	41054	1	11	-1	0	3	3	3
+40362	3	7	3	41053	1	11	-1	1	0.35	0.35	0.35
+40362	4	7	3	40112	1	11	-1	0	1	1	1
+40362	5	7	3	49147	1	1	-1	0	0.8	0.8	0.8
+40362	6	7	3	40368	1	5	-1	1	0.35	0.35	0.35
+40362	7	7	3	40507	1	5	-1	0	0.3	0.3	0.3
+40362	8	7	3	40379	1	1	-1	1	0.005	0.005	0.005
+40362	1	7	4	40472	1	6	-1	0	3	3	3
+40362	2	7	4	40473	1	6	-1	1	0.06	0.06	0.06
+40362	3	7	4	40474	1	6	-1	1	0.06	0.06	0.06
+40362	4	7	4	40475	1	6	-1	0	0.8	0.8	0.8
+40362	5	7	4	40476	1	1	-1	0	1	1	1
+40362	6	7	4	40477	1	5	-1	1	0.16	0.16	0.16
+40362	7	7	4	40478	1	5	-1	1	0.003	0.003	0.003
+40362	8	7	4	40479	1	5	-1	1	0.003	0.003	0.003
+40362	1	7	5	34279	50	1.8	-1	0	0.8	0.8	0.8
+40362	2	7	5	40437	1	1.7	-1	0	0.822	0.822	0.822
+40362	3	7	5	40350	1	6.9	-1	1	0.002	0.002	0.002
+40362	4	7	5	40511	1	1.1	-1	1	0.002	0.002	0.002
+40362	5	7	5	40400	1	5	-1	1	0.001	0.001	0.001
+40362	6	7	5	40265	1	3	-1	1	0.06	0.06	0.06
+40362	7	7	5	49148	1	1	-1	1	0.003	0.003	0.003
+40362	8	7	5	40463	1	1.5	-1	1	0.003	0.003	0.003
+34279	1	0	1	34428	1	1	-1	1	20	10	1
+34279	2	0	1	42899	1	1	-1	0	20	20	20
+34279	3	0	1	26185	3	1	-1	0	10	20	29
+34279	4	0	1	26187	1	1	-1	0	1	1	1
+34279	1	1	1	31970	4	16	-1	0	0.006	0.006	0.006
+34279	2	1	1	31975	4	16	-1	0	0.006	0.006	0.006
+34279	3	1	1	31603	30	21	-1	0	6	6	6
+34279	4	1	1	31605	30	21	-1	0	6	6	6
+34279	5	1	1	32990	6	21	-1	0	0.006	0.006	0.006
+34279	6	1	1	26360	1	2	-1	0	0.006	0.006	0.006
+34279	7	1	1	26369	1	2	-1	0	10	10	10
+34279	8	1	1	26941	1	2	-1	0	1	1	1
+34279	1	1	2	31971	4	12	-1	0	2	2	2
+34279	2	1	2	31976	4	12	-1	0	2	2	2
+34279	3	1	2	31606	30	12	-1	0	5	5	5
+34279	4	1	2	31607	30	12	-1	0	5	5	5
+34279	5	1	2	39921	50	8	-1	0	0.006	0.006	0.006
+34279	6	1	2	25276	1	8	-1	0	0.006	0.006	0.006
+34279	7	1	2	25764	10	3	-1	0	0.006	0.006	0.006
+34279	8	1	2	25272	1	3	-1	0	0.013	0.013	0.013
+34279	1	1	3	31972	4	11	-1	0	1	1	1
+34279	2	1	3	31977	4	11	-1	0	1	1	1
+34279	3	1	3	31608	60	8	-1	0	5	5	5
+34279	4	1	3	31609	60	8	-1	0	0.23	0.23	0.23
+34279	5	1	3	34428	1	3	-1	0	0.005	0.005	0.005
+34279	6	1	3	36915	1	1	-1	1	0.005	0.005	0.005
+34279	7	1	3	34210	3	3.5	-1	0	0.5	0.5	0.5
+34279	8	1	3	28775	1	7.5	-1	0	0.001	0.001	0.001
+34279	1	1	4	34155	4	7	-1	0	0.5	0.5	0.5
+34279	2	1	4	34156	4	7	-1	0	0.5	0.5	0.5
+34279	3	1	4	31610	60	6.5	-1	0	0.8	0.8	0.8
+34279	4	1	4	31611	60	6.5	-1	0	0.8	0.8	0.8
+34279	5	1	4	34409	1	7	-1	0	0.001	0.001	0.001
+34279	6	1	4	26423	1	2	-1	1	0.001	0.001	0.001
+34279	7	1	4	26432	1	2	-1	1	0.001	0.001	0.001
+34279	8	1	4	27004	1	2	-1	1	0.25	0.25	0.25
+34279	1	1	5	39260	4	4	-1	0	0.05	0.05	0.05
+34279	2	1	5	39261	4	4	-1	0	0.025	0.025	0.025
+34279	3	1	5	34427	1	8	-1	0	0.025	0.025	0.025
+34279	4	1	5	34429	1	1.2	-1	1	0.8	0.8	0.8
+34279	5	1	5	42965	1	5	-1	0	1.389	1.389	1.389
+34279	6	1	5	34411	1	1.7	-1	1	0.001	0.001	0.001
+34279	7	1	5	28779	1	4.1	-1	0	0.001	0.001	0.001
+34279	8	1	5	26198	1	1.5	-1	1	0.06	0.06	0.06
+34279	1	2	1	31970	4	16	-1	0	0.006	0.006	0.006
+34279	2	2	1	31975	4	16	-1	0	0.006	0.006	0.006
+34279	3	2	1	31603	30	21	-1	0	6	6	6
+34279	4	2	1	31605	30	21	-1	0	6	6	6
+34279	5	2	1	32990	6	21	-1	0	0.006	0.006	0.006
+34279	6	2	1	26359	1	2	-1	0	0.006	0.006	0.006
+34279	7	2	1	26363	1	2	-1	0	10	10	10
+34279	8	2	1	26944	1	2	-1	0	1	1	1
+34279	1	2	2	31971	4	12	-1	0	2	2	2
+34279	2	2	2	31976	4	12	-1	0	2	2	2
+34279	3	2	2	31606	30	12	-1	0	5	5	5
+34279	4	2	2	31607	30	12	-1	0	5	5	5
+34279	5	2	2	39921	50	8	-1	0	0.006	0.006	0.006
+34279	6	2	2	25276	1	8	-1	0	0.006	0.006	0.006
+34279	7	2	2	25764	10	3	-1	0	0.006	0.006	0.006
+34279	8	2	2	25272	1	3	-1	0	0.013	0.013	0.013
+34279	1	2	3	31972	4	11	-1	0	1	1	1
+34279	2	2	3	31977	4	11	-1	0	1	1	1
+34279	3	2	3	31608	60	8	-1	0	0.23	0.23	0.23
+34279	4	2	3	31609	60	8	-1	0	5	5	5
+34279	5	2	3	34428	1	3	-1	0	0.005	0.005	0.005
+34279	6	2	3	34410	1	1	-1	1	0.005	0.005	0.005
+34279	7	2	3	34211	3	3.5	-1	0	0.5	0.5	0.5
+34279	8	2	3	28771	1	7.5	-1	0	0.001	0.001	0.001
+34279	1	2	4	34155	4	7	-1	0	0.5	0.5	0.5
+34279	2	2	4	34156	4	7	-1	0	0.5	0.5	0.5
+34279	3	2	4	31610	60	6.5	-1	0	0.8	0.8	0.8
+34279	4	2	4	31611	60	6.5	-1	0	0.8	0.8	0.8
+34279	5	2	4	34409	1	7	-1	0	0.001	0.001	0.001
+34279	6	2	4	26422	1	2	-1	1	0.001	0.001	0.001
+34279	7	2	4	26426	1	2	-1	1	0.001	0.001	0.001
+34279	8	2	4	27007	1	2	-1	1	0.25	0.25	0.25
+34279	1	2	5	39260	4	4	-1	0	0.05	0.05	0.05
+34279	2	2	5	39261	4	4	-1	0	0.025	0.025	0.025
+34279	3	2	5	34427	1	8	-1	0	0.025	0.025	0.025
+34279	4	2	5	34429	1	1.2	-1	1	0.8	0.8	0.8
+34279	5	2	5	42965	1	5	-1	0	1.389	1.389	1.389
+34279	6	2	5	36914	1	1.7	-1	1	0.001	0.001	0.001
+34279	7	2	5	28778	1	4.1	-1	0	0.001	0.001	0.001
+34279	8	2	5	26197	1	1.5	-1	1	0.06	0.06	0.06
+34279	1	3	1	31970	4	16	-1	0	0.006	0.006	0.006
+34279	2	3	1	31975	4	16	-1	0	0.006	0.006	0.006
+34279	3	3	1	31603	30	21	-1	0	6	6	6
+34279	4	3	1	31605	30	21	-1	0	6	6	6
+34279	5	3	1	32990	6	21	-1	0	0.006	0.006	0.006
+34279	6	3	1	26366	1	2	-1	0	0.006	0.006	0.006
+34279	7	3	1	26361	1	2	-1	0	10	10	10
+34279	8	3	1	26947	1	2	-1	0	1	1	1
+34279	1	3	2	31971	4	12	-1	0	2	2	2
+34279	2	3	2	31976	4	12	-1	0	2	2	2
+34279	3	3	2	31606	30	12	-1	0	5	5	5
+34279	4	3	2	31607	30	12	-1	0	5	5	5
+34279	5	3	2	39921	50	8	-1	0	0.006	0.006	0.006
+34279	6	3	2	25276	1	8	-1	0	0.006	0.006	0.006
+34279	7	3	2	25764	10	3	-1	0	0.006	0.006	0.006
+34279	8	3	2	25272	1	3	-1	0	0.013	0.013	0.013
+34279	1	3	3	31972	4	11	-1	0	1	1	1
+34279	2	3	3	31977	4	11	-1	0	1	1	1
+34279	3	3	3	31608	60	8	-1	0	5	5	5
+34279	4	3	3	31609	60	8	-1	0	0.23	0.23	0.23
+34279	5	3	3	34428	1	3	-1	0	0.005	0.005	0.005
+34279	6	3	3	36916	1	1	-1	1	0.005	0.005	0.005
+34279	7	3	3	34209	3	3.5	-1	0	0.5	0.5	0.5
+34279	8	3	3	28774	1	7.5	-1	0	0.001	0.001	0.001
+34279	1	3	4	34155	4	7	-1	0	0.5	0.5	0.5
+34279	2	3	4	34156	4	7	-1	0	0.5	0.5	0.5
+34279	3	3	4	31610	60	6.5	-1	0	0.8	0.8	0.8
+34279	4	3	4	31611	60	6.5	-1	0	0.8	0.8	0.8
+34279	5	3	4	34409	1	7	-1	0	0.001	0.001	0.001
+34279	6	3	4	26429	1	2	-1	1	0.001	0.001	0.001
+34279	7	3	4	26424	1	2	-1	1	0.001	0.001	0.001
+34279	8	3	4	27010	1	2	-1	1	0.25	0.25	0.25
+34279	1	3	5	39260	4	4	-1	0	0.05	0.05	0.05
+34279	2	3	5	39261	4	4	-1	0	0.025	0.025	0.025
+34279	3	3	5	34427	1	8	-1	0	0.025	0.025	0.025
+34279	4	3	5	34429	1	1.2	-1	1	0.8	0.8	0.8
+34279	5	3	5	42965	1	5	-1	0	1.389	1.389	1.389
+34279	6	3	5	34411	1	1.7	-1	1	0.001	0.001	0.001
+34279	7	3	5	25622	1	4.1	-1	0	0.001	0.001	0.001
+34279	8	3	5	26196	1	1.5	-1	1	0.06	0.06	0.06
+34279	1	4	1	31970	4	16	-1	0	0.006	0.006	0.006
+34279	2	4	1	31975	4	16	-1	0	0.006	0.006	0.006
+34279	3	4	1	31603	30	21	-1	0	6	6	6
+34279	4	4	1	31605	30	21	-1	0	6	6	6
+34279	5	4	1	32990	6	21	-1	0	0.006	0.006	0.006
+34279	6	4	1	26364	1	2	-1	0	0.006	0.006	0.006
+34279	7	4	1	26367	1	2	-1	0	10	10	10
+34279	8	4	1	26942	1	2	-1	0	1	1	1
+34279	1	4	2	31971	4	12	-1	0	2	2	2
+34279	2	4	2	31976	4	12	-1	0	2	2	2
+34279	3	4	2	31606	30	12	-1	0	5	5	5
+34279	4	4	2	31607	30	12	-1	0	5	5	5
+34279	5	4	2	39921	50	8	-1	0	0.006	0.006	0.006
+34279	6	4	2	25276	1	8	-1	0	0.006	0.006	0.006
+34279	7	4	2	25764	10	3	-1	0	0.006	0.006	0.006
+34279	8	4	2	25272	1	3	-1	0	0.013	0.013	0.013
+34279	1	4	3	31972	4	11	-1	0	1	1	1
+34279	2	4	3	31977	4	11	-1	0	1	1	1
+34279	3	4	3	31608	60	8	-1	0	0.23	0.23	0.23
+34279	4	4	3	31609	60	8	-1	0	5	5	5
+34279	5	4	3	34428	1	3	-1	0	0.005	0.005	0.005
+34279	6	4	3	34414	1	1	-1	1	0.005	0.005	0.005
+34279	7	4	3	34415	1	3.5	-1	0	0.5	0.5	0.5
+34279	8	4	3	28776	1	7.5	-1	0	0.001	0.001	0.001
+34279	1	4	4	34155	4	7	-1	0	0.5	0.5	0.5
+34279	2	4	4	34156	4	7	-1	0	0.5	0.5	0.5
+34279	3	4	4	31610	60	6.5	-1	0	0.8	0.8	0.8
+34279	4	4	4	31611	60	6.5	-1	0	0.8	0.8	0.8
+34279	5	4	4	34409	1	7	-1	0	0.001	0.001	0.001
+34279	6	4	4	26427	1	2	-1	1	0.001	0.001	0.001
+34279	7	4	4	26430	1	2	-1	1	0.001	0.001	0.001
+34279	8	4	4	27005	1	2	-1	1	0.25	0.25	0.25
+34279	1	4	5	39260	4	4	-1	0	0.05	0.05	0.05
+34279	2	4	5	39261	4	4	-1	0	0.025	0.025	0.025
+34279	3	4	5	34427	1	8	-1	0	0.025	0.025	0.025
+34279	4	4	5	34429	1	1.2	-1	1	0.8	0.8	0.8
+34279	5	4	5	42965	1	5	-1	0	1.389	1.389	1.389
+34279	6	4	5	36913	1	1.7	-1	1	0.001	0.001	0.001
+34279	7	4	5	26237	1	4.1	-1	0	0.001	0.001	0.001
+34279	8	4	5	26238	10	1.5	-1	1	0.06	0.06	0.06
+34279	1	5	1	31970	4	16	-1	0	0.006	0.006	0.006
+34279	2	5	1	31975	4	16	-1	0	0.006	0.006	0.006
+34279	3	5	1	31603	30	21	-1	0	6	6	6
+34279	4	5	1	31605	30	21	-1	0	6	6	6
+34279	5	5	1	32990	6	21	-1	0	0.006	0.006	0.006
+34279	6	5	1	26945	1	2	-1	0	0.006	0.006	0.006
+34279	7	5	1	26948	1	2	-1	0	10	10	10
+34279	8	5	1	26362	1	2	-1	0	1	1	1
+34279	1	5	2	31971	4	12	-1	0	2	2	2
+34279	2	5	2	31976	4	12	-1	0	2	2	2
+34279	3	5	2	31606	30	12	-1	0	5	5	5
+34279	4	5	2	31607	30	12	-1	0	5	5	5
+34279	5	5	2	39921	50	8	-1	0	0.006	0.006	0.006
+34279	6	5	2	25276	1	8	-1	0	0.006	0.006	0.006
+34279	7	5	2	25764	10	3	-1	0	0.006	0.006	0.006
+34279	8	5	2	25272	1	3	-1	0	0.013	0.013	0.013
+34279	1	5	3	31972	4	11	-1	0	1	1	1
+34279	2	5	3	31977	4	11	-1	0	1	1	1
+34279	3	5	3	31608	60	8	-1	0	5	5	5
+34279	4	5	3	31609	60	8	-1	0	0.23	0.23	0.23
+34279	5	5	3	34428	1	3	-1	0	0.005	0.005	0.005
+34279	6	5	3	34412	1	1	-1	1	0.005	0.005	0.005
+34279	7	5	3	34210	3	3.5	-1	0	0.5	0.5	0.5
+34279	8	5	3	28772	1	7.5	-1	0	0.001	0.001	0.001
+34279	1	5	4	34155	4	7	-1	0	0.5	0.5	0.5
+34279	2	5	4	34156	4	7	-1	0	0.5	0.5	0.5
+34279	3	5	4	31610	60	6.5	-1	0	0.8	0.8	0.8
+34279	4	5	4	31611	60	6.5	-1	0	0.8	0.8	0.8
+34279	5	5	4	34409	1	7	-1	0	0.001	0.001	0.001
+34279	6	5	4	27008	1	2	-1	1	0.001	0.001	0.001
+34279	7	5	4	27011	1	2	-1	1	0.001	0.001	0.001
+34279	8	5	4	26425	1	2	-1	1	0.25	0.25	0.25
+34279	1	5	5	39260	4	4	-1	0	0.05	0.05	0.05
+34279	2	5	5	39261	4	4	-1	0	0.025	0.025	0.025
+34279	3	5	5	34427	1	8	-1	0	0.025	0.025	0.025
+34279	4	5	5	34429	1	1.2	-1	1	0.8	0.8	0.8
+34279	5	5	5	42965	1	5	-1	0	1.389	1.389	1.389
+34279	6	5	5	36919	1	1.7	-1	1	0.001	0.001	0.001
+34279	7	5	5	26006	1	4.1	-1	0	0.001	0.001	0.001
+34279	8	5	5	26195	1	1.5	-1	1	0.06	0.06	0.06
+34279	1	6	1	31970	5	16	-1	0	0.006	0.006	0.006
+34279	2	6	1	31975	5	16	-1	0	0.006	0.006	0.006
+34279	3	6	1	31603	30	21	-1	0	6	6	6
+34279	4	6	1	31605	30	21	-1	0	6	6	6
+34279	5	6	1	32990	6	21	-1	0	0.006	0.006	0.006
+34279	6	6	1	26950	1	2	-1	0	0.006	0.006	0.006
+34279	7	6	1	26940	1	2	-1	0	10	10	10
+34279	8	6	1	26943	1	2	-1	0	1	1	1
+34279	1	6	2	31971	4	12	-1	0	2	2	2
+34279	2	6	2	31976	4	12	-1	0	2	2	2
+34279	3	6	2	31606	30	12	-1	0	5	5	5
+34279	4	6	2	31607	30	12	-1	0	5	5	5
+34279	5	6	2	39921	50	8	-1	0	0.006	0.006	0.006
+34279	6	6	2	25276	1	8	-1	0	0.006	0.006	0.006
+34279	7	6	2	25764	10	3	-1	0	0.006	0.006	0.006
+34279	8	6	2	25272	1	3	-1	0	0.013	0.013	0.013
+34279	1	6	3	31972	4	11	-1	0	1	1	1
+34279	2	6	3	31977	4	11	-1	0	1	1	1
+34279	3	6	3	31608	60	8	-1	0	0.23	0.23	0.23
+34279	4	6	3	31609	60	8	-1	0	5	5	5
+34279	5	6	3	34428	1	3	-1	0	0.005	0.005	0.005
+34279	6	6	3	34414	1	1	-1	1	0.005	0.005	0.005
+34279	7	6	3	34211	3	3.5	-1	0	0.5	0.5	0.5
+34279	8	6	3	28773	1	7.5	-1	0	0.001	0.001	0.001
+34279	1	6	4	34155	4	7	-1	0	0.5	0.5	0.5
+34279	2	6	4	34156	4	7	-1	0	0.5	0.5	0.5
+34279	3	6	4	31610	60	6.5	-1	0	0.8	0.8	0.8
+34279	4	6	4	31611	60	6.5	-1	0	0.8	0.8	0.8
+34279	5	6	4	34409	1	7	-1	0	0.001	0.001	0.001
+34279	6	6	4	27013	1	2	-1	1	0.001	0.001	0.001
+34279	7	6	4	27003	1	2	-1	1	0.001	0.001	0.001
+34279	8	6	4	27006	1	2	-1	1	0.25	0.25	0.25
+34279	1	6	5	39260	4	4	-1	0	0.05	0.05	0.05
+34279	2	6	5	39261	4	4	-1	0	0.025	0.025	0.025
+34279	3	6	5	34427	1	8	-1	0	0.025	0.025	0.025
+34279	4	6	5	34429	1	1.2	-1	1	0.8	0.8	0.8
+34279	5	6	5	42965	1	5	-1	0	1.389	1.389	1.389
+34279	6	6	5	36918	1	1.7	-1	1	0.001	0.001	0.001
+34279	7	6	5	26004	1	4.1	-1	0	0.001	0.001	0.001
+34279	8	6	5	26005	1	1.5	-1	1	0.06	0.06	0.06
+34279	1	7	1	31970	4	16	-1	0	0.006	0.006	0.006
+34279	2	7	1	31975	4	16	-1	0	0.006	0.006	0.006
+34279	3	7	1	31603	30	21	-1	0	6.246	6.246	6.246
+34279	4	7	1	31605	30	21	-1	0	6	6	6
+34279	5	7	1	32990	6	21	-1	0	0.006	0.006	0.006
+34279	6	7	1	26368	1	2	-1	0	0.006	0.006	0.006
+34279	7	7	1	26946	1	2	-1	0	10	10	10
+34279	8	7	1	26949	1	2	-1	0	1	1	1
+34279	1	7	2	31971	4	12	-1	0	2	2	2
+34279	2	7	2	31976	4	12	-1	0	2	2	2
+34279	3	7	2	31606	30	12	-1	0	5	5	5
+34279	4	7	2	31607	30	12	-1	0	5	5	5
+34279	5	7	2	39921	50	8	-1	0	0.006	0.006	0.006
+34279	6	7	2	25276	1	8	-1	0	0.006	0.006	0.006
+34279	7	7	2	25764	10	3	-1	0	0.006	0.006	0.006
+34279	8	7	2	25272	1	3	-1	0	0.013	0.013	0.013
+34279	1	7	3	31972	4	11	-1	0	1	1	1
+34279	2	7	3	31977	4	11	-1	0	1	1	1
+34279	3	7	3	31608	60	8	-1	0	5	5	5
+34279	4	7	3	31609	60	8	-1	0	0.23	0.23	0.23
+34279	5	7	3	34428	1	3	-1	0	0.005	0.005	0.005
+34279	6	7	3	34413	1	1	-1	1	0.005	0.005	0.005
+34279	7	7	3	34209	3	3.5	-1	0	0.5	0.5	0.5
+34279	8	7	3	28777	1	7.5	-1	0	0.001	0.001	0.001
+34279	1	7	4	34155	4	7	-1	0	0.5	0.5	0.5
+34279	2	7	4	34156	4	7	-1	0	0.5	0.5	0.5
+34279	3	7	4	31610	60	6.5	-1	0	0.8	0.8	0.8
+34279	4	7	4	31611	60	6.5	-1	0	0.8	0.8	0.8
+34279	5	7	4	34409	1	7	-1	0	0.001	0.001	0.001
+34279	6	7	4	26431	1	2	-1	1	0.001	0.001	0.001
+34279	7	7	4	27009	1	2	-1	1	0.001	0.001	0.001
+34279	8	7	4	27012	1	2	-1	1	0.004	0.004	0.004
+34279	1	7	5	39260	4	4	-1	0	0.05	0.05	0.05
+34279	2	7	5	39261	4	4	-1	0	0.025	0.025	0.025
+34279	3	7	5	34427	1	8	-1	0	0.025	0.025	0.025
+34279	4	7	5	34429	1	1.2	-1	1	0.8	0.8	0.8
+34279	5	7	5	42965	1	5	-1	0	1.389	1.389	1.389
+34279	6	7	5	26001	1	1.3	-1	1	0.001	0.001	0.001
+34279	7	7	5	26002	1	1.3	-1	1	0.001	0.001	0.001
+34279	8	7	5	26003	1	2.7	-1	1	0.06	0.06	0.06
+\.
+
+
+--
+-- TOC entry 3121 (class 0 OID 42697)
+-- Dependencies: 218
 -- Data for Name: worlds; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY worlds (id, name, ip, port, online_user, maxnum_user, state, version, show_order) FROM stdin;
-1010	Dev-CH1	192.168.1.99	5567	1	1000	0	Unknown_Version	0
+COPY public.worlds (id, name, ip, port, online_user, maxnum_user, state, version, show_order) FROM stdin;
+1010	Dev-CH1	192.168.0.110	5567	1	1000	0	Unknown_Version	0
 \.
 
 
 --
+-- TOC entry 3131 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: item_receivable_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.item_receivable_id_seq', 1, true);
+
+
+--
+-- TOC entry 3132 (class 0 OID 0)
+-- Dependencies: 219
 -- Name: worlds_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('worlds_id_seq', 1, false);
+SELECT pg_catalog.setval('public.worlds_id_seq', 1, false);
 
 
 --
--- Name: accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 2952 (class 2606 OID 42710)
+-- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY accounts
+ALTER TABLE ONLY public.accounts
     ADD CONSTRAINT accounts_pkey PRIMARY KEY (id);
 
 
 --
--- Name: character_number_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 2956 (class 2606 OID 42712)
+-- Name: character_number character_number_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY character_number
+ALTER TABLE ONLY public.character_number
     ADD CONSTRAINT character_number_pkey PRIMARY KEY (account_id, world_id);
 
 
 --
--- Name: configuration_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 2958 (class 2606 OID 42714)
+-- Name: configuration configuration_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY configuration
+ALTER TABLE ONLY public.configuration
     ADD CONSTRAINT configuration_pkey PRIMARY KEY (schema_version);
 
 
 --
--- Name: crashlog_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 2960 (class 2606 OID 42716)
+-- Name: crashlog crashlog_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY crashlog
+ALTER TABLE ONLY public.crashlog
     ADD CONSTRAINT crashlog_pkey PRIMARY KEY (host, eth0, regdate);
 
 
 --
--- Name: crashmonitor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 2962 (class 2606 OID 42718)
+-- Name: crashmonitor crashmonitor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY crashmonitor
+ALTER TABLE ONLY public.crashmonitor
     ADD CONSTRAINT crashmonitor_pkey PRIMARY KEY (host, daemon, eth0);
 
 
 --
--- Name: exchange_pin_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 2965 (class 2606 OID 42720)
+-- Name: exchange_pin exchange_pin_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY exchange_pin
+ALTER TABLE ONLY public.exchange_pin
     ADD CONSTRAINT exchange_pin_pkey PRIMARY KEY (pin);
 
 
 --
--- Name: gm_tool_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 2968 (class 2606 OID 42722)
+-- Name: gm_tool_accounts gm_tool_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY gm_tool_accounts
+ALTER TABLE ONLY public.gm_tool_accounts
     ADD CONSTRAINT gm_tool_accounts_pkey PRIMARY KEY (id);
 
 
 --
--- Name: item_receipt_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 2970 (class 2606 OID 42724)
+-- Name: item_receipt item_receipt_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY item_receipt
+ALTER TABLE ONLY public.item_receipt
     ADD CONSTRAINT item_receipt_pkey PRIMARY KEY (id);
 
 
 --
--- Name: item_receivable_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 2973 (class 2606 OID 42726)
+-- Name: item_receivable item_receivable_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY item_receivable
+ALTER TABLE ONLY public.item_receivable
     ADD CONSTRAINT item_receivable_pkey PRIMARY KEY (id);
 
 
 --
--- Name: itemmall_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 2976 (class 2606 OID 42728)
+-- Name: itemmall_old itemmall_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY itemmall_old
+ALTER TABLE ONLY public.itemmall_old
     ADD CONSTRAINT itemmall_pkey PRIMARY KEY (item_id, item_group);
 
 
 --
--- Name: worlds_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 2978 (class 2606 OID 42730)
+-- Name: worlds worlds_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY worlds
+ALTER TABLE ONLY public.worlds
     ADD CONSTRAINT worlds_pkey PRIMARY KEY (id);
 
 
 --
--- Name: account_username_index; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 2950 (class 1259 OID 42731)
+-- Name: account_username_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE INDEX account_username_index ON accounts USING btree (username);
-
-
---
--- Name: exchange_pin_account_index; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX exchange_pin_account_index ON exchange_pin USING btree (account_id);
+CREATE INDEX account_username_index ON public.accounts USING btree (username);
 
 
 --
--- Name: gm_tool_account_name_index; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 2963 (class 1259 OID 42732)
+-- Name: exchange_pin_account_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE INDEX gm_tool_account_name_index ON gm_tool_accounts USING btree (account_name);
-
-
---
--- Name: item_receivable_account_index; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX item_receivable_account_index ON item_receivable USING btree (account_name);
+CREATE INDEX exchange_pin_account_index ON public.exchange_pin USING btree (account_id);
 
 
 --
--- Name: itemmall_pi_index; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 2966 (class 1259 OID 42733)
+-- Name: gm_tool_account_name_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX itemmall_pi_index ON itemmall USING btree (item_group, item_index, money_unit);
+CREATE INDEX gm_tool_account_name_index ON public.gm_tool_accounts USING btree (account_name);
 
 
 --
--- Name: public; Type: ACL; Schema: -; Owner: postgres
+-- TOC entry 2954 (class 1259 OID 42610)
+-- Name: high_lottery_pi_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
+CREATE UNIQUE INDEX high_lottery_pi_index ON public.high_lottery USING btree (lottery_id, item_index, week, round);
 
+
+--
+-- TOC entry 2971 (class 1259 OID 42734)
+-- Name: item_receivable_account_index; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX item_receivable_account_index ON public.item_receivable USING btree (account_name);
+
+
+--
+-- TOC entry 2974 (class 1259 OID 42735)
+-- Name: itemmall_pi_index; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX itemmall_pi_index ON public.itemmall USING btree (item_group, item_index, money_unit);
+
+
+--
+-- TOC entry 2953 (class 1259 OID 42606)
+-- Name: lottery_pi_index; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX lottery_pi_index ON public.lottery USING btree (lottery_id, item_index, week, round);
+
+
+-- Completed on 2023-01-15 10:23:47
 
 --
 -- PostgreSQL database dump complete
