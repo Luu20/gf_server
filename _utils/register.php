@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $next_id++;
 
       $exists_id = pg_query($db_ls, "SELECT * FROM accounts WHERE id = $next_id");
-      while(pg_num_rows($exists_id) > 0) {
+      while (pg_num_rows($exists_id) > 0) {
         $next_id++;
         $exists_id = pg_query($db_ls, "SELECT * FROM accounts WHERE id = $next_id");
       }
@@ -44,8 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -58,7 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <center>
     <form id="register" action="<?= $_SERVER['PHP_SELF']; ?>" method=post>
       <br>
-      <h3> Grand Fantasia Register </h3><br>
+      <h3> Grand Fantasia Register </h3>
+      <br>
       <center>
         USERNAME<br>
         <input class="input_box" type=text name=username><br>
