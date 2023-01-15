@@ -50,8 +50,19 @@ full)
 	sed -i "s/db_pwd/$db_pwd/g" "./setup.ini"
 	sed -i "s/db_pwd/$db_pwd/g" "./GatewayServer/setup.ini"
 
+	sudo apt-get install apache2 -y
+    sudo apt-get install php -y
+    sudo apt-get install php-cli -y
+    sudo apt-get install php-pgsql -y
+
+	sudo cp ./_utils/register.php /var/www/html
+	sudo cp ./_utils/status.php /var/www/html
+
+	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/register.php"
+	sed -i "s/host_ip/$host_ip/g" "/var/www/html/status.php"
+
 	wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-	echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list >/dev/null
+	echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list > /dev/null
 	sudo apt-get update -y
 	sudo apt -y install postgresql-12
 	POSTGRESQLVERSION=$(psql --version | cut -c 19-20)
