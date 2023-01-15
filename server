@@ -1,0 +1,101 @@
+#!/bin/bash
+
+export LC_ALL=C
+
+B="[40;36m"
+W="[40;37m"
+G="[40;32m"
+R="[40;31m"
+Y="[40;33m"
+P="[40;35m"
+
+case "$1" in
+start)
+  echo $G"STARTING SERVER!"$W
+  cd ~/gf_server/TicketServer/
+  chmod 777 *
+  ./TicketServer -p 7777 &>/dev/null &
+  sleep 2
+  cd ~/gf_server/GatewayServer/
+  chmod 777 *
+  ./GatewayServer &>/dev/null &
+  sleep 2
+  cd ~/gf_server/LoginServer/
+  chmod 777 *
+  ./LoginServer &>/dev/null &
+  sleep 2
+  cd ~/gf_server/MissionServer/
+  chmod 777 *
+  ./MissionServer &>/dev/null &
+  sleep 2
+  cd ~/gf_server/WorldServer/
+  chmod 777 *
+  ./WorldServer &>/dev/null &
+  sleep 4
+  cd ~/gf_server/ZoneServer/
+  chmod 777 *
+  ./ZoneServer &>/dev/null &
+
+  freemem=$(free -m | grep "Mem:" | awk '{print $4}')
+  echo $B"SERVER STARTED! ${Y}Memory Available: ${freemem} MB"${W}
+
+  ;;
+stop)
+  echo $R"STOPPING SERVER!"$W
+  killall -9 LoginServer >/dev/null &
+
+  killall -9 GatewayServer >/dev/null &
+
+  killall -9 TicketServer >/dev/null &
+
+  killall -9 MissionServer >/dev/null &
+
+  killall -9 WorldServer >/dev/null &
+
+  killall -9 ZoneServer >/dev/null &
+
+  freemem=$(free -m | grep "Mem:" | awk '{print $4}')
+  echo $B"SERVER STOPPED! ${Y}Memory Available: ${freemem} MB"${W}
+
+  ;;
+clear)
+  echo $P"CLEANING LOGS!"$W
+  cat /dev/null >/var/log/syslog
+  cat /dev/null >/var/log/wtmp
+  cat /dev/null >/var/log/maillog
+  cat /dev/null >/var/log/messages
+  cat /dev/null >/var/log/openwebmail.log
+  cat /dev/null >/var/log/maillog
+  cat /dev/null >/var/log/secure
+
+  find . -name "*.log.*" -type f -print -exec rm -rf {} \;
+
+  ;;
+status)
+  echo $B"SERVER STATUS!"$W
+  echo ""
+  processes=("LoginServer" "GatewayServer" "TicketServer" "MissionServer" "WorldServer" "ZoneServer")
+
+  for process in "${processes[@]}"; do
+    if ps aux | grep -q $process; then
+      echo $P"$process: ${G}Online"$W
+    else
+      echo $P"$process: ${R}Offline"$W
+    fi
+  done
+
+  freemem=$(free -m | grep "Mem:" | awk '{print $4}')
+  echo ${Y}"Memory Available: ${freemem} MB"${W}
+
+  ;;
+restart)
+  ./server stop
+  sleep 2
+  ./server start
+  
+  ;;
+*)
+  echo "Usage: $0 {start|stop|clear|status|restart}"
+  exit 1
+  ;;
+esac
