@@ -12,7 +12,7 @@ case "$1" in
 full)
 	host_ip=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	if [ "$host_ip" != "" ]; then
-		echo -e "Select IP Option:\n1 - Use Current IP: $host_ip\n2 - Input Other IP"
+		echo -e "Select IP Option:\n1 - Use Current IP: $host_ip\n2 - Use Other IP"
 		read invar
 	else
 		invar="2"
@@ -79,7 +79,7 @@ full)
 update)
 	host_ip=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	if [ "$host_ip" != "" ]; then
-		echo -e "Select IP Option:\n1 - Use Current IP: $host_ip\n2 - Input Other IP"
+		echo -e "Select IP Option:\n1 - Use Current IP: $host_ip\n2 - Use Other IP"
 		read invar
 	else
 		invar="2"
@@ -118,7 +118,7 @@ update)
 restore)
 	host_ip=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	if [ "$host_ip" != "" ]; then
-		echo -e "Select IP Option:\n1 - Use Current IP: $host_ip\n2 - Input Other IP"
+		echo -e "Select IP Option:\n1 - Use Current IP: $host_ip\n2 - Use Other IP"
 		read invar
 	else
 		invar="2"
@@ -147,27 +147,42 @@ restore)
 	fi
 
 	;;
-register)
+web)
+
+	host_ip=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+	if [ "$host_ip" != "" ]; then
+		echo -e "Select IP Option:\n1 - Use Current IP: $host_ip\n2 - Use Other IP"
+		read invar
+	else
+		invar="2"
+	fi
+	if [ "$invar" = "2" ]; then
+		echo "Please Enter IP:"
+		read host_ip
+	fi
+
+	echo "Please Enter PostgreSQL Password:"
+	read db_pwd
+
 	sudo apt-get install apache2 -y
     sudo apt-get install php -y
     sudo apt-get install php-cli -y
     sudo apt-get install php-pgsql -y
 
-	echo "Please Enter PostgreSQL Password:"
-	read db_pwd
-
 	sudo cp ./_utils/register.php /var/www/html
+	sudo cp ./_utils/status.php /var/www/html
 
 	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/register.php"
+	sed -i "s/host_ip/$host_ip/g" "/var/www/html/status.php"
 
 	;;
 
 *)
-	echo "Usage: $0 {full|update|restore|register}"
+	echo "Usage: $0 {full|update|restore|web}"
 	echo "full - Full Server Instalation"
 	echo "update - Server IP Update"
 	echo "restore - Delete And Create DB"
-	echo "register - Install Registration"
+	echo "web - Install Registration and Server Status"
 	exit 1
 	;;
 esac
