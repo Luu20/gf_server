@@ -52,6 +52,8 @@ full)
     sudo apt-get install php-cli -y
     sudo apt-get install php-pgsql -y
 
+	sudo service apache2 restart
+
 	sudo cp ./_utils/register.php /var/www/html
 	sudo cp ./_utils/status.php /var/www/html
 
@@ -187,6 +189,8 @@ web)
     sudo apt-get install php -y
     sudo apt-get install php-cli -y
     sudo apt-get install php-pgsql -y
+
+	sudo service apache2 restart
 
 	sudo cp ./_utils/register.php /var/www/html
 	sudo cp ./_utils/status.php /var/www/html
