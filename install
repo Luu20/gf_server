@@ -58,6 +58,7 @@ full)
 	sed -i "s/db_pwd/$db_pwd/g" "./setup.ini"
 	sed -i "s/db_pwd/$db_pwd/g" "./GatewayServer/setup.ini"
 	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/register.php"
+	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/status.php"
 	sed -i "s/host_ip/$host_ip/g" "/var/www/html/status.php"
 
 	wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
@@ -99,8 +100,12 @@ update)
 		read host_ip
 	fi
 
+	echo "Please Enter PostgreSQL Password:"
+	read db_pwd
+
 	sudo cp ./_utils/status.php /var/www/html
 
+	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/status.php"
 	sed -i "s/host_ip/$host_ip/g" "/var/www/html/status.php"
 
 	ip_parts=(${host_ip//./ })
@@ -187,6 +192,7 @@ web)
 	sudo cp ./_utils/status.php /var/www/html
 
 	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/register.php"
+	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/status.php"
 	sed -i "s/host_ip/$host_ip/g" "/var/www/html/status.php"
 
 	;;
