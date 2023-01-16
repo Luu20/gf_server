@@ -58,6 +58,12 @@ stop)
   echo $B"SERVER STOPPED! ${Y}Memory Available: ${freemem} MB"${W}
 
   ;;
+restart)
+  ./server stop
+  sleep 2
+  ./server start
+  
+  ;;
 clear)
   echo $P"CLEANING LOGS!"$W
   cat /dev/null >/var/log/syslog
@@ -71,31 +77,8 @@ clear)
   find . -name "*.log.*" -type f -print -exec rm -rf {} \;
 
   ;;
-status)
-  echo $B"SERVER STATUS!"$W
-  echo ""
-  processes=("LoginServer" "GatewayServer" "TicketServer" "MissionServer" "WorldServer" "ZoneServer")
-
-  for process in "${processes[@]}"; do
-    if ps aux | grep -q $process; then
-      echo $P"$process: ${G}Online"$W
-    else
-      echo $P"$process: ${R}Offline"$W
-    fi
-  done
-
-  freemem=$(free -m | grep "Mem:" | awk '{print $4}')
-  echo ${Y}"Memory Available: ${freemem} MB"${W}
-
-  ;;
-restart)
-  ./server stop
-  sleep 2
-  ./server start
-  
-  ;;
 *)
-  echo "Usage: $0 {start|stop|clear|status|restart}"
+  echo "Usage: $0 {start|stop|restart|clear}"
   exit 1
   ;;
 esac

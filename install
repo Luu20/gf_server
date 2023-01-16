@@ -35,7 +35,7 @@ full)
 		hex_ip+=$(printf '%02x' "'$char")
 	done
 
-	hex_ip+="000000"
+	hex_ip+="000000000000"
 
 	ip_bytes=$(echo $hex_ip | sed 's/\(..\)/\\\x\1/g')
 
