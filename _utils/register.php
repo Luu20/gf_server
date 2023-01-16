@@ -1,6 +1,5 @@
 <?php
-$db_ls = pg_connect("host=localhost dbname=gf_ls user=postgres password=db_pwd");
-$db_ms = pg_connect("host=localhost dbname=gf_ms user=postgres password=db_pwd");
+include('config.php');
 
 $message = "";
 

@@ -1,16 +1,9 @@
 <?php
+include('config.php');
 
-$db_gs = pg_connect("host=localhost dbname=gf_gs user=postgres password=db_pwd");
-$db_ls = pg_connect("host=localhost dbname=gf_ls user=postgres password=db_pwd");
-
-$config['host'] = "host_ip";
-$config['loginPort'] = 6543;
-$config['gatewayPort'] = 5560;
-$config['ticketPort'] = 7777;
-
-$loginSocket = @fsockopen($config['host'], $config['loginPort'], $err, $err, 1);
-$gatewaySocket = @fsockopen($config['host'], $config['gatewayPort'], $err, $err, 1);
-$ticketsocket = @fsockopen($config['host'], $config['ticketPort'], $err, $err, 1);
+$loginSocket = @fsockopen($host, $login_port, $err, $err, 1);
+$gatewaySocket = @fsockopen($host, $gateway_port, $err, $err, 1);
+$ticketsocket = @fsockopen($host, $ticket_port, $err, $err, 1);
 
 $characters_result = pg_query($db_gs, "SELECT COUNT(*) FROM player_characters");
 $num_characters = pg_fetch_result($characters_result, 0, 0);
@@ -54,9 +47,9 @@ $num_accounts = pg_fetch_result($accounts_result, 0, 0);
         echo "TicketServer: <font color='green'>Online</font><br>";
         fclose($ticketsocket);
     }
+
     echo "<br>Registered Accounts: $num_accounts";
     echo "<br>Characters Created: $num_characters";
-    
     ?>
   </center>
 </body>
