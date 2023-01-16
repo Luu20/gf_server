@@ -54,9 +54,7 @@ full)
 
 	sudo service apache2 restart
 	
-	sudo cp ./_utils/config.php /var/www/html
-	sudo cp ./_utils/status.php /var/www/html
-	sudo cp ./_utils/register.php /var/www/html
+	sudo cp ./_utils/*.php /var/www/html/
 
 	sed -i "s/db_pwd/$db_pwd/g" "./setup.ini"
 	sed -i "s/db_pwd/$db_pwd/g" "./GatewayServer/setup.ini"
@@ -193,15 +191,12 @@ web)
 
 	sudo service apache2 restart
 
-	sudo cp ./_utils/config.php /var/www/html
-	sudo cp ./_utils/register.php /var/www/html
-	sudo cp ./_utils/status.php /var/www/html
+	sudo cp ./_utils/*.php /var/www/html/
 
 	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/config.php"
 	sed -i "s/host_ip/$host_ip/g" "/var/www/html/config.php"
 
 	;;
-
 *)
 	echo "Usage: $0 {full|update|restore|web}"
 	echo "full - Full Server Instalation"
