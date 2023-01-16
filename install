@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 world_offset=3EA7A7
 world_binary=WorldServer
