@@ -71,6 +71,7 @@ full)
 	cd "/etc/postgresql/$POSTGRESQLVERSION/main"
 	sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" postgresql.conf
 	sed -i "s+host    all             all             127.0.0.1/32            md5+host    all             all             0.0.0.0/0            md5+g" pg_hba.conf
+	sed -i "s/local   all             postgres                                peer/local   all             postgres                                md5/g" pg_hba.conf
 
 	sudo -u postgres psql -c "ALTER user postgres WITH password '$db_pwd';"
 
@@ -191,6 +192,7 @@ web)
 
 	sudo service apache2 restart
 
+	sudo rm /var/www/html/index.html
 	sudo cp ./_utils/*.php /var/www/html/
 
 	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/config.php"
