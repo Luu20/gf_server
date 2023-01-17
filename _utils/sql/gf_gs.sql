@@ -2,13 +2,13 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.8 (Ubuntu 13.8-1.pgdg18.04+1)
--- Dumped by pg_dump version 14.5 (Ubuntu 14.5-1.pgdg18.04+1)
+-- Dumped from database version 13.9 (Ubuntu 13.9-1.pgdg22.04+1)
+-- Dumped by pg_dump version 13.9 (Ubuntu 13.9-1.pgdg22.04+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'SQL_ASCII';
+SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
@@ -5293,9 +5293,9 @@ COPY public.server_shutdown (server_id, shutdown_time) FROM stdin;
 --
 
 COPY public.serverstatus (id, name, ext_address, ext_port, int_address, int_port, last_start_time, last_vip_mail_time, next_itemmall_time, bf_count, last_race_reset_time, daily_awards_time_record, daily_awards_begin_date, daily_awards_flags) FROM stdin;
-1010	WorldServer	192.168.209.131	5567	127.0.0.1	5568	0	0	0	0	0	0	0	0
-1011	ZoneServer	192.168.209.131	10020	127.0.0.1	10021	0	0	0	0	0	0	0	0
 -2	MissionServer	none	-1	127.0.0.1	7654	0	0	0	0	0	0	0	0
+1010	WorldServer	192.168.0.118	5567	127.0.0.1	5568	0	0	0	0	0	0	0	0
+1011	ZoneServer	192.168.0.118	10020	127.0.0.1	10021	0	0	0	0	0	0	0	0
 \.
 
 
@@ -6680,13 +6680,6 @@ CREATE UNIQUE INDEX transport_ci_node_index ON public.transport USING btree (pla
 --
 
 CREATE INDEX vip_index ON public.vip USING btree (id);
-
-
---
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
---
-
-GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --

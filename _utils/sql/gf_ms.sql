@@ -2,13 +2,13 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.8 (Ubuntu 13.8-1.pgdg18.04+1)
--- Dumped by pg_dump version 14.5 (Ubuntu 14.5-1.pgdg18.04+1)
+-- Dumped from database version 13.9 (Ubuntu 13.9-1.pgdg22.04+1)
+-- Dumped by pg_dump version 13.9 (Ubuntu 13.9-1.pgdg22.04+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'SQL_ASCII';
+SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
@@ -2308,13 +2308,6 @@ CREATE INDEX tb_user_index ON public.tb_user USING btree (regdate, lastlogindate
 --
 
 CREATE UNIQUE INDEX uid_txn ON public.age_iteminsert_txnlog USING btree (uid, txnid);
-
-
---
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
---
-
-GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
