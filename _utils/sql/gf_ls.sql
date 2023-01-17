@@ -9908,7 +9908,7 @@ COPY public.lottery (lottery_id, item_index, week, round, item_id, item_amount, 
 --
 
 COPY public.worlds (id, name, ip, port, online_user, maxnum_user, state, version, show_order) FROM stdin;
-1010	Dev-CH1	192.168.0.110	5567	1	1000	0	Unknown_Version	0
+1010	Develop-Channel 1	192.168.0.110	5567	1	1000	0	006.058.64.64	0
 \.
 
 
