@@ -57,7 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <br>
             <input type='button' value='Server Status' onclick="window.location.href='status.php'" />
             <input type='button' value='Change Privilege' onclick="window.location.href='gm.php'" />
-            <input type='button' value='Change Name' onclick="window.location.href='change.php'" />
+            <input type='button' value='Change Player Name' onclick="window.location.href='change.php'" />
+            <input type='button' value='Change Sprite Name' onclick="window.location.href='sprite.php'" />
             <br>
             <h3> Grand Fantasia Register </h3>
             <br>

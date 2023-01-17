@@ -29,6 +29,12 @@ $num_accounts = pg_fetch_result($accounts_result, 0, 0);
         <h3> Grand Fantasia Status </h3>
         <br>
         <?php
+        if (!$loginSocket && !$gatewaySocket && !$ticketsocket) {
+            echo "Server Status: <font color='red'>Offline</font><br><br>";
+        } else {
+            echo "Server Status: <font color='green'>Online</font><br><br>";
+        }
+
         if (!$loginSocket) {
             echo "LoginServer: <font color='red'>Offline</font><br>";
         } else {

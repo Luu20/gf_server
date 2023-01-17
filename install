@@ -56,7 +56,7 @@ full)
 	sudo service apache2 restart
 	
 	sudo rm /var/www/html/index.html
-	sudo cp ./_utils/*.php /var/www/html/
+	sudo cp ./_utils/web/*.php /var/www/html/
 
 	sed -i "s/db_pwd/$db_pwd/g" "./setup.ini"
 	sed -i "s/db_pwd/$db_pwd/g" "./GatewayServer/setup.ini"
@@ -85,14 +85,14 @@ full)
 	psql -U postgres -c "create database gf_gs encoding 'UTF8' template template0;"
 	psql -U postgres -c "create database gf_ls encoding 'UTF8' template template0;"
 	psql -U postgres -c "create database gf_ms encoding 'UTF8' template template0;"
-	psql -U postgres -d gf_gs -c "\i '/root/gf_server/_utils/sql/gf_gs.sql';"
-	psql -U postgres -d gf_ls -c "\i '/root/gf_server/_utils/sql/gf_ls.sql';"
-	psql -U postgres -d gf_ms -c "\i '/root/gf_server/_utils/sql/gf_ms.sql';"
+	psql -U postgres -d gf_gs -c "\i '/root/gf_server/_utils/db/gf_gs.sql';"
+	psql -U postgres -d gf_ls -c "\i '/root/gf_server/_utils/db/gf_ls.sql';"
+	psql -U postgres -d gf_ms -c "\i '/root/gf_server/_utils/db/gf_ms.sql';"
 	psql -U postgres -d gf_ls -c "UPDATE worlds SET ip = '$host_ip';"
 	psql -U postgres -d gf_gs -c "UPDATE serverstatus SET ext_address = '$host_ip' WHERE ext_address != 'none';"
 
 	;;
-update)
+ip)
 	host_ip=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	if [ "$host_ip" != "" ]; then
 		echo -e "Select IP Option:\n1 - Use Current IP: $host_ip\n2 - Use Other IP"
@@ -109,10 +109,10 @@ update)
 	read db_pwd
   	export PGPASSWORD=$db_pwd
 
-	sudo cp ./_utils/status.php /var/www/html
+	sudo cp ./_utils/web/config.php /var/www/html
 
-	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/status.php"
-	sed -i "s/host_ip/$host_ip/g" "/var/www/html/status.php"
+	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/config.php"
+	sed -i "s/host_ip/$host_ip/g" "/var/www/html/config.php"
 
 	ip_parts=(${host_ip//./ })
 	ip_parts[3]=0
@@ -140,7 +140,7 @@ update)
 	psql -U postgres -d gf_gs -c "UPDATE serverstatus SET ext_address = '$host_ip' WHERE ext_address != 'none';"
 
 	;;
-restore)
+db)
 	host_ip=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	if [ "$host_ip" != "" ]; then
 		echo -e "Select IP Option:\n1 - Use Current IP: $host_ip\n2 - Use Other IP"
@@ -162,9 +162,9 @@ restore)
 		psql -U postgres -c "create database gf_gs encoding 'UTF8' template template0;"
 		psql -U postgres -c "create database gf_ls encoding 'UTF8' template template0;"
 		psql -U postgres -c "create database gf_ms encoding 'UTF8' template template0;"
-		psql -U postgres -d gf_gs -c "\i '/root/gf_server/_utils/sql/gf_gs.sql';"
-		psql -U postgres -d gf_ls -c "\i '/root/gf_server/_utils/sql/gf_ls.sql';"
-		psql -U postgres -d gf_ms -c "\i '/root/gf_server/_utils/sql/gf_ms.sql';"
+		psql -U postgres -d gf_gs -c "\i '/root/gf_server/_utils/db/gf_gs.sql';"
+		psql -U postgres -d gf_ls -c "\i '/root/gf_server/_utils/db/gf_ls.sql';"
+		psql -U postgres -d gf_ms -c "\i '/root/gf_server/_utils/db/gf_ms.sql';"
 		psql -U postgres -d gf_ls -c "UPDATE worlds SET ip = '$host_ip';"
 		psql -U postgres -d gf_gs -c "UPDATE serverstatus SET ext_address = '$host_ip' WHERE ext_address != 'none';"
 	else
@@ -197,17 +197,17 @@ web)
 	sudo service apache2 restart
 
 	sudo rm /var/www/html/index.html
-	sudo cp ./_utils/*.php /var/www/html/
+	sudo cp ./_utils/web/*.php /var/www/html/
 
 	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/config.php"
 	sed -i "s/host_ip/$host_ip/g" "/var/www/html/config.php"
 
 	;;
 *)
-	echo "Usage: $0 {full|update|restore|web}"
+	echo "Usage: $0 {full|ip|db|web}"
 	echo "full - Full Server Instalation"
-	echo "update - Server IP Update"
-	echo "restore - Delete And Create DB"
+	echo "ip - Server IP Update"
+	echo "db - Delete And Create DB"
 	echo "web - Install Registration and Server Status"
 	exit 1
 	;;
