@@ -24,28 +24,30 @@ $num_accounts = pg_fetch_result($accounts_result, 0, 0);
 <body>
   <center>
     <br>
+    <input type="button" value="Back" onclick="window.location.href='index.php'" />
+    <br>
     <h3> Grand Fantasia Status </h3>
     <br>
     <?php
     if (!$loginSocket) {
-        echo "LoginServer: <font color='red'>Offline</font><br>";
+      echo "LoginServer: <font color='red'>Offline</font><br>";
     } else {
-        echo "LoginServer: <font color='green'>Online</font><br>";
-        fclose($loginSocket);
+      echo "LoginServer: <font color='green'>Online</font><br>";
+      fclose($loginSocket);
     }
-    
+
     if (!$gatewaySocket) {
-        echo "GatewayServer: <font color='red'>Offline</font><br>";
+      echo "GatewayServer: <font color='red'>Offline</font><br>";
     } else {
-        echo "GatewayServer: <font color='green'>Online</font><br>";
-        fclose($gatewaySocket);
+      echo "GatewayServer: <font color='green'>Online</font><br>";
+      fclose($gatewaySocket);
     }
-    
+
     if (!$ticketsocket) {
-        echo "TicketServer: <font color='red'>Offline</font><br>";
+      echo "TicketServer: <font color='red'>Offline</font><br>";
     } else {
-        echo "TicketServer: <font color='green'>Online</font><br>";
-        fclose($ticketsocket);
+      echo "TicketServer: <font color='green'>Online</font><br>";
+      fclose($ticketsocket);
     }
 
     echo "<br>Registered Accounts: $num_accounts";

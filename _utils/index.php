@@ -55,16 +55,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <center>
     <form id="register" action="<?= $_SERVER['PHP_SELF']; ?>" method=post>
       <br>
+      <input type="button" value="Server Status" onclick="window.location.href='status.php'" />
+      <input type="button" value="Change Privilege" onclick="window.location.href='gm.php'" />
+      <input type="button" value="Change Name" onclick="window.location.href='change.php'" />
+      <br>
       <h3> Grand Fantasia Register </h3>
       <br>
-      <center>
-        USERNAME<br>
-        <input class="input_box" type=text name=username><br>
-        PASSWORD<br>
-        <input class="input_box" type=password name=password><br>
-        <br>
-        <input class="input_submit" type=submit name=submit value="Create Account"><br>
-        </table>
+      USERNAME<br>
+      <input class="input_box" type=text name=username><br>
+      PASSWORD<br>
+      <input class="input_box" type=password name=password><br>
+      <br>
+      <input class="input_submit" type=submit name=submit value="Create Account"><br>
+      </table>
     </form>
     <?php
     echo "<p>$message</p>";

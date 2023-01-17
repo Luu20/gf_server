@@ -10,7 +10,7 @@ if (isset($_POST['submit'])) {
     $result = pg_query($db_gs, $query);
     $row = pg_fetch_assoc($result);
     if (!$row) {
-        $message = "Player not found.";
+        $message = "<font color='red'>PLAYER NOT FOUND</font>";
     } else {
         $account_id = $row['account_id'];
 
@@ -44,9 +44,9 @@ if (isset($_POST['submit'])) {
         $result = pg_query($db_ms, $query);
 
         if ($result) {
-            $message = "Successfully updated privilege for player '$playername'";
+            $message = "<font color='green'>SUCCESS UPDATING '$playername' PRIVILEGE</font>";
         } else {
-            $message = "Error updating privilege for player '$playername'";
+            $message = "<font color='red'>ERROR UPDATING '$playername' PRIVILEGE</font>";
         }
     }
 }
@@ -64,6 +64,8 @@ if (isset($_POST['submit'])) {
 <body>
     <center>
         <br>
+        <input type="button" value="Back" onclick="window.location.href='index.php'" />
+        <br>
         <h3> Grand Fantasia GM </h3>
         <br>
         <form action="" method="post">
@@ -76,7 +78,7 @@ if (isset($_POST['submit'])) {
                 <option value="Remove GM">Remove GM</option>
             </select>
 
-            <input type="submit" name="submit" value="Submit">
+            <input type="submit" name="submit" value="Update Privilege">
         </form>
         <p><?php echo $message; ?></p>
     </center>
