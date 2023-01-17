@@ -77,7 +77,7 @@ backup)
   export PGPASSWORD=$db_pwd
 
   folder_name=backup_$(date +%Y_%m_%d_%H_%M_%S)
-  mkdir /root/gf_server/backup/$folder_name
+  sudo mkdir -p /root/gf_server/backup/$folder_name
 
 	echo "Creating gf_gs backup"
   pg_dump -U postgres -Fp gf_gs > /root/gf_server/backup/$folder_name/gf_gs.sql

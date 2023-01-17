@@ -24,6 +24,7 @@ full)
 
 	echo "Please Enter PostgreSQL Password:"
 	read db_pwd
+  	export PGPASSWORD=$db_pwd
 
 	ip_parts=(${host_ip//./ })
 	ip_parts[3]=0
@@ -54,6 +55,7 @@ full)
 
 	sudo service apache2 restart
 	
+	sudo rm /var/www/html/index.html
 	sudo cp ./_utils/*.php /var/www/html/
 
 	sed -i "s/db_pwd/$db_pwd/g" "./setup.ini"
@@ -72,6 +74,7 @@ full)
 	sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" postgresql.conf
 	sed -i "s+host    all             all             127.0.0.1/32            md5+host    all             all             0.0.0.0/0            md5+g" pg_hba.conf
 	sed -i "s/local   all             postgres                                peer/local   all             postgres                                md5/g" pg_hba.conf
+	sed -i "s/local   all             all                                     peer/local   all             all                                     md5/g" pg_hba.conf
 
 	sudo -u postgres psql -c "ALTER user postgres WITH password '$db_pwd';"
 
@@ -79,14 +82,14 @@ full)
 
 	chmod 777 /root -R
 
-	sudo -u postgres psql -c "create database gf_gs encoding 'UTF8' template template0;"
-	sudo -u postgres psql -c "create database gf_ls encoding 'UTF8' template template0;"
-	sudo -u postgres psql -c "create database gf_ms encoding 'UTF8' template template0;"
-	sudo -u postgres psql -d gf_gs -c "\i '/root/gf_server/_utils/sql/gf_gs.sql';"
-	sudo -u postgres psql -d gf_ls -c "\i '/root/gf_server/_utils/sql/gf_ls.sql';"
-	sudo -u postgres psql -d gf_ms -c "\i '/root/gf_server/_utils/sql/gf_ms.sql';"
-	sudo -u postgres psql -d gf_ls -c "UPDATE worlds SET ip = '$host_ip';"
-	sudo -u postgres psql -d gf_gs -c "UPDATE serverstatus SET ext_address = '$host_ip' WHERE ext_address != 'none';"
+	psql -U postgres -c "create database gf_gs encoding 'UTF8' template template0;"
+	psql -U postgres -c "create database gf_ls encoding 'UTF8' template template0;"
+	psql -U postgres -c "create database gf_ms encoding 'UTF8' template template0;"
+	psql -U postgres -d gf_gs -c "\i '/root/gf_server/_utils/sql/gf_gs.sql';"
+	psql -U postgres -d gf_ls -c "\i '/root/gf_server/_utils/sql/gf_ls.sql';"
+	psql -U postgres -d gf_ms -c "\i '/root/gf_server/_utils/sql/gf_ms.sql';"
+	psql -U postgres -d gf_ls -c "UPDATE worlds SET ip = '$host_ip';"
+	psql -U postgres -d gf_gs -c "UPDATE serverstatus SET ext_address = '$host_ip' WHERE ext_address != 'none';"
 
 	;;
 update)
@@ -104,6 +107,7 @@ update)
 
 	echo "Please Enter PostgreSQL Password:"
 	read db_pwd
+  	export PGPASSWORD=$db_pwd
 
 	sudo cp ./_utils/status.php /var/www/html
 
@@ -132,8 +136,8 @@ update)
 
 	echo -en $ip_bytes | dd of=${zone_folder}/${zone_binary} bs=1 seek=$((0x$zone_offset)) count=${#ip_bytes} conv=notrunc >/dev/null 2>&1
 
-	sudo -u postgres psql -d gf_ls -c "UPDATE worlds SET ip = '$host_ip';"
-	sudo -u postgres psql -d gf_gs -c "UPDATE serverstatus SET ext_address = '$host_ip' WHERE ext_address != 'none';"
+	psql -U postgres -d gf_ls -c "UPDATE worlds SET ip = '$host_ip';"
+	psql -U postgres -d gf_gs -c "UPDATE serverstatus SET ext_address = '$host_ip' WHERE ext_address != 'none';"
 
 	;;
 restore)
@@ -149,20 +153,20 @@ restore)
 		read host_ip
 	fi
 
-	sudo -u postgres psql -c "DROP DATABASE gf_gs;"
-	sudo -u postgres psql -c "DROP DATABASE gf_ls;"
-	sudo -u postgres psql -c "DROP DATABASE gf_ms;"
+	psql -U postgres -c "DROP DATABASE gf_gs;"
+	psql -U postgres -c "DROP DATABASE gf_ls;"
+	psql -U postgres -c "DROP DATABASE gf_ms;"
 
-	if ! [ $(sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='gf_gs'") ] && ! [ $(sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='gf_ls'") ] && ! [ $(sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='gf_ms'") ]; then
+	if ! [ $(psql -U postgres -tAc "SELECT 1 FROM pg_database WHERE datname='gf_gs'") ] && ! [ $(psql -U postgres -tAc "SELECT 1 FROM pg_database WHERE datname='gf_ls'") ] && ! [ $(psql -U postgres -tAc "SELECT 1 FROM pg_database WHERE datname='gf_ms'") ]; then
 		chmod 777 /root -R
-		sudo -u postgres psql -c "create database gf_gs encoding 'UTF8' template template0;"
-		sudo -u postgres psql -c "create database gf_ls encoding 'UTF8' template template0;"
-		sudo -u postgres psql -c "create database gf_ms encoding 'UTF8' template template0;"
-		sudo -u postgres psql -d gf_gs -c "\i '/root/gf_server/_utils/sql/gf_gs.sql';"
-		sudo -u postgres psql -d gf_ls -c "\i '/root/gf_server/_utils/sql/gf_ls.sql';"
-		sudo -u postgres psql -d gf_ms -c "\i '/root/gf_server/_utils/sql/gf_ms.sql';"
-		sudo -u postgres psql -d gf_ls -c "UPDATE worlds SET ip = '$host_ip';"
-		sudo -u postgres psql -d gf_gs -c "UPDATE serverstatus SET ext_address = '$host_ip' WHERE ext_address != 'none';"
+		psql -U postgres -c "create database gf_gs encoding 'UTF8' template template0;"
+		psql -U postgres -c "create database gf_ls encoding 'UTF8' template template0;"
+		psql -U postgres -c "create database gf_ms encoding 'UTF8' template template0;"
+		psql -U postgres -d gf_gs -c "\i '/root/gf_server/_utils/sql/gf_gs.sql';"
+		psql -U postgres -d gf_ls -c "\i '/root/gf_server/_utils/sql/gf_ls.sql';"
+		psql -U postgres -d gf_ms -c "\i '/root/gf_server/_utils/sql/gf_ms.sql';"
+		psql -U postgres -d gf_ls -c "UPDATE worlds SET ip = '$host_ip';"
+		psql -U postgres -d gf_gs -c "UPDATE serverstatus SET ext_address = '$host_ip' WHERE ext_address != 'none';"
 	else
 		echo $R"Close All DB Connections!"$W
 	fi
