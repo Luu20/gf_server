@@ -10,4 +10,3 @@
     $db_gs = pg_connect("host=$host dbname=gf_gs user=$db_user password=$db_password");
     $db_ls = pg_connect("host=$host dbname=gf_ls user=$db_user password=$db_password");
     $db_ms = pg_connect("host=$host dbname=gf_ms user=$db_user password=$db_password");
-?>

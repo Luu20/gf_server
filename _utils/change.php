@@ -1,9 +1,9 @@
 <?php
 include('config.php');
 
-$message = "";
+$message = '';
 
-$list = array("fuck");
+$list = array('fuck');
 
 if (isset($_POST['submit'])) {
     $oldname = $_POST['oldname'];
@@ -15,12 +15,12 @@ if (isset($_POST['submit'])) {
         $message = "<font color='red'>PLAYER '$oldname' NOT FOUND</font>";
     } else {
         $block_special_characteres = false;
-        if ($block_special_characteres && preg_match("/[^a-zA-Z0-9 ]/", $newname)) {
+        if ($block_special_characteres && preg_match('/[^a-zA-Z0-9 ]/', $newname)) {
             $message = "CAN'T USE NAME WITH SPECIAL CHARACTER";
         } else {
             $name_lower = strtolower($newname);
 
-            $word_found = "";
+            $word_found = '';
             foreach ($list as $word) {
                 if (preg_match("/$word/", $name_lower)) {
                     $word_found = $word;
@@ -52,32 +52,32 @@ if (isset($_POST['submit'])) {
 }
 ?>
 
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 
 <head>
     <title> Grand Fantasia | Change Name </title>
-    <meta http-equiv="content-type" content="text/html" ; charset="UTF-8" />
+    <meta http-equiv='content-type' content='text/html' ; charset='UTF-8' />
 </head>
 
 <body>
     <center>
         <br>
-        <input type="button" value="Back" onclick="window.location.href='index.php'" />
+        <input type='button' value='Back' onclick="window.location.href='index.php'" />
         <br>
         <h3> Grand Fantasia Change Name </h3>
         <br>
-        <form action="<?= $_SERVER['PHP_SELF']; ?>" method="post">
-            <label for="playername">Old Player Name:</label>
-            <input type="text" id="oldname" name="oldname">
+        <form action="<?= $_SERVER['PHP_SELF']; ?>" method='post'>
+            <label for='playername'>Old Player Name:</label>
+            <input type='text' id='oldname' name='oldname'>
             <br>
-            <label for="playername">New Player Name:</label>
-            <input type="text" id="newname" name="newname">
+            <label for='playername'>New Player Name:</label>
+            <input type='text' id='newname' name='newname'>
             <br>
-            <input type="submit" name="submit" value="Change Name">
+            <input type='submit' name='submit' value='Change Name'>
         </form>
-        <p><?php echo $message; ?></p>
+        <p><?php echo $message;
+            ?></p>
     </center>
 </body>
 
