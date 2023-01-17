@@ -58,8 +58,9 @@ full)
 	sudo rm /var/www/html/index.html
 	sudo cp ./_utils/web/*.php /var/www/html/
 
-	sed -i "s/db_pwd/$db_pwd/g" "./setup.ini"
-	sed -i "s/db_pwd/$db_pwd/g" "./GatewayServer/setup.ini"
+	sed -i "/GameDBPassword/c\GameDBPassword=$db_pwd" "./setup.ini"
+	sed -i "/AccountDBPW/c\AccountDBPW=$db_pwd" "./setup.ini"
+	sed -i "/AccountDBPW/c\AccountDBPW=$db_pwd" "./GatewayServer/setup.ini"
 
 	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/config.php"
 	sed -i "s/host_ip/$host_ip/g" "/var/www/html/config.php"
