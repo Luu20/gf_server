@@ -12,7 +12,9 @@ case "$1" in
 full)
 	host_ip=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	if [ "$host_ip" != "" ]; then
-		read -p "1 - Use Current IP: $host_ip  or 2 - Use Other IP: " invar
+		echo "1 - Use Current IP: $host_ip"
+		echo "2 - Use Other IP:"
+		read -p "Select Option: " invar
 	else
 		invar="2"
 	fi
@@ -99,7 +101,9 @@ full)
 ip)
 	host_ip=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	if [ "$host_ip" != "" ]; then
-		read -p "1 - Use Current IP: $host_ip  or 2 - Use Other IP: " invar
+		echo "1 - Use Current IP: $host_ip"
+		echo "2 - Use Other IP:"
+		read -p "Select Option: " invar
 	else
 		invar="2"
 	fi
@@ -178,7 +182,9 @@ web)
 
 	host_ip=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	if [ "$host_ip" != "" ]; then
-		read -p "1 - Use Current IP: $host_ip  or 2 - Use Other IP: " invar
+		echo "1 - Use Current IP: $host_ip"
+		echo "2 - Use Other IP:"
+		read -p "Select Option: " invar
 	else
 		invar="2"
 	fi
