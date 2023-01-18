@@ -1,9 +1,9 @@
 <?php
 include('config.php');
 
-$loginSocket = @fsockopen($host, $login_port, $err, $err, 1);
-$gatewaySocket = @fsockopen($host, $gateway_port, $err, $err, 1);
-$ticketsocket = @fsockopen($host, $ticket_port, $err, $err, 1);
+$loginSocket = @fsockopen($server_host, $login_port, $err, $err, 1);
+$gatewaySocket = @fsockopen($server_host, $gateway_port, $err, $err, 1);
+$ticketsocket = @fsockopen($server_host, $ticket_port, $err, $err, 1);
 
 $characters_result = pg_query($db_gs, 'SELECT COUNT(*) FROM player_characters');
 $num_characters = pg_fetch_result($characters_result, 0, 0);
@@ -30,7 +30,7 @@ $num_accounts = pg_fetch_result($accounts_result, 0, 0);
         <br>
         <?php
         if (!$loginSocket && !$gatewaySocket && !$ticketsocket) {
-            echo "Server Status: <font color='red'>Offline</font><br><br>";
+            echo "Server Global Status: <font color='red'>Offline</font><br><br>";
         } else {
             echo "Server Status: <font color='green'>Online</font><br><br>";
         }

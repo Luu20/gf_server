@@ -12,19 +12,22 @@ case "$1" in
 full)
 	host_ip=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	if [ "$host_ip" != "" ]; then
-		echo -e "Select IP Option:\n1 - Use Current IP: $host_ip\n2 - Use Other IP"
-		read invar
+		read -p "1 - Use Current IP: $host_ip  or 2 - Use Other IP: " invar
 	else
 		invar="2"
 	fi
 	if [ "$invar" = "2" ]; then
-		echo "Please Enter IP:"
-		read host_ip
+		read -p "Enter Your IP: " host_ip
 	fi
 
-	echo "Please Enter PostgreSQL Password:"
-	read db_pwd
-  	export PGPASSWORD=$db_pwd
+	read -p "Enter PostgreSQL Password: " db_pwd
+	export PGPASSWORD=$db_pwd
+
+	sudo apt purge postgresql -y
+	sudo apt purge php-pgsql -y
+	sudo apt purge php-cli -y
+	sudo apt purge php -y
+	sudo apt purge apache2 -y
 
 	ip_parts=(${host_ip//./ })
 	ip_parts[3]=0
@@ -49,12 +52,12 @@ full)
 	echo -en $ip_bytes | dd of=${zone_folder}/${zone_binary} bs=1 seek=$((0x$zone_offset)) count=${#ip_bytes} conv=notrunc >/dev/null 2>&1
 
 	sudo apt-get install apache2 -y
-    sudo apt-get install php -y
-    sudo apt-get install php-cli -y
-    sudo apt-get install php-pgsql -y
+	sudo apt-get install php -y
+	sudo apt-get install php-cli -y
+	sudo apt-get install php-pgsql -y
 
 	sudo service apache2 restart
-	
+
 	sudo rm /var/www/html/index.html
 	sudo cp ./_utils/web/*.php /var/www/html/
 
@@ -65,8 +68,8 @@ full)
 	sed -i "s/db_pwd/$db_pwd/g" "/var/www/html/config.php"
 	sed -i "s/host_ip/$host_ip/g" "/var/www/html/config.php"
 
-	wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/pgsql.gpg > /dev/null
-	echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list > /dev/null
+	wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/pgsql.gpg >/dev/null
+	echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list >/dev/null
 	sudo apt-get update -y
 	sudo apt -y install postgresql-13
 	POSTGRESQLVERSION=$(psql --version | cut -c 19-20)
@@ -96,19 +99,16 @@ full)
 ip)
 	host_ip=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	if [ "$host_ip" != "" ]; then
-		echo -e "Select IP Option:\n1 - Use Current IP: $host_ip\n2 - Use Other IP"
-		read invar
+		read -p "1 - Use Current IP: $host_ip  or 2 - Use Other IP: " invar
 	else
 		invar="2"
 	fi
 	if [ "$invar" = "2" ]; then
-		echo "Please Enter IP:"
-		read host_ip
+		read -p "Enter Your IP: " host_ip
 	fi
 
-	echo "Please Enter PostgreSQL Password:"
-	read db_pwd
-  	export PGPASSWORD=$db_pwd
+	read -p "Enter PostgreSQL Password: " db_pwd
+	export PGPASSWORD=$db_pwd
 
 	sudo cp ./_utils/web/config.php /var/www/html
 
@@ -144,15 +144,16 @@ ip)
 db)
 	host_ip=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	if [ "$host_ip" != "" ]; then
-		echo -e "Select IP Option:\n1 - Use Current IP: $host_ip\n2 - Use Other IP"
-		read invar
+		read -p "1 - Use Current IP: $host_ip  or 2 - Use Other IP: " invar
 	else
 		invar="2"
 	fi
 	if [ "$invar" = "2" ]; then
-		echo "Please Enter IP:"
-		read host_ip
+		read -p "Enter Your IP: " host_ip
 	fi
+
+	read -p "Enter PostgreSQL Password: " db_pwd
+	export PGPASSWORD=$db_pwd
 
 	psql -U postgres -c "DROP DATABASE gf_gs;"
 	psql -U postgres -c "DROP DATABASE gf_ls;"
@@ -177,23 +178,20 @@ web)
 
 	host_ip=$(ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 	if [ "$host_ip" != "" ]; then
-		echo -e "Select IP Option:\n1 - Use Current IP: $host_ip\n2 - Use Other IP"
-		read invar
+		read -p "1 - Use Current IP: $host_ip  or 2 - Use Other IP: " invar
 	else
 		invar="2"
 	fi
 	if [ "$invar" = "2" ]; then
-		echo "Please Enter IP:"
-		read host_ip
+		read -p "Enter Your IP: " host_ip
 	fi
 
-	echo "Please Enter PostgreSQL Password:"
-	read db_pwd
+	read -p "Enter PostgreSQL Password: " db_pwd
 
 	sudo apt-get install apache2 -y
-    sudo apt-get install php -y
-    sudo apt-get install php-cli -y
-    sudo apt-get install php-pgsql -y
+	sudo apt-get install php -y
+	sudo apt-get install php-cli -y
+	sudo apt-get install php-pgsql -y
 
 	sudo service apache2 restart
 

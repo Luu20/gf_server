@@ -31,7 +31,7 @@ start)
   cd ~/gf_server/WorldServer/
   chmod 777 *
   ./WorldServer &>/dev/null &
-  sleep 4
+  sleep 2
   cd ~/gf_server/ZoneServer/
   chmod 777 *
   ./ZoneServer &>/dev/null &
@@ -43,17 +43,13 @@ start)
 stop)
   echo $R"STOPPING SERVER!"$W
   killall -9 LoginServer >/dev/null &
-  sleep 2
   killall -9 GatewayServer >/dev/null &
-  sleep 2
   killall -9 TicketServer >/dev/null &
-  sleep 2
   killall -9 MissionServer >/dev/null &
-  sleep 2
   killall -9 WorldServer >/dev/null &
-  sleep 2
   killall -9 ZoneServer >/dev/null &
-  sleep 2
+  sleep 1
+  
   freemem=$(free -m | grep "Mem:" | awk '{print $4}')
   echo $B"SERVER STOPPED! ${Y}Memory Available: ${freemem} MB"${W}
 
