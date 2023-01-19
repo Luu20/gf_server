@@ -22,7 +22,9 @@ full)
 		read -p "Enter Your IP: " host_ip
 	fi
 
+	stty -echo
 	read -p "Enter PostgreSQL Password: " db_pwd
+	stty echo
 	export PGPASSWORD=$db_pwd
 
 	sudo apt purge postgresql -y
@@ -111,7 +113,9 @@ ip)
 		read -p "Enter Your IP: " host_ip
 	fi
 
+	stty -echo
 	read -p "Enter PostgreSQL Password: " db_pwd
+	stty echo
 	export PGPASSWORD=$db_pwd
 
 	sudo cp ./_utils/web/config.php /var/www/html
@@ -156,7 +160,9 @@ db)
 		read -p "Enter Your IP: " host_ip
 	fi
 
+	stty -echo
 	read -p "Enter PostgreSQL Password: " db_pwd
+	stty echo
 	export PGPASSWORD=$db_pwd
 
 	psql -U postgres -c "DROP DATABASE gf_gs;"
@@ -192,7 +198,9 @@ web)
 		read -p "Enter Your IP: " host_ip
 	fi
 
+	stty -echo
 	read -p "Enter PostgreSQL Password: " db_pwd
+	stty echo
 
 	sudo apt-get install apache2 -y
 	sudo apt-get install php -y
