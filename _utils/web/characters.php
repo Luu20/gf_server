@@ -22,6 +22,9 @@ $accounts = pg_query($db_ls, "SELECT * FROM accounts");
     th {
       background-color: #f2f2f2;
     }
+    td:first-child {
+      width: 100px;
+    }
   </style>
 </head>
 
