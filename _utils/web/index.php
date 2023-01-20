@@ -56,6 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form id='register' action="<?= $_SERVER['PHP_SELF']; ?>" method=post>
             <br>
             <input type='button' value='Server Status' onclick="window.location.href='status.php'" />
+            <input type='button' value='Add AP' onclick="window.location.href='gold.php'" />
+            <input type='button' value='Characters' onclick="window.location.href='characters.php'" />
             <input type='button' value='Change Privilege' onclick="window.location.href='gm.php'" />
             <input type='button' value='Change Player Name' onclick="window.location.href='change.php'" />
             <br>
