@@ -17,23 +17,6 @@ if (isset($_POST['submit'])) {
         $pquery = "UPDATE player_characters SET privilege = $privilege WHERE given_name='$playername'";
         $result = pg_query($db_gs, $pquery);
 
-        $check_query = "SELECT * FROM gm_tool_accounts WHERE id='$account_id'";
-        $check_result = pg_query($db_ls, $check_query);
-        $check_row = pg_fetch_assoc($check_result);
-        if (!$check_row) {
-            $query = "SELECT username, password FROM accounts WHERE id='$account_id'";
-            $result = pg_query($db_ls, $query);
-            $row = pg_fetch_assoc($result);
-
-            $username = $row['username'];
-            $password = $row['password'];
-
-            $insert_query = "INSERT INTO gm_tool_accounts (id, account_name, password, privilege) VALUES ($account_id, '$username', '$password', $privilege)";
-            $insert_result = pg_query($db_ls, $insert_query);
-        } else {
-            $query = "UPDATE gm_tool_account SET privilege = $privilege WHERE id = '$account_id'";
-            $result = pg_query($db_ls, $query);
-        }
         $query = "SELECT username FROM accounts WHERE id='$account_id'";
         $result = pg_query($db_ls, $query);
         $row = pg_fetch_assoc($result);

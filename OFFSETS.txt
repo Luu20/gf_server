@@ -1,0 +1,17 @@
+GatewayServer = 164ACD
+LoginServer = 1594B9
+LoginServer 'Possible Local Definition ip part: XXX.XXX.' = 15183E
+MissionServer = 4B5AE7
+TicketServer = 11B74B
+WorldServer = 3EA7A7
+WorldServer 'Possible Local Definition ip part: XXX.XXX.' = 39237B
+ZoneServer = 822D47
+
+Gateway -=- IP end 0 + 00 MASK
+Login -=- IP end 0 + 00 MASK
+Login-Local -=- 'XXX.XXX.'
+Mission -=- IP end 0
+Ticket -=- IP end 0
+World -=- IP end 0
+World-Local -=- 'XXX.XXX.'
+Zone -=- IP end 0

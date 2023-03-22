@@ -5294,8 +5294,12 @@ COPY public.server_shutdown (server_id, shutdown_time) FROM stdin;
 
 COPY public.serverstatus (id, name, ext_address, ext_port, int_address, int_port, last_start_time, last_vip_mail_time, next_itemmall_time, bf_count, last_race_reset_time, daily_awards_time_record, daily_awards_begin_date, daily_awards_flags) FROM stdin;
 -2	MissionServer	none	-1	127.0.0.1	7654	0	0	0	0	0	0	0	0
-1010	WorldServer	192.168.0.118	5567	127.0.0.1	5568	0	0	0	0	0	0	0	0
-1011	ZoneServer	192.168.0.118	10020	127.0.0.1	10021	0	0	0	0	0	0	0	0
+1010	WorldServer101	0.0.0.0	5517	127.0.0.1	5518	0	0	0	0	0	0	0	0
+1011	ZoneServer101	0.0.0.0	10010	127.0.0.1	10011	0	0	0	0	0	0	0	0
+1020	WorldServer102	0.0.0.0	5527	127.0.0.1	5528	0	0	0	0	0	0	0	0
+1021	ZoneServer102	0.0.0.0	10020	127.0.0.1	10021	0	0	0	0	0	0	0	0
+1090	WorldServer109	0.0.0.0	5597	127.0.0.1	5598	0	0	0	0	0	0	0	0
+1091	ZoneServer109	0.0.0.0	10090	127.0.0.1	10091	0	0	0	0	0	0	0	0
 \.
 
 

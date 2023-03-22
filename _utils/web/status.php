@@ -1,9 +1,7 @@
 <?php
 include('config.php');
 
-$loginSocket = @fsockopen($server_host, $login_port, $err, $err, 1);
-$gatewaySocket = @fsockopen($server_host, $gateway_port, $err, $err, 1);
-$ticketsocket = @fsockopen($server_host, $ticket_port, $err, $err, 1);
+$server_status = @fsockopen($server_host, $login_port, $err, $err, 1);
 
 $characters_result = pg_query($db_gs, 'SELECT COUNT(*) FROM player_characters');
 $num_characters = pg_fetch_result($characters_result, 0, 0);
@@ -29,31 +27,11 @@ $num_accounts = pg_fetch_result($accounts_result, 0, 0);
         <h3> Grand Fantasia Status </h3>
         <br>
         <?php
-        if (!$loginSocket && !$gatewaySocket && !$ticketsocket) {
-            echo "Server Global Status: <font color='red'>Offline</font><br><br>";
+        if (!$server_status) {
+            echo "Server Status: <font color='red'>Offline</font><br><br>";
         } else {
             echo "Server Status: <font color='green'>Online</font><br><br>";
-        }
-
-        if (!$loginSocket) {
-            echo "LoginServer: <font color='red'>Offline</font><br>";
-        } else {
-            echo "LoginServer: <font color='green'>Online</font><br>";
-            fclose($loginSocket);
-        }
-
-        if (!$gatewaySocket) {
-            echo "GatewayServer: <font color='red'>Offline</font><br>";
-        } else {
-            echo "GatewayServer: <font color='green'>Online</font><br>";
-            fclose($gatewaySocket);
-        }
-
-        if (!$ticketsocket) {
-            echo "TicketServer: <font color='red'>Offline</font><br>";
-        } else {
-            echo "TicketServer: <font color='green'>Online</font><br>";
-            fclose($ticketsocket);
+            fclose($server_status);
         }
 
         echo "<br>Registered Accounts: $num_accounts";

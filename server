@@ -12,29 +12,56 @@ P="[40;35m"
 case "$1" in
 start)
   echo $G"STARTING SERVER!"$W
+  echo -ne $B'[>         ] TicketServer       \r'$W
+  sleep 1
   cd ~/gf_server/TicketServer/
   chmod 777 *
   ./TicketServer -p 7777 &>/dev/null &
-  sleep 2
+  echo -ne $B'[->        ] GatewayServer       \r'$W
+  sleep 3
   cd ~/gf_server/GatewayServer/
   chmod 777 *
   ./GatewayServer &>/dev/null &
-  sleep 2
-  cd ~/gf_server/LoginServer/
-  chmod 777 *
-  ./LoginServer &>/dev/null &
-  sleep 2
+  echo -ne $B'[-->       ] MissionServer       \r'$W
+  sleep 3
   cd ~/gf_server/MissionServer/
   chmod 777 *
   ./MissionServer &>/dev/null &
-  sleep 2
-  cd ~/gf_server/WorldServer/
+  echo -ne $B'[--->      ] WorldServer101       \r'$W
+  sleep 3
+  cd ~/gf_server/WorldServer101/
   chmod 777 *
-  ./WorldServer &>/dev/null &
-  sleep 2
-  cd ~/gf_server/ZoneServer/
+  ./WorldServer101 &>/dev/null &
+  echo -ne $B'[---->     ] ZoneServer101       \r'$W
+  sleep 5
+  cd ~/gf_server/ZoneServer101/
   chmod 777 *
-  ./ZoneServer &>/dev/null &
+  ./ZoneServer101 &>/dev/null &
+  echo -ne $B'[----->    ] WorldServer102       \r'$W
+  sleep 4
+  cd ~/gf_server/WorldServer102/
+  chmod 777 *
+  ./WorldServer102 &>/dev/null &
+  echo -ne $B'[------>   ] ZoneServer102       \r'$W
+  sleep 5
+  cd ~/gf_server/ZoneServer102/
+  chmod 777 *
+  ./ZoneServer102 &>/dev/null &
+  echo -ne $B'[------->  ] WorldServer109       \r'$W
+  sleep 4
+  cd ~/gf_server/WorldServer109/
+  chmod 777 *
+  ./WorldServer109 &>/dev/null &
+  echo -ne $B'[--------> ] ZoneServer109       \r'$W
+  sleep 5
+  cd ~/gf_server/ZoneServer109/
+  chmod 777 *
+  ./ZoneServer109 &>/dev/null &
+  echo -ne $B'[--------->] LoginServer       \r'$W
+  sleep 4
+  cd ~/gf_server/LoginServer/
+  chmod 777 *
+  ./LoginServer &>/dev/null &
 
   freemem=$(free -m | grep "Mem:" | awk '{print $4}')
   echo $B"SERVER STARTED! ${Y}Memory Available: ${freemem} MB"${W}
@@ -42,12 +69,16 @@ start)
   ;;
 stop)
   echo $R"STOPPING SERVER!"$W
-  killall -9 LoginServer >/dev/null &
-  killall -9 GatewayServer >/dev/null &
-  killall -9 TicketServer >/dev/null &
-  killall -9 MissionServer >/dev/null &
-  killall -9 WorldServer >/dev/null &
-  killall -9 ZoneServer >/dev/null &
+  killall -9 LoginServer
+  killall -9 GatewayServer
+  killall -9 TicketServer
+  killall -9 MissionServer
+  killall -9 WorldServer101
+  killall -9 ZoneServer101
+  killall -9 WorldServer102
+  killall -9 ZoneServer102
+  killall -9 WorldServer109
+  killall -9 ZoneServer109
   sleep 1
   
   freemem=$(free -m | grep "Mem:" | awk '{print $4}')
@@ -68,12 +99,16 @@ status)
 backup)
   echo $P"CREATING BACKUP!"$W
 
-	echo "Please Enter PostgreSQL Password:"
-	read db_pwd
+	stty -echo
+	read -p "Enter CURRENT PostgreSQL Password: " db_pwd
+	stty echo
+  echo ""
   export PGPASSWORD=$db_pwd
 
   folder_name=backup_$(date +%Y_%m_%d_%H_%M_%S)
   sudo mkdir -p /root/gf_server/backup/$folder_name
+  
+  chmod -R 777 /root
 
 	echo "Creating gf_gs backup"
   pg_dump -U postgres -Fp gf_gs > /root/gf_server/backup/$folder_name/gf_gs.sql
@@ -83,8 +118,6 @@ backup)
 
 	echo "Creating gf_ms backup"
   pg_dump -U postgres -Fp gf_ms > /root/gf_server/backup/$folder_name/gf_ms.sql
-
-  chmod -R 777 /root
 
   echo $B"BACKUP CREATED! > $folder_name"$W
 
@@ -107,9 +140,13 @@ restore)
     exit 1
   fi
 
-	echo "Please Enter PostgreSQL Password:"
-	read db_pwd
+	stty -echo
+	read -p "Enter CURRENT PostgreSQL Password: " db_pwd
+	stty echo
+  echo ""
   export PGPASSWORD=$db_pwd
+
+	service postgresql restart
 
   folder_name=$2
 
@@ -135,6 +172,7 @@ restore)
   ;;
 clear)
   echo $P"CLEANING LOGS!"$W
+  
   cat /dev/null >/var/log/syslog
   cat /dev/null >/var/log/wtmp
   cat /dev/null >/var/log/maillog

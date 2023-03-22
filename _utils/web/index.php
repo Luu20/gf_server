@@ -23,12 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $exists_id = pg_query($db_ls, "SELECT * FROM accounts WHERE id = $next_id");
             }
 
-            $result_ls = pg_query($db_ls, "INSERT INTO public.accounts (id, username, password, realname) VALUES($next_id, '$username', '$password', '$username')");
+            $pwd_md5 = md5($_POST['password']);
+
+            $result_ls = pg_query($db_ls, "INSERT INTO public.accounts (id, username, password, realname) VALUES($next_id, '$username', '$pwd_md5', '$username')");
 
             if (!$result_ls) {
                 $message = "<font color='red'>ACCOUNT CREATION ERROR</font>";
             } else {
-                $result_ms = pg_query($db_ms, "INSERT INTO tb_user (mid, password, pwd, pvalues) VALUES ('$username','$password','$password','99999')");
+                $result_ms = pg_query($db_ms, "INSERT INTO tb_user (mid, password, pwd, idnum, pvalues) VALUES ('$username','$pwd_md5','$pwd_md5', $next_id,'99999')");
                 if (!$result_ms) {
                     $message = "<font color='red'>ACCOUNT CREATION ERROR</font>";
                 } else {

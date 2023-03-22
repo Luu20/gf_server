@@ -4,8 +4,6 @@
     $db_password = 'db_pwd';
 
     $login_port = 6543;
-    $gateway_port = 5560;
-    $ticket_port = 7777;
 
     $db_gs = pg_connect("host=$server_host dbname=gf_gs user=$db_user password=$db_password");
     $db_ls = pg_connect("host=$server_host dbname=gf_ls user=$db_user password=$db_password");
